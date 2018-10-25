@@ -37,15 +37,14 @@ void smartsensor_pubsubclient::check_connection(void)
  */
 bool smartsensor_pubsubclient::publish(const char *topic, unsigned long value)
 {
-    /*
-    char buffer [128];
-    int ret = snprintf(buffer, sizeof(buffer), "%ld", value);
-    */
+    char buffer [20];
+    int ret = snprintf(buffer, sizeof(buffer), "%ld\n", value);
+    if (ret >= 0 && ret < (int)sizeof(buffer))
+    {
+        ret = publish(topic, buffer);
+    }
 
-    const char *p = reinterpret_cast<const char *>(value);
-    bool rc = publish(topic, p);
-
-    return rc;
+    return ret;
 }
 
 void smartsensor_pubsubclient::reconnect(void)

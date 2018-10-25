@@ -38,7 +38,9 @@ void smartsensor_wifi::check_connection(void)
     Serial.println("");
     Serial.println("Connecting Wifi to one of following SSIDs ...");
 
+    //Print registred SSIDs to try to connect
     for(auto entry : APlist) {
+        Serial.print(" - ");
         Serial.println(entry.ssid);
     }
 

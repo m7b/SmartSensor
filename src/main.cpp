@@ -106,5 +106,5 @@ void loop(void) {
     mqtt.publish("barrel_fill_level_cm", level_cm);
 
     //Wait 1sec
-    delay(1000);
+    delay(3000);
 }
