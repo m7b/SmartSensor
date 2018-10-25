@@ -1,5 +1,5 @@
-##ifndef WIFI_ACCESS_DATAS_H
-#define WIFI_ACCESS_DATAS_H
+#ifndef SMARTSENSOR_SETTINGS_H
+#define SMARTSENSOR_SETTINGS_H
 
 #include <vector>
 
@@ -46,4 +46,4 @@ static const std::vector<std::pair<const char*, const char*>> wifi_access_creden
 #define MAX_DISTANCE_CM   200   //Max distance in [cm]
 #define MAX_FILL_LEVEL_CM 110   //Max fill level of barrel in [cm]
 
-#endif // WIFI_ACCESS_DATAS_H
+#endif // SMARTSENSOR_SETTINGS_H
