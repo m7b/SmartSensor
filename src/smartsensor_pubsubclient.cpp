@@ -1,7 +1,5 @@
 #include "smartsensor_pubsubclient.h"
-
-#define MQTT_SERVER "192.168.178.36"  //bierfass
-#define MQTT_PORT   1883
+#include "settings/smartsensor_settings.h"
 
 smartsensor_pubsubclient::smartsensor_pubsubclient()
 : PubSubClient(espClient)
@@ -47,6 +45,10 @@ bool smartsensor_pubsubclient::publish(const char *topic, unsigned long value)
     return ret;
 }
 
+/**
+ * @brief Reconnect to MQTT publisher
+ * 
+ */
 void smartsensor_pubsubclient::reconnect(void)
 {
     Serial.print("Attempting MQTT connection to ");

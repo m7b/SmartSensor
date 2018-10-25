@@ -1,5 +1,11 @@
-#ifndef WIFI_ACCESS_DATAS_H
+##ifndef WIFI_ACCESS_DATAS_H
 #define WIFI_ACCESS_DATAS_H
+
+#include <vector>
+
+//Debug flag ON or OFF
+#define DEBUG ON
+
 
 /**
  * @brief Declaration of ssid and password
@@ -11,5 +17,33 @@ static const std::vector<std::pair<const char*, const char*>> wifi_access_creden
     {"my_wifi_no_2", "pass for wifi no 2"},
     {"my_wifi_no_3", "pass for wifi no 3"}
 };
+
+
+/**
+ * @brief Syslog server connection info
+ * 
+ */
+#define SYSLOG_SERVER "192.168.0.1"
+#define SYSLOG_PORT 514
+#define DEVICE_HOSTNAME "my-device"
+#define APP_NAME "smartsensor"
+
+
+/**
+ * @brief MQTT Connection settings
+ * 
+ */
+#define MQTT_SERVER "192.168.0.1"
+#define MQTT_PORT   1883
+
+
+/**
+ * @brief Ultrasonic settings
+ * 
+ */
+#define TRIGGER_PIN         0   //Trigger-Pin
+#define ECHO_PIN            1   //Echo-Pin
+#define MAX_DISTANCE_CM   200   //Max distance in [cm]
+#define MAX_FILL_LEVEL_CM 110   //Max fill level of barrel in [cm]
 
 #endif // WIFI_ACCESS_DATAS_H

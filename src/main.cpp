@@ -4,8 +4,6 @@
 #include "smartsensor_pubsubclient.h"
 #include "smartsensor_barrel.h"
 
-#define DEBUG ON
-
 smartsensor_wifi wifiMulti;
 smartsensor_syslog syslog;
 smartsensor_pubsubclient mqtt;

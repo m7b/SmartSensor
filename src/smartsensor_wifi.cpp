@@ -1,5 +1,5 @@
 #include "smartsensor_wifi.h"
-#include "settings/wifi_access_datas.h"
+#include "settings/smartsensor_settings.h"
 
 /**
  * @brief Construct a new smartsensor wifi::smartsensor wifi object
