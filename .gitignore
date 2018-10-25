@@ -1,0 +1,5 @@
+.pioenvs
+.piolibdeps
+.vscode
+include/settings/wifi_access_datas.h
+include/settings/wifi_access_datas.h_backup

@@ -1,0 +1,15 @@
+#ifndef WIFI_ACCESS_DATAS_H
+#define WIFI_ACCESS_DATAS_H
+
+/**
+ * @brief Declaration of ssid and password
+ * 
+ */
+static const std::vector<std::pair<const char*, const char*>> wifi_access_credentials = {
+/*  {"<ssid>"},            "<password>", */
+    {"my_wifi_no_1", "pass for wifi no 1"},
+    {"my_wifi_no_2", "pass for wifi no 2"},
+    {"my_wifi_no_3", "pass for wifi no 3"}
+};
+
+#endif // WIFI_ACCESS_DATAS_H
