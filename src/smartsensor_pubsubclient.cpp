@@ -36,7 +36,7 @@ void smartsensor_pubsubclient::check_connection(void)
 bool smartsensor_pubsubclient::publish(const char *topic, unsigned long value)
 {
     char buffer [20];
-    int ret = snprintf(buffer, sizeof(buffer), "%ld\n", value);
+    int ret = snprintf(buffer, sizeof(buffer), "%ld", value);
     if (ret >= 0 && ret < (int)sizeof(buffer))
     {
         ret = publish(topic, buffer);
@@ -64,7 +64,8 @@ void smartsensor_pubsubclient::reconnect(void)
     if (connect(clientId.c_str()))
 
     {
-        Serial.println("connected");
+        Serial.println("MQTT connected");
+        Serial.println("CLient ID is: " + clientId);
         // Once connected, publish an announcement...
         publish("outTopic", "hello world");
         // ... and resubscribe
@@ -72,7 +73,7 @@ void smartsensor_pubsubclient::reconnect(void)
     }
     else
     {
-        Serial.printf("failed, rc=%d, try again in 5 seconds.\n", state());
+        Serial.printf("failed, rc=%d, try again in 5 seconds.\r\n", state());
         // Wait 5 seconds before retrying
         delay(5000);
     }

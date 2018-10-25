@@ -95,7 +95,7 @@ void loop(void) {
     unsigned long level_cm = barrel.get_fill_level_cm();
 
     //Publish fill level to serial interface
-    Serial.printf("Füllstand der Regentonne ist: %dcm\n", (int)level_cm);
+    Serial.printf("Füllstand der Regentonne ist: %dcm\r\n", (int)level_cm);
 
     //Publish fill level to syslog
     syslog.logf(LOG_INFO, "Füllstand der Regentonne ist: %dcm", (int)level_cm);

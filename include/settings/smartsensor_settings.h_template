@@ -33,7 +33,7 @@ static const std::vector<std::pair<const char*, const char*>> wifi_access_creden
  * @brief MQTT Connection settings
  * 
  */
-#define MQTT_SERVER "192.168.0.1"
+#define MQTT_SERVER "test.mosquitto.org"
 #define MQTT_PORT   1883
 
 
