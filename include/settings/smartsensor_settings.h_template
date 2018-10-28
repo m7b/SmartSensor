@@ -69,7 +69,7 @@ static const std::vector<std::pair<const char*, const char*>> wifi_access_creden
  * 
  */
 #define TRIGGER_PIN         0   //Trigger-Pin
-#define ECHO_PIN            1   //Echo-Pin
+#define ECHO_PIN            2   //Echo-Pin
 #define MAX_DISTANCE_CM   200   //Max distance in [cm]
 #define MAX_FILL_LEVEL_CM 110   //Max fill level of barrel in [cm]
 
