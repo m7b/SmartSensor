@@ -39,7 +39,7 @@ bool smartsensor_pubsubclient::publish(const char *topic, unsigned long value)
     int ret = snprintf(buffer, sizeof(buffer), "%ld", value);
     if (ret >= 0 && ret < (int)sizeof(buffer))
     {
-        ret = publish(topic, buffer);
+        ret = publish(topic, buffer, MQTT_MESSAGES_RETAINED);
     }
 
     return ret;
