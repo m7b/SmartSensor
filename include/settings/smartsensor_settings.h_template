@@ -67,9 +67,13 @@ static const std::vector<std::pair<const char*, const char*>> wifi_access_creden
 /**
  * @brief Ultrasonic settings
  * 
+ * For booting the ESP8266 to operation mode, GPIO0 and GPIO2 has to
+ * be at high state at boot time. Therefor only the trigger pin of
+ * the ultrasonic sensor can be used to connect to one of those GPIOs.
+ * 
  */
-#define TRIGGER_PIN         0   //Trigger-Pin
-#define ECHO_PIN            2   //Echo-Pin
+#define TRIGGER_PIN         0   //Trigger-Pin (high impedanz)
+#define ECHO_PIN            3   //Echo-Pin
 #define MAX_DISTANCE_CM   200   //Max distance in [cm]
 #define MAX_FILL_LEVEL_CM 110   //Max fill level of barrel in [cm]
 

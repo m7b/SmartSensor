@@ -16,7 +16,7 @@ smartsensor_barrel barrel;
  * 
  */
 void setup_serial(void) {
-    Serial.begin(115200);
+    Serial.begin(115200, SERIAL_8N1, SERIAL_TX_ONLY);
 
 #if DEBUG == ON
     // Take time for opening serial window
