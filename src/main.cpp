@@ -4,6 +4,7 @@
 #include "smartsensor_syslog.h"
 #include "smartsensor_pubsubclient.h"
 #include "smartsensor_barrel.h"
+#include "settings/smartsensor_settings.h"
 
 smartsensor_wifi wifiMulti;
 smartsensor_ntp ntp;
@@ -93,8 +94,6 @@ void setup(void) {
  * put your main code here, to run repeatedly.
  */
 void loop(void) {
-    syslog.log(LOG_INFO, "Begin loop");
-
     //update time from NTP on demand, see NTP_UPDATE_INTERVAL_MS
     ntp.update();
 
@@ -118,11 +117,8 @@ void loop(void) {
     syslog.logf(LOG_INFO, "Füllstand der Regentonne ist: %dcm", (int)level_cm);
 
     //Publish fill level via MQTT with topic "barrel_fill_level_cm"
-    mqtt.publish("barrel_fill_level_cm", level_cm);
-
-    ntp.test();
+    mqtt.publish(BARREL_FILL_LEVEL_CM_TOPIC, level_cm);
 
     //Wait 3sec
     delay(3000);
-
 }

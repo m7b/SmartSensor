@@ -72,9 +72,10 @@ static const std::vector<std::pair<const char*, const char*>> wifi_access_creden
  * the ultrasonic sensor can be used to connect to one of those GPIOs.
  * 
  */
-#define TRIGGER_PIN         0   //Trigger-Pin (high impedanz)
-#define ECHO_PIN            3   //Echo-Pin
-#define MAX_DISTANCE_CM   200   //Max distance in [cm]
-#define MAX_FILL_LEVEL_CM 110   //Max fill level of barrel in [cm]
+#define TRIGGER_PIN                  0   //Trigger-Pin (high impedanz)
+#define ECHO_PIN                     3   //Echo-Pin
+#define MAX_DISTANCE_CM            200   //Max distance in [cm]
+#define MAX_FILL_LEVEL_CM          110   //Max fill level of barrel in [cm]
+#define BARREL_FILL_LEVEL_CM_TOPIC "barrel_fill_level_cm"
 
 #endif // SMARTSENSOR_SETTINGS_H
