@@ -25,8 +25,8 @@ smartsensor_barrel::~smartsensor_barrel()
 /**
  * @brief Start meassure
  * 
- * @return true 
- * @return false 
+ * @return true if measured value is in defined area.
+ * @return false if measured value is out of area or no obstacle detected.
  */
 bool smartsensor_barrel::do_measure(void)
 {
