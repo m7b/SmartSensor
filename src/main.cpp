@@ -139,6 +139,9 @@ void loop(void) {
     //check all conditions are ok
     if (!check_all_conditions())
         return;
+
+    //keep mqtt alive
+    mqtt.loop();
     
     //Measure fill level
     barrel.do_measure();
@@ -149,7 +152,7 @@ void loop(void) {
     switch (OperationMode)
     {
         case PERMANENT_MEASSURE:
-            delay(20);
+            delay(200);
             break;
 
         case INTERVAL_MEASURE__5_SEK:
