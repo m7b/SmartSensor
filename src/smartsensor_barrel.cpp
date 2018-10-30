@@ -23,23 +23,17 @@ smartsensor_barrel::~smartsensor_barrel()
 bool smartsensor_barrel::do_measure(void)
 {
     bool rc = false;
-    
-    unsigned long meassured_value;
 
-    meassured_value = ping_cm();
-    if ((meassured_value <= 0) || (meassured_value > max_fill_level_cm))
+    fill_level.sensor_cm = ping_cm();
+    fill_level.utc       = ntp->getEpochTime();
+
+    if ((fill_level.sensor_cm <= 0) || (fill_level.sensor_cm > max_fill_level_cm))
         return rc;
+        
+    fill_level.cm        = max_fill_level_cm - fill_level.sensor_cm;
+    fill_level.percent   = (max_fill_level_cm / 100) * fill_level.cm;
     
     rc = true;
-   
-    sFillLevel tmp;
-    
-    tmp.sensor_cm = meassured_value;
-    tmp.cm        = max_fill_level_cm - meassured_value;
-    tmp.percent   = (max_fill_level_cm / 100) * tmp.cm;
-    tmp.utc       = ntp->getEpochTime();
-
-    fill_level = tmp;
 
     return rc;
 }
@@ -113,7 +107,7 @@ bool smartsensor_barrel::do_publish_serial(void)
 {
     bool rc = false;
 
-    int len = Serial.printf("%s - Füllstand: %dcm; Prozentual: %.2f\r\n",
+    int len = Serial.printf("%s - Füllstand: %dcm; Prozentual: %.2f%%\r\n",
         get_local_datetime().c_str(),
         (int)fill_level.cm,
         fill_level.percent);
