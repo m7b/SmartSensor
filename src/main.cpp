@@ -163,5 +163,9 @@ void loop(void) {
         case INTERVAL_MEASURE__5_MIN:
             delay(3600000);
             break;
+
+        default:
+            delay(7500);
+            break;
     }
 }
