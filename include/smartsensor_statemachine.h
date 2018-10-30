@@ -5,10 +5,10 @@
 
 enum stages
 {
-    PERMANENT_MEASSURE = 0,
-    INTERVAL_MEASURE__5_SEK,
-    INTERVAL_MEASURE_10_SEK,
-    INTERVAL_MEASURE__5_MIN
+    PERMANENT_MEASSURE = 48, //'0'
+    INTERVAL_MEASURE__5_SEK, //'1'
+    INTERVAL_MEASURE_10_SEK, //'2'
+    INTERVAL_MEASURE__5_MIN  //'3'
 };
 
 class smartsensor_statemachine
