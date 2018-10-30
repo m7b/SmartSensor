@@ -32,6 +32,7 @@ bool smartsensor_barrel::do_measure(void)
 {
     bool rc = false;
 
+    fill_level.clear();
     fill_level.sensor_cm = ping_cm();
     fill_level.utc       = ntp->getEpochTime();
 
@@ -39,7 +40,7 @@ bool smartsensor_barrel::do_measure(void)
         return rc;
         
     fill_level.cm        = max_fill_level_cm - fill_level.sensor_cm;
-    fill_level.percent   = (max_fill_level_cm / 100) * fill_level.cm;
+    fill_level.percent   = (100.0 * (float)fill_level.cm) / (float)max_fill_level_cm;
     
     rc = true;
 
