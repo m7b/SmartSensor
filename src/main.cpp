@@ -4,6 +4,7 @@
 #include "smartsensor_syslog.h"
 #include "smartsensor_pubsubclient.h"
 #include "smartsensor_barrel.h"
+#include "smartsensor_statemachine.h"
 #include "settings/smartsensor_settings.h"
 
 smartsensor_wifi wifiMulti;
