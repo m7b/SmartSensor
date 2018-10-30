@@ -33,10 +33,36 @@ void smartsensor_pubsubclient::check_connection(void)
  * @return true 
  * @return false 
  */
-bool smartsensor_pubsubclient::publish(const char *topic, unsigned long value)
+bool smartsensor_pubsubclient::publish(const char *topic, unsigned long ul_value)
 {
     char buffer [20];
-    int ret = snprintf(buffer, sizeof(buffer), "%ld", value);
+    int ret = snprintf(buffer, sizeof(buffer), "%ld", ul_value);
+    if (ret >= 0 && ret < (int)sizeof(buffer))
+    {
+        ret = publish(topic, buffer, MQTT_MESSAGES_RETAINED);
+    }
+
+    return ret;
+}
+
+
+bool smartsensor_pubsubclient::publish(const char *topic, float f_value)
+{
+    char buffer [20];
+    int ret = snprintf(buffer, sizeof(buffer), "%.2f", f_value);
+    if (ret >= 0 && ret < (int)sizeof(buffer))
+    {
+        ret = publish(topic, buffer, MQTT_MESSAGES_RETAINED);
+    }
+
+    return ret;
+}
+
+
+bool smartsensor_pubsubclient::publish(const char *topic, time_t t_value)
+{
+    char buffer [20];
+    int ret = snprintf(buffer, sizeof(buffer), "%ld", t_value);
     if (ret >= 0 && ret < (int)sizeof(buffer))
     {
         ret = publish(topic, buffer, MQTT_MESSAGES_RETAINED);

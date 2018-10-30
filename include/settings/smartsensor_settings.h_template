@@ -77,6 +77,11 @@ static const std::vector<std::pair<const char*, const char*>> wifi_access_creden
 #define ECHO_PIN                     3   //Echo-Pin
 #define MAX_DISTANCE_CM            200   //Max distance in [cm]
 #define MAX_FILL_LEVEL_CM          110   //Max fill level of barrel in [cm]
-#define BARREL_FILL_LEVEL_CM_TOPIC "barrel_fill_level_cm"
+
+#define TOP_LEVEL_TOPIC       "IrrigationSystem/RainWaterStorage/EG/Barrel1/"
+#define LEVEL_SENSOR_CM_TOPIC "Level/sensorcm"
+#define LEVEL_CM_TOPIC        "Level/cm"
+#define LEVEL_PERCENT_TOPIC   "Level/percent"
+#define LEVEL_TIMESTAMP_TOPIC "Level/timestamp"
 
 #endif // SMARTSENSOR_SETTINGS_H

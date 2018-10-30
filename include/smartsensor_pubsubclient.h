@@ -14,8 +14,11 @@ class smartsensor_pubsubclient : public PubSubClient
 
         void check_connection(void);
 
-        bool publish(const char *topic, unsigned long value);
+        bool publish(const char *topic, unsigned long ul_value);
+        bool publish(const char *topic, float f_value);
+        bool publish(const char *topic, time_t t_value);
         using PubSubClient::publish;
+
 
     private:
         WiFiClient espClient;

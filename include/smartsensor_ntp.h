@@ -13,6 +13,7 @@ class smartsensor_ntp : public NTPClient, Timezone
 
         void test(void);
         std::string get_local_datetime(void);
+        std::string get_local_datetime(time_t utc);
 
     private:
         WiFiUDP ntpUDP;

@@ -10,7 +10,8 @@ smartsensor_wifi wifiMulti;
 smartsensor_ntp ntp;
 smartsensor_syslog syslog;
 smartsensor_pubsubclient mqtt;
-smartsensor_barrel barrel;
+
+smartsensor_barrel barrel(&ntp, &mqtt, &syslog);
 
 /**
  * @brief Setup the serial object
@@ -63,6 +64,7 @@ bool check_all_conditions(void) {
     
     rc = rc & wifiMulti.connected();
     rc = rc & mqtt.connected();
+    rc = rc & ntp.update();
 
     return rc;
 }
@@ -108,17 +110,11 @@ void loop(void) {
         return;
     
     //Measure fill level
-    unsigned long level_cm = barrel.get_fill_level_cm();
+    barrel.do_measure();
 
-    //Publish fill level to serial interface
-    Serial.printf("%s - Füllstand der Regentonne: %dcm\r\n", ntp.get_local_datetime().c_str(), (int)level_cm);
+    //Publish fill level
+    barrel.do_publish();
 
-    //Publish fill level to syslog
-    syslog.logf(LOG_INFO, "Füllstand der Regentonne ist: %dcm", (int)level_cm);
-
-    //Publish fill level via MQTT with topic "barrel_fill_level_cm"
-    mqtt.publish(BARREL_FILL_LEVEL_CM_TOPIC, level_cm);
-
-    //Wait 3sec
-    delay(3000);
+    //Wait 5sec
+    delay(5000);
 }

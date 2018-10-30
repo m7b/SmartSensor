@@ -44,6 +44,17 @@ std::string smartsensor_ntp::get_local_datetime(void)
     return buf;
 }
 
+std::string smartsensor_ntp::get_local_datetime(time_t utc)
+{
+    time_t t = toLocal(utc);
+    char buf[32]; 
+    char m[4];    // temporary storage for month string (DateStrings.cpp uses shared buffer) 
+    strcpy(m, monthShortStr(month(t))); 
+    sprintf(buf, "%.2d:%.2d:%.2d %s %.2d %s %d", 
+    hour(t), minute(t), second(t), dayShortStr(weekday(t)), day(t), m, year(t)); 
+    return buf;
+}
+
 void smartsensor_ntp::printDateTime(time_t t, const char *tz)
 { 
     char buf[32]; 
