@@ -14,6 +14,30 @@ smartsensor_pubsubclient mqtt;
 
 smartsensor_barrel barrel(&ntp, &mqtt, &syslog);
 
+int OperationMode = 1;
+
+void test_fct_callback(char* topic, byte* payload, unsigned int length) {
+    Serial.print("Message arrived [");
+    Serial.print(topic);
+    Serial.print("] ");
+    Serial.println();
+
+    if (strcmp(topic, "IrrigationSystem/RainWaterStorage/EG/Barrel1/FunktionMode") == 0)
+    {
+        Serial.printf("Function mode received: %d\r\n", payload[0]);
+        OperationMode = payload[0];
+    }
+
+    if (strcmp(topic, "inTopic") == 0)
+    {
+        Serial.printf("inTopic received: ");
+        for (unsigned int i=0; i<length; i++) {
+            Serial.print((char)payload[i]);
+        }
+        Serial.println();
+    }
+}
+
 /**
  * @brief Setup the serial object
  * 
@@ -50,8 +74,14 @@ void setup_ntp(void) {
  * 
  */
 void setup_mqtt(void) {
+    //Set callback function
+    mqtt.setCallback(test_fct_callback);
+
     // We start by connecting to MQTT server
     mqtt.check_connection();
+
+    // Subscribe function mode
+    mqtt.subscribe("IrrigationSystem/RainWaterStorage/EG/Barrel1/FunktionMode");
 }
 
 /**
@@ -116,6 +146,22 @@ void loop(void) {
     //Publish fill level
     barrel.do_publish();
 
-    //Wait 5sec
-    delay(5000);
+    switch (OperationMode)
+    {
+        case PERMANENT_MEASSURE:
+            delay(20);
+            break;
+
+        case INTERVAL_MEASURE__5_SEK:
+            delay(5000);
+            break;
+
+        case INTERVAL_MEASURE_10_SEK:
+            delay(10000);
+            break;
+
+        case INTERVAL_MEASURE__5_MIN:
+            delay(3600000);
+            break;
+    }
 }
