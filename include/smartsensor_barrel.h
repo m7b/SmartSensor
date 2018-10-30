@@ -14,6 +14,13 @@ struct sFillLevel
     time_t utc;
     sFillLevel() : sensor_cm(0), cm(0), percent(.0), utc(0)
     {}
+    void clear(void)
+    {
+        sensor_cm = 0;
+        cm        = 0;
+        percent   = .0;
+        utc       = 0;
+    }
 };
 
 
