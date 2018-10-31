@@ -99,9 +99,10 @@ void smartsensor_pubsubclient::reconnect(void)
         Serial.println("MQTT connected");
         Serial.println("CLient ID is: " + clientId);
         // Once connected, publish an announcement...
-        publish("outTopic", "hello world");
+        //publish("outTopic", "hello world");
         // ... and resubscribe
-        subscribe("inTopic");
+        for(auto topic : topics_to_subscribe) 
+            subscribe(add_root_topic(topic.second).c_str());
     }
     else
     {

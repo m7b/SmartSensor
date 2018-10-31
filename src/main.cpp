@@ -25,19 +25,26 @@ void test_fct_callback(char* topic, byte* payload, unsigned int length) {
     Serial.print("] ");
     Serial.println();
 
-    if (strcmp(topic, mqtt.add_root_topic(FUNCTION_MODE).c_str()) == 0)
+    for(auto el: topics_to_subscribe)
     {
-        Serial.printf("Function mode received: %d\r\n", payload[0]);
-        OperationMode = payload[0];
-    }
+        if (strcmp(topic, mqtt.add_root_topic(el.second).c_str()) == 0)
+        {
+            switch(el.first)
+            {
+                case 0:     
+                    Serial.printf("Function mode received: %d\r\n", payload[0]);
+                    OperationMode = payload[0];
+                    break;
 
-    if (strcmp(topic, "inTopic") == 0)
-    {
-        Serial.printf("inTopic received: ");
-        for (unsigned int i=0; i<length; i++) {
-            Serial.print((char)payload[i]);
+                case 1:
+                    Serial.printf("inTopic received: ");
+                    for (unsigned int i=0; i<length; i++) {
+                        Serial.print((char)payload[i]);
+                    }
+                    Serial.println(); 
+                    break;
+            }
         }
-        Serial.println();
     }
 }
 
@@ -82,9 +89,6 @@ void setup_mqtt(void) {
 
     // We start by connecting to MQTT server
     mqtt.check_connection();
-
-    // Subscribe function mode
-    mqtt.subscribe(mqtt.add_root_topic(FUNCTION_MODE).c_str());
 }
 
 /**

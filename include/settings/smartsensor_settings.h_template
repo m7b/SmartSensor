@@ -86,4 +86,15 @@ static const std::vector<std::pair<const char*, const char*>> wifi_access_creden
 #define LEVEL_PERCENT_TOPIC   "Level/percent"
 #define LEVEL_TIMESTAMP_TOPIC "Level/timestamp"
 
+
+/**
+ * @brief Topics to subscribe
+ * 
+ */
+static const std::vector<std::pair<int, char*>> topics_to_subscribe = {
+/*  {<idx>}, "<topic>", */
+    {0,      "FunctionMode"},
+    {1,      "inTopic"}
+};
+
 #endif // SMARTSENSOR_SETTINGS_H
