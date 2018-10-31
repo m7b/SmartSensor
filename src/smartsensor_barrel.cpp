@@ -116,6 +116,7 @@ bool smartsensor_barrel::do_publish_mqtt(void)
     bool rc = true;
 
     //Publish fill level
+    
     rc = rc & mqtt->publish(LEVEL_SENSOR_CM_TOPIC, fill_level.sensor_cm);
     rc = rc & mqtt->publish(LEVEL_CM_TOPIC,        fill_level.cm);
     rc = rc & mqtt->publish(LEVEL_PERCENT_TOPIC,   fill_level.percent);

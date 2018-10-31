@@ -22,7 +22,7 @@ void test_fct_callback(char* topic, byte* payload, unsigned int length) {
     Serial.print("] ");
     Serial.println();
 
-    if (strcmp(topic, "IrrigationSystem/RainWaterStorage/EG/Barrel1/FunktionMode") == 0)
+    if (strcmp(topic, mqtt.add_root_topic(FUNCTION_MODE).c_str()) == 0)
     {
         Serial.printf("Function mode received: %d\r\n", payload[0]);
         OperationMode = payload[0];
@@ -81,7 +81,7 @@ void setup_mqtt(void) {
     mqtt.check_connection();
 
     // Subscribe function mode
-    mqtt.subscribe("IrrigationSystem/RainWaterStorage/EG/Barrel1/FunktionMode");
+    mqtt.subscribe(mqtt.add_root_topic(FUNCTION_MODE).c_str());
 }
 
 /**

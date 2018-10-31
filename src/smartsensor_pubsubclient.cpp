@@ -35,11 +35,13 @@ void smartsensor_pubsubclient::check_connection(void)
  */
 bool smartsensor_pubsubclient::publish(const char *topic, unsigned long ul_value)
 {
+    std::string t = add_root_topic(topic);
+
     char buffer [20];
     int ret = snprintf(buffer, sizeof(buffer), "%ld", ul_value);
     if (ret >= 0 && ret < (int)sizeof(buffer))
     {
-        ret = publish(topic, buffer, MQTT_MESSAGES_RETAINED);
+        ret = publish(t.c_str(), buffer, MQTT_MESSAGES_RETAINED);
     }
 
     return ret;
@@ -48,11 +50,13 @@ bool smartsensor_pubsubclient::publish(const char *topic, unsigned long ul_value
 
 bool smartsensor_pubsubclient::publish(const char *topic, float f_value)
 {
+    std::string t = add_root_topic(topic);
+
     char buffer [20];
     int ret = snprintf(buffer, sizeof(buffer), "%.2f", f_value);
     if (ret >= 0 && ret < (int)sizeof(buffer))
     {
-        ret = publish(topic, buffer, MQTT_MESSAGES_RETAINED);
+        ret = publish(t.c_str(), buffer, MQTT_MESSAGES_RETAINED);
     }
 
     return ret;
@@ -61,11 +65,13 @@ bool smartsensor_pubsubclient::publish(const char *topic, float f_value)
 
 bool smartsensor_pubsubclient::publish(const char *topic, time_t t_value)
 {
+    std::string t = add_root_topic(topic);
+
     char buffer [20];
     int ret = snprintf(buffer, sizeof(buffer), "%ld", t_value);
     if (ret >= 0 && ret < (int)sizeof(buffer))
     {
-        ret = publish(topic, buffer, MQTT_MESSAGES_RETAINED);
+        ret = publish(t.c_str(), buffer, MQTT_MESSAGES_RETAINED);
     }
 
     return ret;
@@ -103,4 +109,10 @@ void smartsensor_pubsubclient::reconnect(void)
         // Wait 5 seconds before retrying
         delay(5000);
     }
+}
+
+
+std::string smartsensor_pubsubclient::add_root_topic(const char *topic)
+{
+    return std::string(TOP_LEVEL_TOPIC) + std::string(LOCATION_NAME_SENSOR) + topic;
 }

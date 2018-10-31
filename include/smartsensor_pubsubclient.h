@@ -19,6 +19,7 @@ class smartsensor_pubsubclient : public PubSubClient
         bool publish(const char *topic, time_t t_value);
         using PubSubClient::publish;
 
+        std::string add_root_topic(const char *topic);
 
     private:
         WiFiClient espClient;
