@@ -17,8 +17,21 @@ class smartsensor_statemachine
         smartsensor_statemachine(smartsensor_barrel *barrel);
         ~smartsensor_statemachine();
 
+        void loop(int operation_mode);
+
     private:
         smartsensor_barrel *barrel;
+
+        int step;
+
+        unsigned long start_time;
+
+        
+        void set_next_step(int step);
+        int get_step(void);
+
+        unsigned long get_duration(unsigned long start);
+        unsigned long get_duration_us(unsigned long start);
 };
 
 #endif // SMARTSENSOR_STATEMACHINE_H

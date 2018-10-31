@@ -14,7 +14,10 @@ smartsensor_pubsubclient mqtt;
 
 smartsensor_barrel barrel(&ntp, &mqtt, &syslog);
 
-int OperationMode = 1;
+smartsensor_statemachine sm(&barrel);
+
+//Initial operation mode
+int OperationMode = INTERVAL_MEASURE__5_SEK;
 
 void test_fct_callback(char* topic, byte* payload, unsigned int length) {
     Serial.print("Message arrived [");
@@ -142,33 +145,7 @@ void loop(void) {
 
     //keep mqtt alive
     mqtt.loop();
-    
-    //Measure fill level
-    barrel.do_measure();
 
-    //Publish fill level
-    barrel.do_publish();
-
-    switch (OperationMode)
-    {
-        case PERMANENT_MEASSURE:
-            delay(200);
-            break;
-
-        case INTERVAL_MEASURE__5_SEK:
-            delay(5000);
-            break;
-
-        case INTERVAL_MEASURE_10_SEK:
-            delay(10000);
-            break;
-
-        case INTERVAL_MEASURE__5_MIN:
-            delay(300000);
-            break;
-
-        default:
-            delay(7500);
-            break;
-    }
+    //state machine loop
+    sm.loop(OperationMode);
 }
