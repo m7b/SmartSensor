@@ -4,6 +4,7 @@ smartsensor_statemachine::smartsensor_statemachine(smartsensor_barrel *barrel)
 : barrel(barrel)
 {
     step = 0;
+    start_time = 0;
 }
  
  
@@ -50,46 +51,53 @@ void smartsensor_statemachine::loop(int operation_mode)
 {
     switch (get_step())
     {
-        case 0:
-            //init
+        case 0: //init
             set_next_step(10);
             break;
 
-        case 10:
-            //start timeout
+        case 10: //start timeout
             start_time = millis();
             set_next_step(20);
             break;
 
-        case 20:
-            //start meassure
+        case 20: //start meassure
             barrel->do_measure();
             set_next_step(30);
             break;
 
-        case 30:
-            //report meassure
+        case 30: //report meassure
             barrel->do_publish();
             set_next_step(40);
             break;
 
-        case 40:
-            //wait timeout depending on operation mode
+        case 40: { //wait timeout depending on operation mode
             unsigned long duration = 0;
+
             switch (operation_mode)
             {
                 case PERMANENT_MEASSURE:      duration =    200; break;
                 case INTERVAL_MEASURE__5_SEK: duration =   5000; break;
                 case INTERVAL_MEASURE_10_SEK: duration =  10000; break;
                 case INTERVAL_MEASURE__5_MIN: duration = 300000; break;
-                default:                      duration =   5000; break;
+                case DEEP_SLEEP_20_SEK:       ESP.deepSleep(20e6); break;
+                case DEEP_SLEEP__5_MIN:       ESP.deepSleep( 3e8); break;
+                default:                      duration =   3000; break;
             }
 
+            //wait timeout depending on operation mode
             if (get_duration(start_time) >= duration)
-            {
                 set_next_step(0);
-                break;
+
+            //in case of deep sleep, go to waiting step
+            if ((operation_mode == DEEP_SLEEP_20_SEK) || (operation_mode == DEEP_SLEEP__5_MIN))
+            {
+                Serial.println("Going to sleep ...");
+                set_next_step(50);
             }
+        }
+
+        case 50: //wait until deep sleep has performed. CPU stops working
+            delay(20);
 
     }
 }

@@ -8,7 +8,9 @@ enum stages
     PERMANENT_MEASSURE = 48, //'0'
     INTERVAL_MEASURE__5_SEK, //'1'
     INTERVAL_MEASURE_10_SEK, //'2'
-    INTERVAL_MEASURE__5_MIN  //'3'
+    INTERVAL_MEASURE__5_MIN, //'3'
+    DEEP_SLEEP_20_SEK,       //'4'
+    DEEP_SLEEP__5_MIN        //'5'
 };
 
 class smartsensor_statemachine
@@ -25,7 +27,6 @@ class smartsensor_statemachine
         int step;
 
         unsigned long start_time;
-
         
         void set_next_step(int step);
         int get_step(void);
