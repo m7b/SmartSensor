@@ -33,6 +33,8 @@ class smartsensor_statemachine
 
         unsigned long get_duration(unsigned long start);
         unsigned long get_duration_us(unsigned long start);
+
+        unsigned long ds_time;
 };
 
 #endif // SMARTSENSOR_STATEMACHINE_H
