@@ -14,9 +14,10 @@ class smartsensor_pubsubclient : public PubSubClient
 
         void check_connection(void);
 
-        bool publish(const char *topic, unsigned long ul_value);
-        bool publish(const char *topic, float f_value);
-        bool publish(const char *topic, time_t t_value);
+        bool publish(const char *topic, const unsigned long ul_value);
+        bool publish(const char *topic, const float f_value);
+        bool publish(const char *topic, const time_t t_value);
+        bool publish(const char *topic, const std::string s_value);
         using PubSubClient::publish;
 
         std::string add_root_topic(const char *topic);

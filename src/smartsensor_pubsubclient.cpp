@@ -33,7 +33,7 @@ void smartsensor_pubsubclient::check_connection(void)
  * @return true 
  * @return false 
  */
-bool smartsensor_pubsubclient::publish(const char *topic, unsigned long ul_value)
+bool smartsensor_pubsubclient::publish(const char *topic, const unsigned long ul_value)
 {
     std::string t = add_root_topic(topic);
 
@@ -48,7 +48,7 @@ bool smartsensor_pubsubclient::publish(const char *topic, unsigned long ul_value
 }
 
 
-bool smartsensor_pubsubclient::publish(const char *topic, float f_value)
+bool smartsensor_pubsubclient::publish(const char *topic, const float f_value)
 {
     std::string t = add_root_topic(topic);
 
@@ -63,12 +63,27 @@ bool smartsensor_pubsubclient::publish(const char *topic, float f_value)
 }
 
 
-bool smartsensor_pubsubclient::publish(const char *topic, time_t t_value)
+bool smartsensor_pubsubclient::publish(const char *topic, const time_t t_value)
 {
     std::string t = add_root_topic(topic);
 
     char buffer [20];
     int ret = snprintf(buffer, sizeof(buffer), "%ld", t_value);
+    if (ret >= 0 && ret < (int)sizeof(buffer))
+    {
+        ret = publish(t.c_str(), buffer, MQTT_MESSAGES_RETAINED);
+    }
+
+    return ret;
+}
+
+
+bool smartsensor_pubsubclient::publish(const char *topic, const std::string s_value)
+{
+    std::string t = add_root_topic(topic);
+
+    char buffer [80];
+    int ret = snprintf(buffer, sizeof(buffer), "%s", s_value.c_str());
     if (ret >= 0 && ret < (int)sizeof(buffer))
     {
         ret = publish(t.c_str(), buffer, MQTT_MESSAGES_RETAINED);
