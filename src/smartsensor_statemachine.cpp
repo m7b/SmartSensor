@@ -71,44 +71,50 @@ void smartsensor_statemachine::loop(int operation_mode)
             break;
 
         case 40: { //wait timeout depending on operation mode
-            unsigned long duration = 0;
+                unsigned long duration = 0;
 
-            switch (operation_mode)
-            {
-                case PERMANENT_MEASSURE:      duration =    200; break;
-                case INTERVAL_MEASURE__5_SEK: duration =   5000; break;
-                case INTERVAL_MEASURE_10_SEK: duration =  10000; break;
-                case INTERVAL_MEASURE__5_MIN: duration = 300000; break;
-                case DEEP_SLEEP_20_SEK:       ds_time = 20e6; break;
-                case DEEP_SLEEP__5_MIN:       ds_time =  3e8; break;
-                default:                      duration =   3000; break;
+                switch (operation_mode)
+                {
+                    case PERMANENT_MEASSURE:      duration =    200; break;
+                    case INTERVAL_MEASURE__5_SEK: duration =   5000; break;
+                    case INTERVAL_MEASURE_10_SEK: duration =  10000; break;
+                    case INTERVAL_MEASURE__5_MIN: duration = 300000; break;
+                    case DEEP_SLEEP_20_SEK:       ds_time = 20e6; break;
+                    case DEEP_SLEEP__5_MIN:       ds_time =  3e8; break;
+                    default:                      duration =   3000; break;
+                }
+
+                //wait timeout depending on operation mode
+                if (get_duration(start_time) >= duration)
+                    set_next_step(0);
+
+                //in case of deep sleep, perform special step
+                if ((operation_mode == DEEP_SLEEP_20_SEK) || (operation_mode == DEEP_SLEEP__5_MIN))
+                {
+                    Serial.println("Going to sleep ...");
+                    set_next_step(50);
+                }
             }
-
-            //wait timeout depending on operation mode
-            if (get_duration(start_time) >= duration)
-                set_next_step(0);
-
-            //in case of deep sleep, perform special step
-            if ((operation_mode == DEEP_SLEEP_20_SEK) || (operation_mode == DEEP_SLEEP__5_MIN))
-            {
-                Serial.println("Going to sleep ...");
-                set_next_step(50);
-            }
-        }
+            break;
 
         case 50: //Start timeout for deep sleep
             start_time = millis();
             set_next_step(60);
+            break;
 
         case 60: //wait timeout for deep sleep
-            if (get_duration(start_time) >= 2000)
-            {
-                ESP.deepSleep(ds_time);
+            if (get_duration(start_time) >= 200)
                 set_next_step(70);
-            }
 
-        case 70: //wait until deep sleep has performed. CPU stops working
-            delay(200);
+            break;
 
+        case 70: //Enter deep sleep
+            ESP.deepSleep(ds_time);
+            set_next_step(80);
+            break;
+
+        case 80: //wait until deep sleep has performed. CPU stops working
+            delay(20);
+            break;
     }
 }
