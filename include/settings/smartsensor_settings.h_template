@@ -3,8 +3,11 @@
 
 #include <vector>
 
-//Debug flag ON or OFF
-#define DEBUG ON
+#define ON 1
+#define OFF 0
+
+//Debug flag 1 or 0
+#define DEBUG OFF
 
 
 /**
