@@ -59,8 +59,11 @@ bool smartsensor_barrel::do_publish(void)
 
     //Publish fill level
     rc = rc & do_publish_mqtt();
+
+#if DEBUG == ON
     rc = rc & do_publish_syslog();
     rc = rc & do_publish_serial();
+#endif
 
     return rc;
 }
