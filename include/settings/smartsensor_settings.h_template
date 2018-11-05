@@ -82,13 +82,13 @@ static const std::vector<std::pair<const char*, const char*>> wifi_access_creden
 #define MAX_DISTANCE_CM            200   //Max distance in [cm]
 #define MAX_FILL_LEVEL_CM          110   //Max fill level of barrel in [cm]
 
-#define TOP_LEVEL_TOPIC             "IrrigationSystem/RainWaterStorage/"
+#define TOP_LEVEL_TOPIC             "WS/RWS/"
 #define LOCATION_NAME_SENSOR        "EG/Barrel1/"
-#define LEVEL_SENSOR_CM_TOPIC       "Level/sensorcm"
-#define LEVEL_CM_TOPIC              "Level/cm"
-#define LEVEL_PERCENT_TOPIC         "Level/percent"
-#define LEVEL_TIMESTAMP_TOPIC       "Level/timestamp"
-#define LEVEL_LOCAL_TIMESTAMP_TOPIC "Level/localtimestamp"
+#define LEVEL_SENSOR_CM_TOPIC       "Lvl/raw_cm"
+#define LEVEL_CM_TOPIC              "Lvl/cm"
+#define LEVEL_PERCENT_TOPIC         "Lvl/percent"
+#define LEVEL_TIMESTAMP_TOPIC       "Lvl/timestamp"
+#define LEVEL_LOCAL_TIMESTAMP_TOPIC "Lvl/local_timestamp"
 
 
 /**
