@@ -1,4 +1,4 @@
-#include "smartsensor_barrel.h"
+#include "sensor/smartsensor_barrel.h"
 #include "settings/smartsensor_settings.h"
 
 /**
@@ -8,7 +8,7 @@
  * @param mqtt 
  * @param syslog 
  */
-smartsensor_barrel::smartsensor_barrel(smartsensor_ntp *ntp, smartsensor_pubsubclient *mqtt, smartsensor_syslog *syslog)
+smartsensor_barrel::smartsensor_barrel(rws_ntp *ntp, rws_pubsubclient *mqtt, rws_syslog *syslog)
 : NewPing(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE_CM), ntp(ntp), mqtt(mqtt), syslog(syslog)
 {
     this->max_fill_level_cm = MAX_FILL_LEVEL_CM;

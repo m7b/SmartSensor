@@ -1,4 +1,4 @@
-#include "smartsensor_statemachine.h"
+#include "sensor/smartsensor_statemachine.h"
 
 smartsensor_statemachine::smartsensor_statemachine(smartsensor_barrel *barrel)
 : barrel(barrel)

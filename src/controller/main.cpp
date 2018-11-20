@@ -1,23 +1,23 @@
 #include <Arduino.h>
-#include "smartsensor_wifi.h"
-#include "smartsensor_ntp.h"
-#include "smartsensor_syslog.h"
-#include "smartsensor_pubsubclient.h"
-#include "smartsensor_barrel.h"
-#include "smartsensor_statemachine.h"
+#include <rws_wifi.h>
+#include <rws_ntp.h>
+#include <rws_syslog.h>
+#include <rws_pubsubclient.h>
 #include "settings/smartsensor_settings.h"
 
-smartsensor_wifi wifiMulti;
-smartsensor_ntp ntp;
-smartsensor_syslog syslog;
-smartsensor_pubsubclient mqtt;
 
-smartsensor_barrel barrel(&ntp, &mqtt, &syslog);
+//Set dst/std rules
+TimeChangeRule rCEST = {CEST_ABBREV, CEST_WEEK, CEST_DOW, CEST_MONTH, CEST_HOUR, CEST_OFFSET};
+TimeChangeRule rCET  = {CET_ABBREV,  CET_WEEK,  CET_DOW,  CET_MONTH,  CET_HOUR,  CET_OFFSET};
+Timezone tz(rCEST, rCET);
 
-smartsensor_statemachine sm(&barrel);
+rws_wifi wifiMulti;
+rws_ntp ntp(NTP_SERVER, NTP_OFFSET_S, NTP_UPDATE_INTERVAL_MS, &tz);
+rws_syslog syslog(SYSLOG_SERVER, SYSLOG_PORT, DEVICE_HOSTNAME, APP_NAME, LOG_KERN);
+rws_pubsubclient mqtt(MQTT_SERVER, MQTT_PORT);
 
 //Initial operation mode
-int OperationMode = INTERVAL_MEASURE__5_SEK;
+int OperationMode = 0;
 
 void test_fct_callback(char* topic, byte* payload, unsigned int length) {
     Serial.print("Message arrived [");
@@ -66,6 +66,12 @@ void setup_serial(void) {
  * 
  */
 void setup_wifi(void) {
+    // Add WiFi connection credentials
+    for(auto entry : wifi_access_credentials) 
+        wifiMulti.addAP(entry.first, entry.second);
+
+    WiFi.mode(WIFI_STA);
+
     // We start by connecting to a WiFi network
     wifiMulti.check_connection();
 }
@@ -84,6 +90,12 @@ void setup_ntp(void) {
  * 
  */
 void setup_mqtt(void) {
+    //Set 1st and 2nd level topic
+    mqtt.set_1st_2nd_level_topic(TOP_LEVEL_TOPIC, LOCATION_NAME_SENSOR);
+
+    //Set topics to subscribe
+    mqtt.set_topics_to_subscribe(&topics_to_subscribe);
+
     //Set callback function
     mqtt.setCallback(test_fct_callback);
 
@@ -150,6 +162,7 @@ void loop(void) {
     //keep mqtt alive
     mqtt.loop();
 
-    //state machine loop
-    sm.loop(OperationMode);
+    ntp.test();
+
+    delay(2000);
 }

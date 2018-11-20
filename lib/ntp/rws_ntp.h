@@ -1,15 +1,17 @@
-#ifndef SMARTSENSOR_NTP_H
-#define SMARTSENSOR_NTP_H
+#ifndef RWS_NTP_H
+#define RWS_NTP_H
 
 #include <NTPClient.h>
 #include <WiFiUdp.h>
 #include <Timezone.h> 
 
-class smartsensor_ntp : public NTPClient, Timezone
+class rws_ntp : public NTPClient
 {
     public:
-        smartsensor_ntp();
-        ~smartsensor_ntp();
+        rws_ntp(const char* poolServerName, int timeOffset, int updateInterval, Timezone *tz);
+        ~rws_ntp();
+
+        void setRules(TimeChangeRule dstStart, TimeChangeRule stdStart);
 
         void test(void);
         std::string get_local_datetime(void);
@@ -17,8 +19,9 @@ class smartsensor_ntp : public NTPClient, Timezone
 
     private:
         WiFiUDP ntpUDP;
+        Timezone *tz;
 
         void printDateTime(time_t t, const char *tz);
 };
 
-#endif // SMARTSENSOR_NTP_H
+#endif // RWS_NTP_H
