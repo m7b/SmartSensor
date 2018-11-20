@@ -1,8 +1,8 @@
 #include <Arduino.h>
-#include "smartsensor_wifi.h"
-#include "smartsensor_ntp.h"
-#include "smartsensor_syslog.h"
-#include "smartsensor_pubsubclient.h"
+#include <rws_wifi.h>
+#include <rws_ntp.h>
+#include <rws_syslog.h>
+#include <rws_pubsubclient.h>
 #include "smartsensor_barrel.h"
 #include "smartsensor_statemachine.h"
 #include "settings/smartsensor_settings.h"

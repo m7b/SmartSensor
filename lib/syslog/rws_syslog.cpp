@@ -1,5 +1,5 @@
-#include "smartsensor_syslog.h"
-#include "settings/smartsensor_settings.h"
+#include "rws_syslog.h"
+#include "../../include/settings/smartsensor_settings.h"
 
 /**
  * @brief Construct a new smartsensor syslog::smartsensor syslog object

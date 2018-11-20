@@ -1,5 +1,5 @@
-#include "smartsensor_pubsubclient.h"
-#include "settings/smartsensor_settings.h"
+#include "rws_pubsubclient.h"
+#include "../../include/settings/smartsensor_settings.h"
 
 smartsensor_pubsubclient::smartsensor_pubsubclient()
 : PubSubClient(espClient)

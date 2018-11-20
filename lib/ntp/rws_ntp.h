@@ -1,5 +1,5 @@
-#ifndef SMARTSENSOR_NTP_H
-#define SMARTSENSOR_NTP_H
+#ifndef RWS_NTP_H
+#define RWS_NTP_H
 
 #include <NTPClient.h>
 #include <WiFiUdp.h>
@@ -21,4 +21,4 @@ class smartsensor_ntp : public NTPClient, Timezone
         void printDateTime(time_t t, const char *tz);
 };
 
-#endif // SMARTSENSOR_NTP_H
+#endif // RWS_NTP_H

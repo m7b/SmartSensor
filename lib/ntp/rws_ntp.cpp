@@ -1,5 +1,5 @@
-#include "smartsensor_ntp.h"
-#include "settings/smartsensor_settings.h"
+#include "rws_ntp.h"
+#include "../../include/settings/smartsensor_settings.h"
 
 TimeChangeRule rCEST = {CEST_ABBREV, CEST_WEEK, CEST_DOW, CEST_MONTH, CEST_HOUR, CEST_OFFSET};
 TimeChangeRule rCET  = {CET_ABBREV,  CET_WEEK,  CET_DOW,  CET_MONTH,  CET_HOUR,  CET_OFFSET};

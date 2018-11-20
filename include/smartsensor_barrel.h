@@ -2,9 +2,9 @@
 #define SMARTSENSOR_BARREL_H
 
 #include <NewPing.h>
-#include "smartsensor_ntp.h"
-#include "smartsensor_pubsubclient.h"
-#include "smartsensor_syslog.h"
+#include "rws_ntp.h"
+#include "rws_pubsubclient.h"
+#include "rws_syslog.h"
 
 struct sFillLevel
 {
