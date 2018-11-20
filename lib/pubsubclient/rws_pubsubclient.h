@@ -1,16 +1,16 @@
-#ifndef SMARTSENSOR_PUBSUBCLIENT_H
-#define SMARTSENSOR_PUBSUBCLIENT_H
+#ifndef RWS_PUBSUBCLIENT_H
+#define RWS_PUBSUBCLIENT_H
 
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 
 #define MAX_MSG_SIZE 50
 
-class smartsensor_pubsubclient : public PubSubClient
+class rws_pubsubclient : public PubSubClient
 {
     public:
-        smartsensor_pubsubclient();
-        ~smartsensor_pubsubclient();
+        rws_pubsubclient();
+        ~rws_pubsubclient();
 
         void check_connection(void);
 
@@ -31,4 +31,4 @@ class smartsensor_pubsubclient : public PubSubClient
         void reconnect(void);
 };
 
-#endif // SMARTSENSOR_PUBSUBCLIENT_H
+#endif // RWS_PUBSUBCLIENT_H

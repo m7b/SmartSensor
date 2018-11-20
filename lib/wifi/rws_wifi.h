@@ -1,21 +1,22 @@
-#ifndef SMARTSENSOR_WIFI_H
-#define SMARTSENSOR_WIFI_H
+#ifndef RWS_WIFI_H
+#define RWS_WIFI_H
 
 #include <ESP8266WiFiMulti.h>
 
 /**
- * @brief description of the smartsensor_wifi object
+ * @brief description of the rws_wifi object
  * 
  * It uses the ESP8266WiFiMulti object to manage the
  * connection.
  * 
  */
-class smartsensor_wifi
+class rws_wifi
 {
     public:
-        smartsensor_wifi();
-        ~smartsensor_wifi();
+        rws_wifi();
+        ~rws_wifi();
         
+        void addAP(const char* ssid, const char *passphrase = NULL);
         void check_connection(void);
         bool connected(void);
 
@@ -23,8 +24,7 @@ class smartsensor_wifi
         WifiAPlist APlist;
         ESP8266WiFiMulti wifiMulti;
 
-        void addAP(const char* ssid, const char *passphrase = NULL);
         void APlistClean(void);
 };
 
-#endif // SMARTSENSOR_WIFI_H
+#endif // RWS_WIFI_H

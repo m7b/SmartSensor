@@ -27,7 +27,7 @@ struct sFillLevel
 class smartsensor_barrel : public NewPing
 {
     public:
-        smartsensor_barrel(smartsensor_ntp *ntp, smartsensor_pubsubclient *mqtt, smartsensor_syslog *syslog);
+        smartsensor_barrel(rws_ntp *ntp, rws_pubsubclient *mqtt, rws_syslog *syslog);
         ~smartsensor_barrel();
 
         bool do_measure(void);
@@ -42,9 +42,9 @@ class smartsensor_barrel : public NewPing
         unsigned long max_fill_level_cm;
         sFillLevel fill_level;
 
-        smartsensor_ntp *ntp;
-        smartsensor_pubsubclient *mqtt;
-        smartsensor_syslog *syslog;
+        rws_ntp *ntp;
+        rws_pubsubclient *mqtt;
+        rws_syslog *syslog;
 
         bool do_publish_mqtt(void);
         bool do_publish_syslog(void);

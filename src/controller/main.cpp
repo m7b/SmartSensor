@@ -2,6 +2,8 @@
 #include <ESP8266WiFi.h>
 #include <controller/controller.h>
 
+#include <rws_wifi.h>
+
 #define ONBOARD_LED_GREEN 12
 #define ONBOARD_LED_BLUE  13
 #define ONBOARD_LED_RED   15

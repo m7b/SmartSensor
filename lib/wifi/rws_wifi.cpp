@@ -1,5 +1,4 @@
 #include "rws_wifi.h"
-#include "../../include/settings/smartsensor_settings.h"
 
 /**
  * @brief Construct a new smartsensor wifi::smartsensor wifi object
@@ -7,12 +6,8 @@
  * Automatic add some ssid and passwords.
  * 
  */
-smartsensor_wifi::smartsensor_wifi()
+rws_wifi::rws_wifi()
 {
-    WiFi.mode(WIFI_STA);
-
-    for(auto entry : wifi_access_credentials) 
-        addAP(entry.first, entry.second);
 }
 
 /**
@@ -21,7 +16,7 @@ smartsensor_wifi::smartsensor_wifi()
  * Clears the list or ssid and its passwords
  * 
  */
-smartsensor_wifi::~smartsensor_wifi()
+rws_wifi::~rws_wifi()
 {
     APlistClean();
 }
@@ -30,7 +25,7 @@ smartsensor_wifi::~smartsensor_wifi()
  * @brief check and wait for connection
  * 
  */
-void smartsensor_wifi::check_connection(void)
+void rws_wifi::check_connection(void)
 {
     if (connected())
         return;
@@ -63,7 +58,7 @@ void smartsensor_wifi::check_connection(void)
  * @return true 
  * @return false 
  */
-bool smartsensor_wifi::connected(void)
+bool rws_wifi::connected(void)
 {
     return WiFi.isConnected();
 }
@@ -74,7 +69,7 @@ bool smartsensor_wifi::connected(void)
  * @param ssid 
  * @param passphrase 
  */
-void smartsensor_wifi::addAP(const char* ssid, const char *passphrase)
+void rws_wifi::addAP(const char* ssid, const char *passphrase)
 {
     bool rc;
 
@@ -91,7 +86,7 @@ void smartsensor_wifi::addAP(const char* ssid, const char *passphrase)
  * @brief Clears the ssid and password list
  * 
  */
-void smartsensor_wifi::APlistClean(void)
+void rws_wifi::APlistClean(void)
 {
     for(auto entry : APlist) {
         if(entry.ssid) {

@@ -1,17 +1,17 @@
-#ifndef SMARTSENSOR_SYSLOG_H
-#define SMARTSENSOR_SYSLOG_H
+#ifndef RWS_SYSLOG_H
+#define RWS_SYSLOG_H
 
 #include <WiFiUdp.h>
 #include <Syslog.h>
 
-class smartsensor_syslog : public Syslog
+class rws_syslog : public Syslog
 {
     public:
-        smartsensor_syslog();
-        ~smartsensor_syslog();
+        rws_syslog();
+        ~rws_syslog();
 
     private:
         WiFiUDP syslogUDP;
 };
 
-#endif // SMARTSENSOR_SYSLOG_H
+#endif // RWS_SYSLOG_H

@@ -7,10 +7,10 @@
 #include "sensor/smartsensor_statemachine.h"
 #include "settings/smartsensor_settings.h"
 
-smartsensor_wifi wifiMulti;
-smartsensor_ntp ntp;
-smartsensor_syslog syslog;
-smartsensor_pubsubclient mqtt;
+rws_wifi wifiMulti;
+rws_ntp ntp;
+rws_syslog syslog;
+rws_pubsubclient mqtt;
 
 smartsensor_barrel barrel(&ntp, &mqtt, &syslog);
 
@@ -66,6 +66,12 @@ void setup_serial(void) {
  * 
  */
 void setup_wifi(void) {
+    // Add WiFi connection credentials
+    for(auto entry : wifi_access_credentials) 
+        wifiMulti.addAP(entry.first, entry.second);
+
+    WiFi.mode(WIFI_STA);
+
     // We start by connecting to a WiFi network
     wifiMulti.check_connection();
 }

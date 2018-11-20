@@ -1,7 +1,7 @@
 #include "rws_pubsubclient.h"
 #include "../../include/settings/smartsensor_settings.h"
 
-smartsensor_pubsubclient::smartsensor_pubsubclient()
+rws_pubsubclient::rws_pubsubclient()
 : PubSubClient(espClient)
 {
     setServer(MQTT_SERVER, MQTT_PORT);
@@ -11,11 +11,11 @@ smartsensor_pubsubclient::smartsensor_pubsubclient()
     max_connection_tries = 3;
 }
 
-smartsensor_pubsubclient::~smartsensor_pubsubclient()
+rws_pubsubclient::~rws_pubsubclient()
 {
 }
 
-void smartsensor_pubsubclient::check_connection(void)
+void rws_pubsubclient::check_connection(void)
 {
     int try_counter = 0;
     while (!connected() && (try_counter < max_connection_tries))
@@ -33,7 +33,7 @@ void smartsensor_pubsubclient::check_connection(void)
  * @return true 
  * @return false 
  */
-bool smartsensor_pubsubclient::publish(const char *topic, const unsigned long ul_value)
+bool rws_pubsubclient::publish(const char *topic, const unsigned long ul_value)
 {
     std::string t = add_root_topic(topic);
 
@@ -48,7 +48,7 @@ bool smartsensor_pubsubclient::publish(const char *topic, const unsigned long ul
 }
 
 
-bool smartsensor_pubsubclient::publish(const char *topic, const float f_value)
+bool rws_pubsubclient::publish(const char *topic, const float f_value)
 {
     std::string t = add_root_topic(topic);
 
@@ -63,7 +63,7 @@ bool smartsensor_pubsubclient::publish(const char *topic, const float f_value)
 }
 
 
-bool smartsensor_pubsubclient::publish(const char *topic, const time_t t_value)
+bool rws_pubsubclient::publish(const char *topic, const time_t t_value)
 {
     std::string t = add_root_topic(topic);
 
@@ -78,7 +78,7 @@ bool smartsensor_pubsubclient::publish(const char *topic, const time_t t_value)
 }
 
 
-bool smartsensor_pubsubclient::publish(const char *topic, const std::string s_value)
+bool rws_pubsubclient::publish(const char *topic, const std::string s_value)
 {
     std::string t = add_root_topic(topic);
 
@@ -96,7 +96,7 @@ bool smartsensor_pubsubclient::publish(const char *topic, const std::string s_va
  * @brief Reconnect to MQTT publisher
  * 
  */
-void smartsensor_pubsubclient::reconnect(void)
+void rws_pubsubclient::reconnect(void)
 {
     Serial.print("Attempting MQTT connection to ");
     Serial.print(MQTT_SERVER);
@@ -128,7 +128,7 @@ void smartsensor_pubsubclient::reconnect(void)
 }
 
 
-std::string smartsensor_pubsubclient::add_root_topic(const char *topic)
+std::string rws_pubsubclient::add_root_topic(const char *topic)
 {
     return std::string(TOP_LEVEL_TOPIC) + std::string(LOCATION_NAME_SENSOR) + topic;
 }

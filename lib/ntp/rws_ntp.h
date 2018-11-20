@@ -5,11 +5,11 @@
 #include <WiFiUdp.h>
 #include <Timezone.h> 
 
-class smartsensor_ntp : public NTPClient, Timezone
+class rws_ntp : public NTPClient, Timezone
 {
     public:
-        smartsensor_ntp();
-        ~smartsensor_ntp();
+        rws_ntp();
+        ~rws_ntp();
 
         void test(void);
         std::string get_local_datetime(void);

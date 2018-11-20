@@ -5,7 +5,7 @@
  * @brief Construct a new smartsensor syslog::smartsensor syslog object
  * 
  */
-smartsensor_syslog::smartsensor_syslog()
+rws_syslog::rws_syslog()
 : Syslog(syslogUDP, SYSLOG_SERVER, SYSLOG_PORT, DEVICE_HOSTNAME, APP_NAME, LOG_KERN)
 {
 }
@@ -14,6 +14,6 @@ smartsensor_syslog::smartsensor_syslog()
  * @brief Destroy the smartsensor syslog::smartsensor syslog object
  * 
  */
-smartsensor_syslog::~smartsensor_syslog()
+rws_syslog::~rws_syslog()
 {
 }
