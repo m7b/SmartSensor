@@ -3,8 +3,8 @@
 #include <rws_ntp.h>
 #include <rws_syslog.h>
 #include <rws_pubsubclient.h>
-#include "smartsensor_barrel.h"
-#include "smartsensor_statemachine.h"
+#include "sensor/smartsensor_barrel.h"
+#include "sensor/smartsensor_statemachine.h"
 #include "settings/smartsensor_settings.h"
 
 smartsensor_wifi wifiMulti;

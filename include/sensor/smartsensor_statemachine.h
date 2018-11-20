@@ -1,7 +1,7 @@
 #ifndef SMARTSENSOR_STATEMACHINE_H
 #define SMARTSENSOR_STATEMACHINE_H
 
-#include "smartsensor_barrel.h"
+#include "sensor/smartsensor_barrel.h"
 
 enum stages
 {

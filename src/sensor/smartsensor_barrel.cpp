@@ -1,4 +1,4 @@
-#include "smartsensor_barrel.h"
+#include "sensor/smartsensor_barrel.h"
 #include "settings/smartsensor_settings.h"
 
 /**
