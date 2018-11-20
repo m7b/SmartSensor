@@ -5,8 +5,14 @@
 #include <rws_pubsubclient.h>
 #include "settings/smartsensor_settings.h"
 
+
+//Set dst/std rules
+TimeChangeRule rCEST = {CEST_ABBREV, CEST_WEEK, CEST_DOW, CEST_MONTH, CEST_HOUR, CEST_OFFSET};
+TimeChangeRule rCET  = {CET_ABBREV,  CET_WEEK,  CET_DOW,  CET_MONTH,  CET_HOUR,  CET_OFFSET};
+Timezone tz(rCEST, rCET);
+
 rws_wifi wifiMulti;
-rws_ntp ntp(NTP_SERVER, NTP_OFFSET_S, NTP_UPDATE_INTERVAL_MS);
+rws_ntp ntp(NTP_SERVER, NTP_OFFSET_S, NTP_UPDATE_INTERVAL_MS, &tz);
 rws_syslog syslog(SYSLOG_SERVER, SYSLOG_PORT, DEVICE_HOSTNAME, APP_NAME, LOG_KERN);
 rws_pubsubclient mqtt(MQTT_SERVER, MQTT_PORT);
 
@@ -75,11 +81,6 @@ void setup_wifi(void) {
  * 
  */
 void setup_ntp(void) {
-    //Set dst/std rules
-    TimeChangeRule rCEST = {CEST_ABBREV, CEST_WEEK, CEST_DOW, CEST_MONTH, CEST_HOUR, CEST_OFFSET};
-    TimeChangeRule rCET  = {CET_ABBREV,  CET_WEEK,  CET_DOW,  CET_MONTH,  CET_HOUR,  CET_OFFSET};
-    ntp.setRules(rCEST, rCET);
-
     // We start getting time from ntp
     ntp.begin();
 }
@@ -113,7 +114,7 @@ bool check_all_conditions(void) {
     
     rc = rc & wifiMulti.connected();
     rc = rc & mqtt.connected();
-    //rc = rc & ntp.update();
+    rc = rc & ntp.update();
 
     return rc;
 }
@@ -131,7 +132,7 @@ void setup(void) {
     setup_wifi();
 
     // Setup NTP
-    //setup_ntp();
+    setup_ntp();
 
     // Setup MQTT
     setup_mqtt();
@@ -146,7 +147,7 @@ void setup(void) {
  */
 void loop(void) {
     //update time from NTP on demand, see NTP_UPDATE_INTERVAL_MS
-    //ntp.update();
+    ntp.update();
 
     //check and renew WiFi connection
     wifiMulti.check_connection();
@@ -160,4 +161,8 @@ void loop(void) {
 
     //keep mqtt alive
     mqtt.loop();
+
+    ntp.test();
+
+    delay(2000);
 }

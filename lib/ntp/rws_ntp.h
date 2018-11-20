@@ -8,7 +8,7 @@
 class rws_ntp : public NTPClient
 {
     public:
-        rws_ntp(const char* poolServerName, int timeOffset, int updateInterval);
+        rws_ntp(const char* poolServerName, int timeOffset, int updateInterval, Timezone *tz);
         ~rws_ntp();
 
         void setRules(TimeChangeRule dstStart, TimeChangeRule stdStart);

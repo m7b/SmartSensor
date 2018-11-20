@@ -4,8 +4,8 @@
  * @brief Construct a new smartsensor::rws_ntp object
  * 
  */
-rws_ntp::rws_ntp(const char* poolServerName, int timeOffset, int updateInterval)
-: NTPClient(ntpUDP, poolServerName, timeOffset, updateInterval), tz(0)
+rws_ntp::rws_ntp(const char* poolServerName, int timeOffset, int updateInterval, Timezone *tz)
+: NTPClient(ntpUDP, poolServerName, timeOffset, updateInterval), tz(tz)
 {
 }
 
