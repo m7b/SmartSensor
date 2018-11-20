@@ -13,7 +13,6 @@ rws_syslog syslog(SYSLOG_SERVER, SYSLOG_PORT, DEVICE_HOSTNAME, APP_NAME, LOG_KER
 rws_pubsubclient mqtt(MQTT_SERVER, MQTT_PORT);
 
 smartsensor_barrel barrel(&ntp, &mqtt, &syslog);
-
 smartsensor_statemachine sm(&barrel);
 
 //Initial operation mode
