@@ -7,7 +7,7 @@
 class rws_syslog : public Syslog
 {
     public:
-        rws_syslog();
+        rws_syslog(const char* server, uint16_t port, const char* deviceHostname = SYSLOG_NILVALUE, const char* appName = SYSLOG_NILVALUE, uint16_t priDefault = LOG_KERN, uint8_t protocol = SYSLOG_PROTO_IETF);
         ~rws_syslog();
 
     private:

@@ -9,7 +9,7 @@
 
 rws_wifi wifiMulti;
 rws_ntp ntp;
-rws_syslog syslog;
+rws_syslog syslog(SYSLOG_SERVER, SYSLOG_PORT, DEVICE_HOSTNAME, APP_NAME, LOG_KERN);
 rws_pubsubclient mqtt;
 
 smartsensor_barrel barrel(&ntp, &mqtt, &syslog);
