@@ -5,11 +5,13 @@
 #include <WiFiUdp.h>
 #include <Timezone.h> 
 
-class rws_ntp : public NTPClient, Timezone
+class rws_ntp : public NTPClient
 {
     public:
-        rws_ntp();
+        rws_ntp(const char* poolServerName, int timeOffset, int updateInterval);
         ~rws_ntp();
+
+        void setRules(TimeChangeRule dstStart, TimeChangeRule stdStart);
 
         void test(void);
         std::string get_local_datetime(void);
@@ -17,6 +19,7 @@ class rws_ntp : public NTPClient, Timezone
 
     private:
         WiFiUDP ntpUDP;
+        Timezone *tz;
 
         void printDateTime(time_t t, const char *tz);
 };

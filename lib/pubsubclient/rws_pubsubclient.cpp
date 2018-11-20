@@ -1,18 +1,30 @@
 #include "rws_pubsubclient.h"
-#include "../../include/settings/smartsensor_settings.h"
 
-rws_pubsubclient::rws_pubsubclient()
+rws_pubsubclient::rws_pubsubclient(const char *server, uint16_t port)
 : PubSubClient(espClient)
 {
-    setServer(MQTT_SERVER, MQTT_PORT);
+    this->server = server;
+    this->port   = port;
+    setServer(server, port);
 //  setCallback(callback);
 
     clientId = "";
+
+    _1st_level_topic = "";
+    _2nd_level_topic = "";
+
     max_connection_tries = 3;
 }
 
 rws_pubsubclient::~rws_pubsubclient()
 {
+}
+
+
+void rws_pubsubclient::set_1st_2nd_level_topic(std::string first, std::string second)
+{
+    _1st_level_topic = first;
+    _2nd_level_topic = second;
 }
 
 void rws_pubsubclient::check_connection(void)
@@ -23,6 +35,11 @@ void rws_pubsubclient::check_connection(void)
         reconnect();
         try_counter++;
     }
+}
+
+void rws_pubsubclient::set_topics_to_subscribe(const std::vector<std::pair<const int, const char*>> *topics_to_subscribe)
+{
+    _topics_to_subscribe = topics_to_subscribe;
 }
 
 /**
@@ -41,7 +58,7 @@ bool rws_pubsubclient::publish(const char *topic, const unsigned long ul_value)
     int ret = snprintf(buffer, sizeof(buffer), "%ld", ul_value);
     if (ret >= 0 && ret < (int)sizeof(buffer))
     {
-        ret = publish(t.c_str(), buffer, MQTT_MESSAGES_RETAINED);
+        ret = publish(t.c_str(), buffer, true);
     }
 
     return ret;
@@ -56,7 +73,7 @@ bool rws_pubsubclient::publish(const char *topic, const float f_value)
     int ret = snprintf(buffer, sizeof(buffer), "%.2f", f_value);
     if (ret >= 0 && ret < (int)sizeof(buffer))
     {
-        ret = publish(t.c_str(), buffer, MQTT_MESSAGES_RETAINED);
+        ret = publish(t.c_str(), buffer, true);
     }
 
     return ret;
@@ -71,7 +88,7 @@ bool rws_pubsubclient::publish(const char *topic, const time_t t_value)
     int ret = snprintf(buffer, sizeof(buffer), "%ld", t_value);
     if (ret >= 0 && ret < (int)sizeof(buffer))
     {
-        ret = publish(t.c_str(), buffer, MQTT_MESSAGES_RETAINED);
+        ret = publish(t.c_str(), buffer, true);
     }
 
     return ret;
@@ -86,7 +103,7 @@ bool rws_pubsubclient::publish(const char *topic, const std::string s_value)
     int ret = snprintf(buffer, sizeof(buffer), "%s", s_value.c_str());
     if (ret >= 0 && ret < (int)sizeof(buffer))
     {
-        ret = publish(t.c_str(), buffer, MQTT_MESSAGES_RETAINED);
+        ret = publish(t.c_str(), buffer, true);
     }
 
     return ret;
@@ -99,9 +116,9 @@ bool rws_pubsubclient::publish(const char *topic, const std::string s_value)
 void rws_pubsubclient::reconnect(void)
 {
     Serial.print("Attempting MQTT connection to ");
-    Serial.print(MQTT_SERVER);
+    Serial.print(server);
     Serial.print(":");
-    Serial.print(MQTT_PORT);
+    Serial.print(port);
     Serial.println(" ... ");
 
     // Create a random client ID
@@ -116,7 +133,7 @@ void rws_pubsubclient::reconnect(void)
         // Once connected, publish an announcement...
         //publish("outTopic", "hello world");
         // ... and resubscribe
-        for(auto topic : topics_to_subscribe) 
+        for(auto topic : *_topics_to_subscribe) 
             subscribe(add_root_topic(topic.second).c_str());
     }
     else
@@ -130,5 +147,5 @@ void rws_pubsubclient::reconnect(void)
 
 std::string rws_pubsubclient::add_root_topic(const char *topic)
 {
-    return std::string(TOP_LEVEL_TOPIC) + std::string(LOCATION_NAME_SENSOR) + topic;
+    return _1st_level_topic + _2nd_level_topic + topic;
 }

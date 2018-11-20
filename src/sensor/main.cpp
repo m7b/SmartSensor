@@ -8,9 +8,9 @@
 #include "settings/smartsensor_settings.h"
 
 rws_wifi wifiMulti;
-rws_ntp ntp;
+rws_ntp ntp(NTP_SERVER, NTP_OFFSET_S, NTP_UPDATE_INTERVAL_MS);
 rws_syslog syslog(SYSLOG_SERVER, SYSLOG_PORT, DEVICE_HOSTNAME, APP_NAME, LOG_KERN);
-rws_pubsubclient mqtt;
+rws_pubsubclient mqtt(MQTT_SERVER, MQTT_PORT);
 
 smartsensor_barrel barrel(&ntp, &mqtt, &syslog);
 
@@ -81,6 +81,11 @@ void setup_wifi(void) {
  * 
  */
 void setup_ntp(void) {
+    //Set dst/std rules
+    TimeChangeRule rCEST = {CEST_ABBREV, CEST_WEEK, CEST_DOW, CEST_MONTH, CEST_HOUR, CEST_OFFSET};
+    TimeChangeRule rCET  = {CET_ABBREV,  CET_WEEK,  CET_DOW,  CET_MONTH,  CET_HOUR,  CET_OFFSET};
+    ntp.setRules(rCEST, rCET);
+
     // We start getting time from ntp
     ntp.begin();
 }
@@ -90,6 +95,12 @@ void setup_ntp(void) {
  * 
  */
 void setup_mqtt(void) {
+    //Set 1st and 2nd level topic
+    mqtt.set_1st_2nd_level_topic(TOP_LEVEL_TOPIC, LOCATION_NAME_SENSOR);
+
+    //Set topics to subscribe
+    mqtt.set_topics_to_subscribe(&topics_to_subscribe);
+
     //Set callback function
     mqtt.setCallback(test_fct_callback);
 

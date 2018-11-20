@@ -1,15 +1,11 @@
 #include "rws_ntp.h"
-#include "../../include/settings/smartsensor_settings.h"
-
-TimeChangeRule rCEST = {CEST_ABBREV, CEST_WEEK, CEST_DOW, CEST_MONTH, CEST_HOUR, CEST_OFFSET};
-TimeChangeRule rCET  = {CET_ABBREV,  CET_WEEK,  CET_DOW,  CET_MONTH,  CET_HOUR,  CET_OFFSET};
 
 /**
  * @brief Construct a new smartsensor::rws_ntp object
  * 
  */
-rws_ntp::rws_ntp()
-: NTPClient(ntpUDP, NTP_SERVER, NTP_OFFSET_S, NTP_UPDATE_INTERVAL_MS), Timezone(rCEST, rCET)
+rws_ntp::rws_ntp(const char* poolServerName, int timeOffset, int updateInterval)
+: NTPClient(ntpUDP, poolServerName, timeOffset, updateInterval), tz(0)
 {
 }
 
@@ -22,10 +18,15 @@ rws_ntp::~rws_ntp()
 }
 
 
+void rws_ntp::setRules(TimeChangeRule dstStart, TimeChangeRule stdStart)
+{
+    tz->setRules(dstStart, stdStart);
+}
+
 void rws_ntp::test(void)
 {
     time_t utc = getEpochTime();
-    time_t local = toLocal(utc);
+    time_t local = tz->toLocal(utc);
 
     Serial.println(); 
     printDateTime(utc, "UTC"); 
@@ -35,7 +36,7 @@ void rws_ntp::test(void)
 
 std::string rws_ntp::get_local_datetime(void)
 {
-    time_t t = toLocal(getEpochTime());
+    time_t t = tz->toLocal(getEpochTime());
     char buf[32]; 
     char m[4];    // temporary storage for month string (DateStrings.cpp uses shared buffer) 
     strcpy(m, monthShortStr(month(t))); 
@@ -46,7 +47,7 @@ std::string rws_ntp::get_local_datetime(void)
 
 std::string rws_ntp::get_local_datetime(time_t utc)
 {
-    time_t t = toLocal(utc);
+    time_t t = tz->toLocal(utc);
     char buf[32]; 
     char m[4];    // temporary storage for month string (DateStrings.cpp uses shared buffer) 
     strcpy(m, monthShortStr(month(t))); 
