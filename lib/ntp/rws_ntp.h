@@ -1,6 +1,7 @@
 #ifndef RWS_NTP_H
 #define RWS_NTP_H
 
+#include <rws_common.h>
 #include <NTPClient.h>
 #include <WiFiUdp.h>
 #include <Timezone.h> 
@@ -14,6 +15,7 @@ class rws_ntp : public NTPClient
         void setRules(TimeChangeRule dstStart, TimeChangeRule stdStart);
 
         void test(void);
+        void test(unsigned long delay_ms);
         std::string get_local_datetime(void);
         std::string get_local_datetime(time_t utc);
 

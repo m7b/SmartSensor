@@ -49,9 +49,10 @@ void controller::loop(void)
     //keep mqtt alive
     _mqtt->loop();
 
-    //_ntp->test();
-    //delay(2000);
+    //test utc time
+    _ntp->test(3000);
 
+    //control rgb led
     _light->loop();
 }
 

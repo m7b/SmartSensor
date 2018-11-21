@@ -25,28 +25,6 @@ int smartsensor_statemachine::get_step(void)
     return step;
 }
 
-unsigned long smartsensor_statemachine::get_duration(unsigned long start)
-{
-    unsigned long act = millis();
-    unsigned long max = 0xffffffff;
-
-    if (start > act)
-        return  max - start + act;
-
-    return act - start;
-}
-
-unsigned long smartsensor_statemachine::get_duration_us(unsigned long start)
-{
-    unsigned long act = micros();
-    unsigned long max = 0xffffffff;
-
-    if (start > act)
-        return  max - start + act;
-
-    return act - start;
-}
-
 void smartsensor_statemachine::loop(int operation_mode)
 {
     switch (get_step())
@@ -85,7 +63,7 @@ void smartsensor_statemachine::loop(int operation_mode)
                 }
 
                 //wait timeout depending on operation mode
-                if (get_duration(start_time) >= duration)
+                if (get_duration_ms(start_time) >= duration)
                     set_next_step(0);
 
                 //in case of deep sleep, perform special step
@@ -103,7 +81,7 @@ void smartsensor_statemachine::loop(int operation_mode)
             break;
 
         case 60: //wait timeout for deep sleep
-            if (get_duration(start_time) >= 200)
+            if (get_duration_ms(start_time) >= 200)
                 set_next_step(70);
 
             break;

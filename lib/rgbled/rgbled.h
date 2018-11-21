@@ -1,7 +1,7 @@
 #ifndef RGBLED_H
 #define RGBLED_H
 
-#include <Arduino.h>
+#include <rws_common.h>
 
 class rgbled
 {
@@ -30,7 +30,6 @@ class rgbled
         uint32_t _start;
 
         bool conditions_ok(void);
-        uint32_t get_duration(uint32_t start);
 };
 
 #endif // RGBLED_H

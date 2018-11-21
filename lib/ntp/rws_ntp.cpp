@@ -33,6 +33,17 @@ void rws_ntp::test(void)
     printDateTime(local , "local");
 }
 
+void rws_ntp::test(unsigned long delay_ms)
+{
+    static unsigned long start = 0;
+
+    if (get_duration_ms(start) >= delay_ms)
+    {
+        start = millis();
+        test();
+    }
+}
+
 
 std::string rws_ntp::get_local_datetime(void)
 {

@@ -1,6 +1,7 @@
 #ifndef SMARTSENSOR_STATEMACHINE_H
 #define SMARTSENSOR_STATEMACHINE_H
 
+#include <rws_common.h>
 #include "sensor/smartsensor_barrel.h"
 
 enum stages
@@ -31,9 +32,6 @@ class smartsensor_statemachine
         
         void set_next_step(int step);
         int get_step(void);
-
-        unsigned long get_duration(unsigned long start);
-        unsigned long get_duration_us(unsigned long start);
 };
 
 #endif // SMARTSENSOR_STATEMACHINE_H

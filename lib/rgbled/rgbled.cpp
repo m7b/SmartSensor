@@ -73,7 +73,7 @@ void rgbled::loop(void)
             break;
             
         case 2:
-            if (get_duration(_start) >= _delay_ms)
+            if (get_duration_ms(_start) >= _delay_ms)
                 _step++;
             break;
             
@@ -105,15 +105,4 @@ bool rgbled::conditions_ok(void)
         return false;
     
     return true;
-}
-
-uint32_t rgbled::get_duration(uint32_t start)
-{
-    uint32_t act = millis();
-    uint32_t max = 0xffffffff;
-
-    if (start > act)
-        return  max - start + act;
-
-    return act - start;
 }
