@@ -1,8 +1,8 @@
-#ifndef SMARTSENSOR_STATEMACHINE_H
-#define SMARTSENSOR_STATEMACHINE_H
+#ifndef STATEMACHINE_H
+#define STATEMACHINE_H
 
 #include <rws_common.h>
-#include "sensor/smartsensor_barrel.h"
+#include "sensor/barrel.h"
 
 enum stages
 {
@@ -14,16 +14,16 @@ enum stages
     DEEP_SLEEP__5_MIN        //'5'
 };
 
-class smartsensor_statemachine
+class statemachine
 {
     public:
-        smartsensor_statemachine(smartsensor_barrel *barrel);
-        ~smartsensor_statemachine();
+        statemachine(barrel *bar);
+        ~statemachine();
 
         void loop(int operation_mode);
 
     private:
-        smartsensor_barrel *barrel;
+        barrel *bar;
 
         int step;
 
@@ -34,4 +34,4 @@ class smartsensor_statemachine
         int get_step(void);
 };
 
-#endif // SMARTSENSOR_STATEMACHINE_H
+#endif // STATEMACHINE_H

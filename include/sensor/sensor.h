@@ -1,23 +1,22 @@
-#ifndef CONTROLLER_H
-#define CONTROLLER_H
+#ifndef SENSOR_H
+#define SENSOR_H
 
 //#include <Arduino.h>
 #include <rws_wifi.h>
 #include <rws_ntp.h>
 #include <rws_syslog.h>
 #include <rws_pubsubclient.h>
+
+#include "sensor/barrel.h"
+#include "sensor/statemachine.h"
+
 #include "settings/smartsensor_settings.h"
 
-#include <rgbled.h>
-#define ONBOARD_LED_RED   15
-#define ONBOARD_LED_GREEN 12
-#define ONBOARD_LED_BLUE  13
-
-class controller
+class sensor
 {
     public:
-        controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclient *mqtt);
-        ~controller();
+        sensor(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclient *mqtt);
+        ~sensor();
 
         void setup(void);
         void loop(void);
@@ -27,6 +26,9 @@ class controller
         rws_ntp *_ntp;
         rws_syslog *_syslog;
         rws_pubsubclient *_mqtt;
+
+        barrel *_barrel;
+        statemachine *_sm;
     
         //Initial operation mode
         int OperationMode;
@@ -41,8 +43,6 @@ class controller
         bool check_all_conditions(void);
 
         void mqtt_callback(char* topic, uint8_t* payload, unsigned int length);
-
-        rgbled *_light;
 };
 
-#endif // CONTROLLER_H
+#endif // SENSOR_H

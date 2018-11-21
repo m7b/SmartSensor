@@ -1,5 +1,5 @@
-#ifndef SMARTSENSOR_BARREL_H
-#define SMARTSENSOR_BARREL_H
+#ifndef BARREL_H
+#define BARREL_H
 
 #include <NewPing.h>
 #include "rws_ntp.h"
@@ -24,11 +24,11 @@ struct sFillLevel
 };
 
 
-class smartsensor_barrel : public NewPing
+class barrel : public NewPing
 {
     public:
-        smartsensor_barrel(rws_ntp *ntp, rws_pubsubclient *mqtt, rws_syslog *syslog);
-        ~smartsensor_barrel();
+        barrel(rws_ntp *ntp, rws_pubsubclient *mqtt, rws_syslog *syslog);
+        ~barrel();
 
         bool do_measure(void);
         bool do_publish(void);
@@ -51,4 +51,4 @@ class smartsensor_barrel : public NewPing
         bool do_publish_serial(void);
 };
 
-#endif // SMARTSENSOR_BARREL_H
+#endif // BARREL_H

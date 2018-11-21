@@ -1,35 +1,35 @@
-#include "controller/controller.h"
+#include "sensor/sensor.h"
 
-controller::controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclient *mqtt)
+sensor::sensor(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclient *mqtt)
 {
     _wifiMulti = wifi;
     _ntp       = ntp;
     _syslog    = syslog;
     _mqtt      = mqtt;
+    
+    _barrel = new barrel(_ntp, _mqtt, _syslog);
+    _sm     = new statemachine(_barrel);
 
     //Initial operation mode
-    int OperationMode = 0;
-
-    _light = new rgbled(ONBOARD_LED_RED, ONBOARD_LED_GREEN, ONBOARD_LED_BLUE);
+    OperationMode = INTERVAL_MEASURE__5_SEK;
 }
 
-controller::~controller()
+sensor::~sensor()
 {
-    delete _light;
+    delete _barrel;
+    delete _sm;
 }
 
-void controller::setup(void)
+void sensor::setup(void)
 {
     setup_serial();
     setup_wifi();
     setup_ntp();
     setup_syslog();
     setup_mqtt();
-
-    _light->set_delay_ms(333);
 }
 
-void controller::loop(void)
+void sensor::loop(void)
 {
     //update time from NTP on demand, see NTP_UPDATE_INTERVAL_MS
     _ntp->update();
@@ -47,11 +47,11 @@ void controller::loop(void)
     //keep mqtt alive
     _mqtt->loop();
 
+    //run statemachine
+    _sm->loop(OperationMode);
+
     //test utc time
     _ntp->test(3000);
-
-    //control rgb led
-    _light->loop();
 }
 
 
@@ -59,7 +59,7 @@ void controller::loop(void)
 ///////////////////////////////////////////////////////////////////////////////
 // PRIVATE
 ///////////////////////////////////////////////////////////////////////////////
-void controller::setup_serial(void)
+void sensor::setup_serial(void)
 {
     Serial.begin(115200, SERIAL_8N1, SERIAL_TX_ONLY);
 
@@ -69,7 +69,7 @@ void controller::setup_serial(void)
 #endif
 }
 
-void controller::setup_wifi(void)
+void sensor::setup_wifi(void)
 {
     // Add WiFi connection credentials
     for(auto entry : wifi_access_credentials) 
@@ -81,18 +81,18 @@ void controller::setup_wifi(void)
     _wifiMulti->check_connection();
 }
 
-void controller::setup_ntp(void)
+void sensor::setup_ntp(void)
 {
     // We start getting time from ntp
     _ntp->begin();
 }
 
-void controller::setup_syslog(void)
+void sensor::setup_syslog(void)
 {
     //Syslog already usable
 }
 
-void controller::setup_mqtt(void)
+void sensor::setup_mqtt(void)
 {
     //Set 1st and 2nd level topic
     _mqtt->set_1st_2nd_level_topic(TOP_LEVEL_TOPIC, LOCATION_NAME_SENSOR);
@@ -108,7 +108,7 @@ void controller::setup_mqtt(void)
 }
 
 
-bool controller::check_all_conditions(void)
+bool sensor::check_all_conditions(void)
 {
     bool rc = true;
     
@@ -119,7 +119,7 @@ bool controller::check_all_conditions(void)
     return rc;
 }
 
-void controller::mqtt_callback(char* topic, uint8_t* payload, unsigned int length) {
+void sensor::mqtt_callback(char* topic, uint8_t* payload, unsigned int length) {
     Serial.print("Message arrived [");
     Serial.print(topic);
     Serial.print("] ");

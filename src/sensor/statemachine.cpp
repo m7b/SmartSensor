@@ -1,31 +1,31 @@
-#include "sensor/smartsensor_statemachine.h"
+#include "sensor/statemachine.h"
 
-smartsensor_statemachine::smartsensor_statemachine(smartsensor_barrel *barrel)
-: barrel(barrel)
+statemachine::statemachine(barrel *bar)
+: bar(bar)
 {
     step = 0;
     start_time = 0;
 }
  
  
-smartsensor_statemachine::~smartsensor_statemachine()
+statemachine::~statemachine()
 {
 }
 
 
-void smartsensor_statemachine::set_next_step(int step)
+void statemachine::set_next_step(int step)
 {
     this->step = step;
     start_time = millis();
 }
 
 
-int smartsensor_statemachine::get_step(void)
+int statemachine::get_step(void)
 {
     return step;
 }
 
-void smartsensor_statemachine::loop(int operation_mode)
+void statemachine::loop(int operation_mode)
 {
     switch (get_step())
     {
@@ -39,12 +39,12 @@ void smartsensor_statemachine::loop(int operation_mode)
             break;
 
         case 20: //start meassure
-            barrel->do_measure();
+            bar->do_measure();
             set_next_step(30);
             break;
 
         case 30: //report meassure
-            barrel->do_publish();
+            bar->do_publish();
             set_next_step(40);
             break;
 

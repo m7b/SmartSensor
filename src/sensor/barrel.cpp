@@ -1,4 +1,4 @@
-#include "sensor/smartsensor_barrel.h"
+#include "sensor/barrel.h"
 #include "settings/smartsensor_settings.h"
 
 /**
@@ -8,7 +8,7 @@
  * @param mqtt 
  * @param syslog 
  */
-smartsensor_barrel::smartsensor_barrel(rws_ntp *ntp, rws_pubsubclient *mqtt, rws_syslog *syslog)
+barrel::barrel(rws_ntp *ntp, rws_pubsubclient *mqtt, rws_syslog *syslog)
 : NewPing(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE_CM), ntp(ntp), mqtt(mqtt), syslog(syslog)
 {
     this->max_fill_level_cm = MAX_FILL_LEVEL_CM;
@@ -18,7 +18,7 @@ smartsensor_barrel::smartsensor_barrel(rws_ntp *ntp, rws_pubsubclient *mqtt, rws
  * @brief Destroy the smartsensor barrel::smartsensor barrel object
  * 
  */
-smartsensor_barrel::~smartsensor_barrel()
+barrel::~barrel()
 {
 }
 
@@ -28,7 +28,7 @@ smartsensor_barrel::~smartsensor_barrel()
  * @return true if measured value is in defined area.
  * @return false if measured value is out of area or no obstacle detected.
  */
-bool smartsensor_barrel::do_measure(void)
+bool barrel::do_measure(void)
 {
     bool rc = false;
 
@@ -53,7 +53,7 @@ bool smartsensor_barrel::do_measure(void)
  * @return true 
  * @return false 
  */
-bool smartsensor_barrel::do_publish(void)
+bool barrel::do_publish(void)
 {
     bool rc = true;
 
@@ -73,7 +73,7 @@ bool smartsensor_barrel::do_publish(void)
  * 
  * @return sFillLevel 
  */
-sFillLevel smartsensor_barrel::get_fill_level(void)
+sFillLevel barrel::get_fill_level(void)
 {
     return fill_level;
 }
@@ -83,7 +83,7 @@ sFillLevel smartsensor_barrel::get_fill_level(void)
  * 
  * @return unsigned long 
  */
-unsigned long smartsensor_barrel::get_fill_level_cm(void)
+unsigned long barrel::get_fill_level_cm(void)
 {
     return fill_level.cm;
 }
@@ -93,7 +93,7 @@ unsigned long smartsensor_barrel::get_fill_level_cm(void)
  * 
  * @return float 
  */
-float smartsensor_barrel::get_fill_level_percent(void)
+float barrel::get_fill_level_percent(void)
 {
     return fill_level.percent;
 }
@@ -103,7 +103,7 @@ float smartsensor_barrel::get_fill_level_percent(void)
  * 
  * @return std::string 
  */
-std::string smartsensor_barrel::get_local_datetime(void)
+std::string barrel::get_local_datetime(void)
 {
     return ntp->get_local_datetime(fill_level.utc);
 }
@@ -114,7 +114,7 @@ std::string smartsensor_barrel::get_local_datetime(void)
  * @return true 
  * @return false 
  */
-bool smartsensor_barrel::do_publish_mqtt(void)
+bool barrel::do_publish_mqtt(void)
 {
     bool rc = true;
 
@@ -135,7 +135,7 @@ bool smartsensor_barrel::do_publish_mqtt(void)
  * @return true 
  * @return false 
  */
-bool smartsensor_barrel::do_publish_syslog(void)
+bool barrel::do_publish_syslog(void)
 {
     bool rc;
 
@@ -153,7 +153,7 @@ bool smartsensor_barrel::do_publish_syslog(void)
  * @return true 
  * @return false 
  */
-bool smartsensor_barrel::do_publish_serial(void)
+bool barrel::do_publish_serial(void)
 {
     bool rc = false;
 
