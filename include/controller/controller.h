@@ -6,6 +6,7 @@
 #include <rws_ntp.h>
 #include <rws_syslog.h>
 #include <rws_pubsubclient.h>
+#include <statemachine.h>
 
 #include "common/settings/settings.h"
 #include "controller/settings/settings.h"
@@ -29,6 +30,8 @@ class controller
         rws_ntp *_ntp;
         rws_syslog *_syslog;
         rws_pubsubclient *_mqtt;
+
+        statemachine sm;
     
         //Initial operation mode
         int OperationMode;
@@ -45,6 +48,8 @@ class controller
         void mqtt_callback(char* topic, uint8_t* payload, unsigned int length);
 
         rgbled *_light;
+
+        void operating(void);
 };
 
 #endif // CONTROLLER_H
