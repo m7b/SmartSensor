@@ -6,6 +6,8 @@
 #include <rws_ntp.h>
 #include <rws_syslog.h>
 #include <rws_pubsubclient.h>
+
+#include "common/settings/settings.h"
 #include "controller/settings/settings.h"
 
 #include <rgbled.h>

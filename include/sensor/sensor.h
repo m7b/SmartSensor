@@ -10,6 +10,7 @@
 #include "sensor/barrel.h"
 #include "sensor/statemachine.h"
 
+#include "common/settings/settings.h"
 #include "sensor/settings/settings.h"
 
 class sensor

@@ -1,5 +1,5 @@
-#ifndef SMARTSENSOR_SETTINGS_H
-#define SMARTSENSOR_SETTINGS_H
+#ifndef COMMON_SETTINGS_H
+#define COMMON_SETTINGS_H
 
 #include <vector>
 
@@ -100,4 +100,4 @@ static const std::vector<std::pair<const int, const char*>> topics_to_subscribe 
     {1,      "inTopic"}
 };
 
-#endif // SMARTSENSOR_SETTINGS_H
+#endif // COMMON_SETTINGS_H

@@ -1,4 +1,5 @@
 #include "sensor/barrel.h"
+#include "common/settings/settings.h"
 #include "sensor/settings/settings.h"
 
 /**
