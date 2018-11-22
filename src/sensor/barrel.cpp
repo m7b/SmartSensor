@@ -1,5 +1,5 @@
 #include "sensor/barrel.h"
-#include "settings/smartsensor_settings.h"
+#include "sensor/settings/settings.h"
 
 /**
  * @brief Construct a new smartsensor barrel::smartsensor barrel object

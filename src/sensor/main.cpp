@@ -5,7 +5,7 @@
 #include <rws_pubsubclient.h>
 
 #include "sensor/sensor.h"
-#include "settings/smartsensor_settings.h"
+#include "sensor/settings/settings.h"
 
 
 //Set dst/std rules

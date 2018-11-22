@@ -6,7 +6,7 @@
 #include <rws_ntp.h>
 #include <rws_syslog.h>
 #include <rws_pubsubclient.h>
-#include "settings/smartsensor_settings.h"
+#include "controller/settings/settings.h"
 
 #include <rgbled.h>
 #define ONBOARD_LED_RED   15

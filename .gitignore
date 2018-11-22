@@ -5,5 +5,9 @@
 .vscode/c_cpp_properties.json
 .vscode/launch.json
 .vscode
-include/settings/smartsensor_settings.h
-include/settings/smartsensor_settings.h_backup
+include/common/settings/settings.h
+include/common/settings/settings.h_backup
+include/controller/settings/settings.h
+include/controller/settings/settings.h_backup
+include/sensor/settings/settings.h
+include/sensor/settings/settings.h_backup
