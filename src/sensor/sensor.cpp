@@ -8,7 +8,6 @@ sensor::sensor(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclien
     _mqtt      = mqtt;
     
     _barrel = new barrel(_ntp, _mqtt, _syslog);
-    _sm     = new statemachine(_barrel);
 
     //Initial operation mode
     OperationMode = INTERVAL_MEASURE__5_SEK;
@@ -17,7 +16,6 @@ sensor::sensor(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclien
 sensor::~sensor()
 {
     delete _barrel;
-    delete _sm;
 }
 
 void sensor::setup(void)
@@ -47,11 +45,11 @@ void sensor::loop(void)
     //keep mqtt alive
     _mqtt->loop();
 
-    //run statemachine
-    _sm->loop(OperationMode);
-
     //test utc time
     _ntp->test(3000);
+
+    //operation
+    operating(OperationMode);
 }
 
 
@@ -145,5 +143,77 @@ void sensor::mqtt_callback(char* topic, uint8_t* payload, unsigned int length) {
                     break;
             }
         }
+    }
+}
+
+void sensor::operating(int operation_mode)
+{
+    switch (get_step())
+    {
+        case N000_INIT_STEP:
+            set_next_step(N010_START_TIMEOUT);
+            break;
+
+        case N010_START_TIMEOUT:
+            _start_time = millis();
+            set_next_step(N020_START_MEASSURE);
+            break;
+
+        case N020_START_MEASSURE:
+            _barrel->do_measure();
+            set_next_step(N030_REPORT_MEASSURE);
+            break;
+
+        case N030_REPORT_MEASSURE:
+            _barrel->do_publish();
+            set_next_step(N040_WAIT_TIMEOUT);
+            break;
+
+        case N040_WAIT_TIMEOUT: {
+                unsigned long duration = 0;
+
+                switch (operation_mode)
+                {
+                    case PERMANENT_MEASSURE:      duration =    200; break;
+                    case INTERVAL_MEASURE__5_SEK: duration =   5000; break;
+                    case INTERVAL_MEASURE_10_SEK: duration =  10000; break;
+                    case INTERVAL_MEASURE__5_MIN: duration = 300000; break;
+                    case DEEP_SLEEP_20_SEK:       _ds_time = 20e6; break;
+                    case DEEP_SLEEP__5_MIN:       _ds_time =  3e8; break;
+                    default:                      duration =   3000; break;
+                }
+
+                //wait timeout depending on operation mode
+                if (get_duration_ms(_start_time) >= duration)
+                    set_next_step(N000_INIT_STEP);
+
+                //in case of deep sleep, perform special step
+                if ((operation_mode == DEEP_SLEEP_20_SEK) || (operation_mode == DEEP_SLEEP__5_MIN))
+                {
+                    Serial.println("Going to sleep ...");
+                    set_next_step(N050_START_TIMEOUT_DS);
+                }
+            }
+            break;
+
+        case N050_START_TIMEOUT_DS:
+            _start_time = millis();
+            set_next_step(N060_WAIT_TIMEOUT_DS);
+            break;
+
+        case N060_WAIT_TIMEOUT_DS:
+            if (get_duration_ms(_start_time) >= 200)
+                set_next_step(N070_ENTER_DS);
+
+            break;
+
+        case N070_ENTER_DS:
+            ESP.deepSleep(_ds_time);
+            set_next_step(N080_WAIT_DS);
+            break;
+
+        case N080_WAIT_DS: //wait until deep sleep has performed. CPU stops working
+            delay(20);
+            break;
     }
 }
