@@ -22,3 +22,11 @@ unsigned long get_duration_us(unsigned long start)
 
     return act - start;
 }
+
+/*
+constexpr unsigned long get_id(void)
+{
+    static unsigned long id = 0;
+    return id++;
+}
+*/

@@ -2,7 +2,10 @@
 
 statemachine::statemachine()
 {
-    _step = 0;
+    _step.id = 0;
+    memset(_step.descr, 0, sizeof(_step.descr));
+
+    _step_start = 0;
 }
  
  
@@ -11,16 +14,14 @@ statemachine::~statemachine()
 }
 
 
-void statemachine::set_next_step(int step, const char *descr)
+void statemachine::set_next_step(step next_step)
 {
-    _step = step;
-
-    strncpy(_descr, descr, sizeof(_descr));
-    _descr[sizeof(_descr) - 1] = '\0';
+    _step       = next_step;
+    _step_start = millis();
 }
 
 
-int statemachine::get_step(void)
+unsigned long statemachine::get_step(void)
 {
     return _step;
 }

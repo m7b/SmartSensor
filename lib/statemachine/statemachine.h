@@ -1,9 +1,26 @@
 #ifndef STATEMACHINE_H
 #define STATEMACHINE_H
 
+#include <rws_common.h>
 #include <cstring>
 
 #define MAX_DESCR_LENGTH 80
+
+struct step
+{
+    unsigned long id;
+    char descr[MAX_DESCR_LENGTH];
+
+    static unsigned long gen_id()
+    {
+        static unsigned long i = 0;
+        return ++i;
+    }
+
+    constexpr operator unsigned long() const { return id; }
+    
+};
+
 
 class statemachine
 {
@@ -11,12 +28,13 @@ class statemachine
         statemachine();
         ~statemachine();
 
-        void set_next_step(int step, const char *descr);
-        int get_step(void);
+        void set_next_step(step);
+        unsigned long get_step(void);
 
     private:
-        int _step;
+        step _step;
         char _descr[MAX_DESCR_LENGTH];
+        unsigned long _step_start;
 };
 
 
