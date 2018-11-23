@@ -6,20 +6,18 @@
 
 #define MAX_DESCR_LENGTH 80
 
+//Marco for defining steps
+//constexpr step N000_INIT_STEP { __COUNTER__ , "N000: Init step"};
+#define STEP_DEF(x, y) constexpr step x {__COUNTER__, y}
+
 struct step
 {
     unsigned long id;
     char descr[MAX_DESCR_LENGTH];
-
-    static unsigned long gen_id()
-    {
-        static unsigned long i = 0;
-        return ++i;
-    }
-
+    //step(const step& a) : id(a.id) { } // user-defined copy ctor
     constexpr operator unsigned long() const { return id; }
-    
 };
+
 
 
 class statemachine
@@ -28,7 +26,7 @@ class statemachine
         statemachine();
         ~statemachine();
 
-        void set_next_step(step);
+        void set_next_step(const step &next);
         unsigned long get_step(void);
 
     private:

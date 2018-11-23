@@ -14,10 +14,14 @@ statemachine::~statemachine()
 }
 
 
-void statemachine::set_next_step(step next_step)
+void statemachine::set_next_step(const step &next_step)
 {
     _step       = next_step;
     _step_start = millis();
+
+    char buffer [80];
+    snprintf(buffer, sizeof(buffer), "Step %ld: %s\r\n", (unsigned long) _step, _step.descr);
+    Serial.print(buffer);
 }
 
 
