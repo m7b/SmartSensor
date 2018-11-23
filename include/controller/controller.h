@@ -16,7 +16,7 @@
 #define ONBOARD_LED_GREEN 12
 #define ONBOARD_LED_BLUE  13
 
-class controller
+class controller : public statemachine
 {
     public:
         controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclient *mqtt);
@@ -30,11 +30,6 @@ class controller
         rws_ntp *_ntp;
         rws_syslog *_syslog;
         rws_pubsubclient *_mqtt;
-
-        statemachine sm;
-    
-        //Initial operation mode
-        int OperationMode;
 
         void setup_serial(void);
 

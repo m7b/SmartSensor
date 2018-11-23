@@ -7,9 +7,6 @@ controller::controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pub
     _syslog    = syslog;
     _mqtt      = mqtt;
 
-    //Initial operation mode
-    int OperationMode = 0;
-
     _light = new rgbled(ONBOARD_LED_RED, ONBOARD_LED_GREEN, ONBOARD_LED_BLUE);
 }
 
@@ -136,7 +133,6 @@ void controller::mqtt_callback(char* topic, uint8_t* payload, unsigned int lengt
             {
                 case 0:     
                     Serial.printf("Function mode received: %d\r\n", payload[0]);
-                    OperationMode = payload[0];
                     break;
 
                 case 1:
@@ -151,121 +147,118 @@ void controller::mqtt_callback(char* topic, uint8_t* payload, unsigned int lengt
     }
 }
 
-
-
-
 void controller::operating(void)
 {
-    switch (sm.get_step())
+    switch (get_step())
     {
         case N000_INIT_STEP:
-            sm.set_next_step(N010_CHECK_PUMP_NOT_ACTIVE);
+            set_next_step(N010_CHECK_PUMP_NOT_ACTIVE);
             break;
             
         case N010_CHECK_PUMP_NOT_ACTIVE:
             if (true)
-                sm.set_next_step(N020_CHECK_DST_LEVEL_BELOW_MAX);
+                set_next_step(N020_CHECK_DST_LEVEL_BELOW_MAX);
             else
-                sm.set_next_step(N080_CHECK_ONLY_START_PUMP);
+                set_next_step(N080_CHECK_ONLY_START_PUMP);
             break;
             
         case N020_CHECK_DST_LEVEL_BELOW_MAX:
             if (true)
-                sm.set_next_step(N030_CHECK_SRC_LEVEL_OVER_MIN);
+                set_next_step(N030_CHECK_SRC_LEVEL_OVER_MIN);
             else
-                sm.set_next_step(N999_END);
+                set_next_step(N999_END);
             break;
             
         case N030_CHECK_SRC_LEVEL_OVER_MIN:
             if (true)
-                sm.set_next_step(N040_CHECK_PUMP_READY);
+                set_next_step(N040_CHECK_PUMP_READY);
             else
-                sm.set_next_step(N999_END);
+                set_next_step(N999_END);
             break;
             
         case N040_CHECK_PUMP_READY:
             if (true)
-                sm.set_next_step(N050_CHECK_START_PUMP);
+                set_next_step(N050_CHECK_START_PUMP);
             else
-                sm.set_next_step(N999_END);
+                set_next_step(N999_END);
             break;
             
         case N050_CHECK_START_PUMP:
-            sm.set_next_step(N060_WAIT_PUMP_STARTED);
+            set_next_step(N060_WAIT_PUMP_STARTED);
             break;
             
         case N060_WAIT_PUMP_STARTED:
-            sm.set_next_step(N070_STORE_START_TIME);
+            set_next_step(N070_STORE_START_TIME);
             break;
             
         case N070_STORE_START_TIME:
-            sm.set_next_step(N080_CHECK_ONLY_START_PUMP);
+            set_next_step(N080_CHECK_ONLY_START_PUMP);
             break;
             
         case N080_CHECK_ONLY_START_PUMP:
-            sm.set_next_step(N090_CHECK_SRC_LEVEL_DECREASING);
+            set_next_step(N090_CHECK_SRC_LEVEL_DECREASING);
             break;
             
         case N090_CHECK_SRC_LEVEL_DECREASING:
             if (true)
-                sm.set_next_step(N100_CHECK_DST_LEVEL_INCREASING);
+                set_next_step(N100_CHECK_DST_LEVEL_INCREASING);
             else
-                sm.set_next_step(N200_REPORT_ERROR);
+                set_next_step(N200_REPORT_ERROR);
             break;
             
         case N100_CHECK_DST_LEVEL_INCREASING:
             if (true)
-                sm.set_next_step(N110_CHECK_SRC_LEVEL_OVER_MIN);
+                set_next_step(N110_CHECK_SRC_LEVEL_OVER_MIN);
             else
-                sm.set_next_step(N200_REPORT_ERROR);
+                set_next_step(N200_REPORT_ERROR);
             break;
             
         case N110_CHECK_SRC_LEVEL_OVER_MIN:
             if (true)
-                sm.set_next_step(N120_CHECK_DST_LEVEL_BELOW_MAX);
+                set_next_step(N120_CHECK_DST_LEVEL_BELOW_MAX);
             else
-                sm.set_next_step(N300_CHECK_STOP_PUMP);
+                set_next_step(N300_CHECK_STOP_PUMP);
             break;
             
         case N120_CHECK_DST_LEVEL_BELOW_MAX:
             if (true)
-                sm.set_next_step(N130_CHECK_NO_STOP_DEMAND_FROM_USER);
+                set_next_step(N130_CHECK_NO_STOP_DEMAND_FROM_USER);
             else
-                sm.set_next_step(N300_CHECK_STOP_PUMP);
+                set_next_step(N300_CHECK_STOP_PUMP);
             break;
             
         case N130_CHECK_NO_STOP_DEMAND_FROM_USER:
             if (true)
-                sm.set_next_step(N140_CHECK_PUMP_DURATION_BELOW_MAX);
+                set_next_step(N140_CHECK_PUMP_DURATION_BELOW_MAX);
             else
-                sm.set_next_step(N300_CHECK_STOP_PUMP);
+                set_next_step(N300_CHECK_STOP_PUMP);
             break;
             
         case N140_CHECK_PUMP_DURATION_BELOW_MAX:
             if (true)
-                sm.set_next_step(N200_REPORT_ERROR);
+                set_next_step(N200_REPORT_ERROR);
             else
-                sm.set_next_step(N300_CHECK_STOP_PUMP);
+                set_next_step(N300_CHECK_STOP_PUMP);
             break;
             
         case N200_REPORT_ERROR:
-            sm.set_next_step(N300_CHECK_STOP_PUMP);
+            set_next_step(N300_CHECK_STOP_PUMP);
             break;
             
         case N300_CHECK_STOP_PUMP:
-            sm.set_next_step(N310_CHECK_PUMP_STOPPED);
+            set_next_step(N310_CHECK_PUMP_STOPPED);
             break;
             
         case N310_CHECK_PUMP_STOPPED:
-            sm.set_next_step(N320_STORE_PUMP_DATA);
+            set_next_step(N320_STORE_PUMP_DATA);
             break;
             
         case N320_STORE_PUMP_DATA:
-            sm.set_next_step(N999_END);
+            set_next_step(N999_END);
             break;
             
         case N999_END:
-            sm.set_next_step(N000_INIT_STEP);
+            set_next_step(N000_INIT_STEP);
             break;
     }
 }
