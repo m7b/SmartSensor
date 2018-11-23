@@ -28,7 +28,6 @@ void rws_ntp::test(void)
     time_t utc = getEpochTime();
     time_t local = tz->toLocal(utc);
 
-    Serial.println(); 
     printDateTime(utc, "UTC"); 
     printDateTime(local , "local");
 }

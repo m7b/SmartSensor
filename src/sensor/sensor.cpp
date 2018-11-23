@@ -45,9 +45,6 @@ void sensor::loop(void)
     //keep mqtt alive
     _mqtt->loop();
 
-    //test utc time
-    _ntp->test(3000);
-
     //operation
     operating(OperationMode);
 }
@@ -151,6 +148,8 @@ void sensor::operating(int operation_mode)
     switch (get_step())
     {
         case N000_INIT_STEP:
+            //test utc time
+            _ntp->test();
             set_next_step(N010_START_TIMEOUT);
             break;
 
