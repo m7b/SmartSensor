@@ -66,7 +66,7 @@ STEP_DEF(N010_START_TIMEOUT,    "N010: Start timeout");
 STEP_DEF(N020_START_MEASSURE,   "N020: Start meassure");
 STEP_DEF(N030_REPORT_MEASSURE,  "N030: Report meassure");
 STEP_DEF(N040_WAIT_TIMEOUT,     "N040: Wait timeout, depending on operation mode");
-STEP_DEF(N050_START_TIMEOUT_DS, "N050: Start timeout for deep sleep ");
+STEP_DEF(N050_START_TIMEOUT_DS, "N050: Start timeout for deep sleep");
 STEP_DEF(N060_WAIT_TIMEOUT_DS,  "N060: Wait timeout for deep sleep");
 STEP_DEF(N070_ENTER_DS,         "N070: Enter deep sleep");
 STEP_DEF(N080_WAIT_DS,          "N080: Wait until deep sleep has performed, CPU stops working");
