@@ -1,7 +1,6 @@
 #ifndef CONTROLLER_SETTINGS_H
 #define CONTROLLER_SETTINGS_H
 
-#define TOP_LEVEL_TOPIC             "WS/RWS/"
 #define LOCATION_NAME_TYPE          "EG/Controller/"
 
 /**

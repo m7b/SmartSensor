@@ -64,7 +64,8 @@ static const std::vector<std::pair<const char*, const char*>> wifi_access_creden
  * 
  */
 #define MQTT_SERVER "broker.hivemq.com"
-//#define MQTT_SERVER "test.mosquitto.org"  //bierfass
 #define MQTT_PORT   1883
+
+#define TOP_LEVEL_TOPIC             "WS/RWS/"
 
 #endif // COMMON_SETTINGS_H
