@@ -1,6 +1,17 @@
 #ifndef CONTROLLER_SETTINGS_H
 #define CONTROLLER_SETTINGS_H
 
+#define TOP_LEVEL_TOPIC             "WS/RWS/"
+#define LOCATION_NAME_TYPE          "EG/Controller/"
 
+/**
+ * @brief Topics to subscribe
+ * 
+ */
+static const std::vector<std::pair<const int, const char*>> topics_to_subscribe = {
+/*  {<idx>}, "<topic>", */
+    {0,      "FunctionMode"},
+    {1,      "inTopic"}
+};
 
 #endif // CONTROLLER_SETTINGS_H

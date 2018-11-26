@@ -95,7 +95,7 @@ void controller::setup_syslog(void)
 void controller::setup_mqtt(void)
 {
     //Set 1st and 2nd level topic
-    _mqtt->set_1st_2nd_level_topic(TOP_LEVEL_TOPIC, LOCATION_NAME_SENSOR);
+    _mqtt->set_1st_2nd_level_topic(TOP_LEVEL_TOPIC, LOCATION_NAME_TYPE);
 
     //Set topics to subscribe
     _mqtt->set_topics_to_subscribe(&topics_to_subscribe);
