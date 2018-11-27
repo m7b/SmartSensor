@@ -13,6 +13,8 @@
 #include "common/settings/settings.h"
 #include "sensor/settings/settings.h"
 
+#include "common/mqtt_comm.h"
+
 enum stages
 {
     PERMANENT_MEASSURE = 48, //'0'

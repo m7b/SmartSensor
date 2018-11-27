@@ -11,6 +11,8 @@
 #include "common/settings/settings.h"
 #include "controller/settings/settings.h"
 
+#include "common/mqtt_comm.h"
+
 #include <rgbled.h>
 #define ONBOARD_LED_RED   15
 #define ONBOARD_LED_GREEN 12
