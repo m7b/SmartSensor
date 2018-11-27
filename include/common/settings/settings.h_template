@@ -67,5 +67,7 @@ static const std::vector<std::pair<const char*, const char*>> wifi_access_creden
 #define MQTT_PORT   1883
 
 #define TOP_LEVEL_TOPIC             "WS/RWS/"
+#define LOCATION_TYPE_BARREL_SRC    "EG/BarrelSrc/"
+#define LOCATION_TYPE_BARREL_DST    "DG/BarrelDst/"
 
 #endif // COMMON_SETTINGS_H

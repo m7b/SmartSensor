@@ -14,7 +14,16 @@
 #define MAX_DISTANCE_CM            200   //Max distance in [cm]
 #define MAX_FILL_LEVEL_CM          110   //Max fill level of barrel in [cm]
 
-#define LOCATION_TYPE               "EG/Barrel1/"
+
+#if defined(DST_BARREL)
+    #define LOCATION_TYPE           LOCATION_TYPE_BARREL_SRC
+#elif defined(SRC_BARREL)
+    #define LOCATION_TYPE           LOCATION_TYPE_BARREL_DST
+#else
+    #define LOCATION_TYPE           "LOCATION_TYPE_not_set"
+#endif
+
+
 #define LEVEL_SENSOR_CM_TOPIC       "Lvl/raw_cm"
 #define LEVEL_CM_TOPIC              "Lvl/cm"
 #define LEVEL_PERCENT_TOPIC         "Lvl/percent"

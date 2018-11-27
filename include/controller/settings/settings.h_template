@@ -1,7 +1,7 @@
 #ifndef CONTROLLER_SETTINGS_H
 #define CONTROLLER_SETTINGS_H
 
-#define LOCATION_TYPE          "EG/Controller/"
+#define LOCATION_TYPE          LOCATION_TYPE_CONTROLLER
 
 /**
  * @brief Topics to subscribe
