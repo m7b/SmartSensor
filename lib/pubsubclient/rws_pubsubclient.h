@@ -12,8 +12,6 @@ class rws_pubsubclient : public PubSubClient
         rws_pubsubclient(const char *server, uint16_t port);
         ~rws_pubsubclient();
 
-        void set_1st_2nd_level_topic(std::string first, std::string second);
-
         void check_connection(void);
 
         void set_topics_to_subscribe(const std::vector<std::pair<const int, const char*>> *topics_to_subscribe);
@@ -24,16 +22,12 @@ class rws_pubsubclient : public PubSubClient
         bool publish(const char *topic, const std::string s_value);
         using PubSubClient::publish;
 
-        std::string add_root_topic(const char *topic);
-
     private:
         WiFiClient espClient;
         const char *server;
         uint16_t port;
 
         String clientId;
-        std::string _1st_level_topic;
-        std::string _2nd_level_topic;
         const std::vector<std::pair<const int, const char*>> *_topics_to_subscribe;
         char msg[MAX_MSG_SIZE];
         int max_connection_tries;

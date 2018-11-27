@@ -89,9 +89,6 @@ void sensor::setup_syslog(void)
 
 void sensor::setup_mqtt(void)
 {
-    //Set 1st and 2nd level topic
-    _mqtt->set_1st_2nd_level_topic(TOP_LEVEL_TOPIC, LOCATION_TYPE);
-
     //Set topics to subscribe
     _mqtt->set_topics_to_subscribe(&topics_to_subscribe);
 
@@ -122,7 +119,7 @@ void sensor::mqtt_callback(char* topic, uint8_t* payload, unsigned int length) {
 
     for(auto el: topics_to_subscribe)
     {
-        if (strcmp(topic, _mqtt->add_root_topic(el.second).c_str()) == 0)
+        if (strcmp(topic, el.second) == 0)
         {
             switch(el.first)
             {

@@ -1,6 +1,8 @@
 #ifndef SENSOR_SETTINGS_H
 #define SENSOR_SETTINGS_H
 
+#include "common/settings/settings.h"
+
 /**
  * @brief Ultrasonic settings
  * 
@@ -30,15 +32,14 @@
 #define LEVEL_TIMESTAMP_TOPIC       "Lvl/timestamp"
 #define LEVEL_LOCAL_TIMESTAMP_TOPIC "Lvl/local_timestamp"
 
-
 /**
  * @brief Topics to subscribe
  * 
  */
 static const std::vector<std::pair<const int, const char*>> topics_to_subscribe = {
-/*  {<idx>}, "<topic>", */
-    {0,      "FunctionMode"},
-    {1,      "inTopic"}
+/*  TOPIC(<idx>, "<topic>"), */
+    TOPIC(0, "FunctionMode"),
+    TOPIC(1, "inTopic")
 };
 
 #endif // SENSOR_SETTINGS_H

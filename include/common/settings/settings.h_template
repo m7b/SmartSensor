@@ -67,7 +67,16 @@ static const std::vector<std::pair<const char*, const char*>> wifi_access_creden
 #define MQTT_PORT   1883
 
 #define TOP_LEVEL_TOPIC             "WS/RWS/"
+#define LOCATION_TYPE_CONTROLLER    "DG/Controller/"
 #define LOCATION_TYPE_BARREL_SRC    "EG/BarrelSrc/"
 #define LOCATION_TYPE_BARREL_DST    "DG/BarrelDst/"
+
+
+
+/**
+ * @brief Helper to subscribe to topics with apropriate root
+ * 
+ */
+#define TOPIC(NUM, NAME) {(const int) NUM, TOP_LEVEL_TOPIC LOCATION_TYPE NAME}
 
 #endif // COMMON_SETTINGS_H

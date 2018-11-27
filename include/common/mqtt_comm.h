@@ -10,7 +10,9 @@
     #include "controller/settings/settings.h"
 #endif
 
-std::string add_root_topic(const char *topic);
+std::string self_root_topic(const char *topic);
+
+
 
 //cmd_topic_to_src
 //cmd_topic_to_dst

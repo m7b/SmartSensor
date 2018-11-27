@@ -1,6 +1,8 @@
 #ifndef CONTROLLER_SETTINGS_H
 #define CONTROLLER_SETTINGS_H
 
+#include "common/settings/settings.h"
+
 #define LOCATION_TYPE          LOCATION_TYPE_CONTROLLER
 
 /**
@@ -8,9 +10,9 @@
  * 
  */
 static const std::vector<std::pair<const int, const char*>> topics_to_subscribe = {
-/*  {<idx>}, "<topic>", */
-    {0,      "FunctionMode"},
-    {1,      "inTopic"}
+/*  TOPIC(<idx>, "<topic>"), */
+    TOPIC(0, "FunctionMode"),
+    TOPIC(1, "inTopic")
 };
 
 #endif // CONTROLLER_SETTINGS_H

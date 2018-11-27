@@ -8,7 +8,6 @@
 #include <rws_pubsubclient.h>
 #include <statemachine.h>
 
-#include "common/settings/settings.h"
 #include "controller/settings/settings.h"
 
 #include "common/mqtt_comm.h"
