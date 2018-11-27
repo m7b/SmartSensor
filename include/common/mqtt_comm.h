@@ -10,7 +10,7 @@
     #include "controller/settings/settings.h"
 #endif
 
-std::string self_root_topic(const char *topic);
+//std::string self_root_topic(const char *topic);
 
 
 

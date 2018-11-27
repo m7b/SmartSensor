@@ -1,9 +1,10 @@
 #include "common/mqtt_comm.h"
-
+/*
 std::string self_root_topic(const char *topic)
 {
     return std::string(TOP_LEVEL_TOPIC) + std::string(LOCATION_TYPE) + topic;
 }
+*/
 
 //ack_cmd_from_controller
 
