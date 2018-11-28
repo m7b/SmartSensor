@@ -32,6 +32,9 @@ static const std::vector<std::pair<const char*, const char*>> wifi_access_creden
 /**
  * @brief TimeChange rule to define
  * 
+ * CET_OFFSET is set depending on the previous set of
+ * NTP_OFFSET_S of 0.
+ * 
  */
 #define CEST_ABBREV "CEST"  //Central European Summer Time
 #define CEST_WEEK   Last
