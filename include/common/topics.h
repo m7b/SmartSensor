@@ -8,9 +8,9 @@
  * 
  */
 #if defined(DST_BARREL)
-    #define LOCATION_TYPE           LOCATION_TYPE_BARREL_SRC
-#elif defined(SRC_BARREL)
     #define LOCATION_TYPE           LOCATION_TYPE_BARREL_DST
+#elif defined(SRC_BARREL)
+    #define LOCATION_TYPE           LOCATION_TYPE_BARREL_SRC
 #else
     #define LOCATION_TYPE           LOCATION_TYPE_CONTROLLER
 #endif

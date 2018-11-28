@@ -8,11 +8,11 @@
  * @brief Topics to publish
  * 
  */
-#define LEVEL_SENSOR_CM_TOPIC       "Lvl/raw_cm"
-#define LEVEL_CM_TOPIC              "Lvl/cm"
-#define LEVEL_PERCENT_TOPIC         "Lvl/percent"
-#define LEVEL_TIMESTAMP_TOPIC       "Lvl/timestamp"
-#define LEVEL_LOCAL_TIMESTAMP_TOPIC "Lvl/local_timestamp"
+#define LEVEL_SENSOR_CM_TOPIC       TOP_LEVEL_TOPIC LOCATION_TYPE "Lvl/raw_cm"
+#define LEVEL_CM_TOPIC              TOP_LEVEL_TOPIC LOCATION_TYPE "Lvl/cm"
+#define LEVEL_PERCENT_TOPIC         TOP_LEVEL_TOPIC LOCATION_TYPE "Lvl/percent"
+#define LEVEL_TIMESTAMP_TOPIC       TOP_LEVEL_TOPIC LOCATION_TYPE "Lvl/timestamp"
+#define LEVEL_LOCAL_TIMESTAMP_TOPIC TOP_LEVEL_TOPIC LOCATION_TYPE "Lvl/local_timestamp"
 
 
 /**
