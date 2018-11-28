@@ -1,14 +1,17 @@
 MQTT Topics
 -----------
 
- - IrrigationSystem/RainWaterStorage/EG/Barrel1/Level/sensorcm
- - IrrigationSystem/RainWaterStorage/EG/Barrel1/Level/cm
- - IrrigationSystem/RainWaterStorage/EG/Barrel1/Level/percent
- - IrrigationSystem/RainWaterStorage/EG/Barrel1/Level/timestamp
- - IrrigationSystem/RainWaterStorage/EG/Barrel1/Mode/Demand
- - IrrigationSystem/RainWaterStorage/EG/Barrel1/Mode/Actual
- 
- 
- - WaterSystem/Master
+ - WS/RWS/EG/BarrelSrc/Lvl/sensorcm
+ - WS/RWS/EG/BarrelSrc/Lvl/cm
+ - WS/RWS/EG/BarrelSrc/Lvl/percent
+ - WS/RWS/EG/BarrelSrc/Lvl/timestamp
+ - WS/RWS/EG/BarrelSrc/Lvl/local_timestamp
+ - WS/RWS/EG/BarrelSrc/FunctionMode
 
-  - WS/RWS/EG/Barrel1/Lvl/
+ - WS/RWS/EG/BarrelSrc/Lvl/Barrel1/Mode/Demand
+ - WS/RWS/EG/BarrelSrc/Lvl/Barrel1/Mode/Actual
+ 
+ WS = WateringSystem
+ RWS = RainWaterSystem
+ 
+Controller
