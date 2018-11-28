@@ -9,6 +9,7 @@
 #include <statemachine.h>
 
 #include "controller/settings/settings.h"
+#include "controller/topics.h"
 
 #include "common/mqtt_comm.h"
 

@@ -8,9 +8,9 @@
 #include <rws_pubsubclient.h>
 #include <statemachine.h>
 
-#include "sensor/barrel.h"
-
 #include "sensor/settings/settings.h"
+#include "sensor/barrel.h"
+#include "sensor/topics.h"
 
 #include "common/mqtt_comm.h"
 

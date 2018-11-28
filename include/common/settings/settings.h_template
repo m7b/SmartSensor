@@ -1,8 +1,6 @@
 #ifndef COMMON_SETTINGS_H
 #define COMMON_SETTINGS_H
 
-#include <vector>
-
 #define ON 1
 #define OFF 0
 
