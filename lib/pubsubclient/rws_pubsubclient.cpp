@@ -32,6 +32,20 @@ void rws_pubsubclient::check_connection(void)
     }
 }
 
+
+bool rws_pubsubclient::publish(const char *topic, const uint8_t value)
+{
+    char buffer [20];
+    int ret = snprintf(buffer, sizeof(buffer), "%c", value);
+    if (ret >= 0 && ret < (int)sizeof(buffer))
+    {
+        ret = publish(topic, buffer, true);
+    }
+
+    return ret;
+}
+
+
 /**
  * @brief Publish an unsigned long value to specific topic
  * 

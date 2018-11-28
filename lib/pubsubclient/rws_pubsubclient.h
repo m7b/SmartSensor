@@ -16,6 +16,7 @@ class rws_pubsubclient : public PubSubClient
 
         void set_topics_to_subscribe(const std::vector<std::pair<const int, const char*>> *topics_to_subscribe);
 
+        bool publish(const char *topic, const uint8_t value);
         bool publish(const char *topic, const unsigned long ul_value);
         bool publish(const char *topic, const float f_value);
         bool publish(const char *topic, const time_t t_value);

@@ -14,14 +14,14 @@
 
 #include "common/mqtt_comm.h"
 
-enum stages
+enum FunctionModes
 {
-    PERMANENT_MEASSURE = 48, //'0'
-    INTERVAL_MEASURE__5_SEK, //'1'
-    INTERVAL_MEASURE_10_SEK, //'2'
-    INTERVAL_MEASURE__5_MIN, //'3'
-    DEEP_SLEEP_20_SEK,       //'4'
-    DEEP_SLEEP__5_MIN        //'5'
+    FUNCTION_MODE_PERMANENT_MEASSURE = 48, //'0'
+    FUNCTION_MODE_INTERVAL_MEASURE__5_SEK, //'1'
+    FUNCTION_MODE_INTERVAL_MEASURE_10_SEK, //'2'
+    FUNCTION_MODE_INTERVAL_MEASURE__5_MIN, //'3'
+    FUNCTION_MODE_DEEP_SLEEP_20_SEK,       //'4'
+    FUNCTION_MODE_DEEP_SLEEP__5_MIN        //'5'
 };
 
 class sensor : public statemachine
@@ -44,8 +44,10 @@ class sensor : public statemachine
         unsigned long _start_time;
         unsigned long _ds_time;
     
-        //Initial operation mode
-        int OperationMode;
+        //Function mode
+        uint8_t FunctionModeRequest;
+        uint8_t FunctionModeAck;
+        uint8_t FunctionMode;
 
         void setup_serial(void);
 
@@ -58,18 +60,21 @@ class sensor : public statemachine
 
         void mqtt_callback(char* topic, uint8_t* payload, unsigned int length);
         
-        void operating(int operation_mode);
+        void operating(void);
 };
 
 
-STEP_DEF(N000_INIT_STEP,        "N000: Init step");    
-STEP_DEF(N010_START_TIMEOUT,    "N010: Start timeout");
-STEP_DEF(N020_START_MEASSURE,   "N020: Start meassure");
-STEP_DEF(N030_REPORT_MEASSURE,  "N030: Report meassure");
-STEP_DEF(N040_WAIT_TIMEOUT,     "N040: Wait timeout, depending on operation mode");
-STEP_DEF(N050_START_TIMEOUT_DS, "N050: Start timeout for deep sleep");
-STEP_DEF(N060_WAIT_TIMEOUT_DS,  "N060: Wait timeout for deep sleep");
-STEP_DEF(N070_ENTER_DS,         "N070: Enter deep sleep");
-STEP_DEF(N080_WAIT_DS,          "N080: Wait until deep sleep has performed, CPU stops working");
+STEP_DEF(N000_INIT_STEP,                      "N000: Init step");    
+STEP_DEF(N010_START_TIMEOUT,                  "N010: Start timeout");
+STEP_DEF(N020_START_MEASSURE,                 "N020: Start meassure");
+STEP_DEF(N030_REPORT_MEASSURE,                "N030: Report meassure");
+STEP_DEF(N040_CHECK_FUNCTION_MODE_CHANGE_REQ, "N040: Check function mode change request");
+STEP_DEF(N050_CHANGE_TO_REQ_FUNCTION_MODE,    "N050: Change to requested function mode");
+STEP_DEF(N060_ACK_NEW_FUNCTION_MODE,          "N060: Acknowledge new function mode");
+STEP_DEF(N070_WAIT_TIMEOUT,                   "N070: Wait timeout, depending on operation mode");
+STEP_DEF(N080_START_TIMEOUT_DS,               "N080: Start timeout for deep sleep");
+STEP_DEF(N090_WAIT_TIMEOUT_DS,                "N090: Wait timeout for deep sleep");
+STEP_DEF(N100_ENTER_DS,                       "N100: Enter deep sleep");
+STEP_DEF(N110_WAIT_DS,                        "N110: Wait until deep sleep has performed, CPU stops working");
 
 #endif // SENSOR_H

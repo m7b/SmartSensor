@@ -21,9 +21,6 @@ rws_pubsubclient mqtt(MQTT_SERVER, MQTT_PORT);
 
 sensor sens(&wifiMulti, &ntp, &syslog, &mqtt);
 
-//Initial operation mode
-int OperationMode = INTERVAL_MEASURE__5_SEK;
-
 
 /**
  * @brief setup section of board
