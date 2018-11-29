@@ -33,6 +33,11 @@ class controller : public statemachine
         rws_syslog *_syslog;
         rws_pubsubclient *_mqtt;
 
+        uint8_t _function_mode_src_req;
+        uint8_t _function_mode_src_ack;
+        uint8_t _function_mode_dst_req;
+        uint8_t _function_mode_dst_ack;
+
         void setup_serial(void);
 
         void setup_wifi(void);

@@ -8,11 +8,8 @@
  * @brief Topics to publish
  * 
  */
-#define LEVEL_SENSOR_CM_TOPIC       "Lvl/raw_cm"
-#define LEVEL_CM_TOPIC              "Lvl/cm"
-#define LEVEL_PERCENT_TOPIC         "Lvl/percent"
-#define LEVEL_TIMESTAMP_TOPIC       "Lvl/timestamp"
-#define LEVEL_LOCAL_TIMESTAMP_TOPIC "Lvl/local_timestamp"
+#define FUNCTION_MODE_SRC_REQUEST TOP_LEVEL_TOPIC LOCATION_TYPE_BARREL_SRC FUNCTION_MODE_REQ
+#define FUNCTION_MODE_DST_REQUEST TOP_LEVEL_TOPIC LOCATION_TYPE_BARREL_DST FUNCTION_MODE_REQ
 
 
 /**
@@ -20,10 +17,24 @@
  * 
  */
 static const std::vector<std::pair<const int, const char*>> topics_to_subscribe = {
+// TOPIC_FROM_SRC(NUM, NAME)
+// TOPIC_FROM_DST(NUM, NAME)
+// TOPIC_FROM_CONTROLLER(NUM, NAME) 
 /*  TOPIC(<idx>, "<topic>"), */
-    TOPIC(0, "FunctionMode"),
-    TOPIC(1, "inTopic")
+    TOPIC_FROM_SRC(  0, FUNCTION_MODE_ACK),
+    TOPIC_FROM_DST(  1, FUNCTION_MODE_ACK),
+    
+    TOPIC_FROM_SRC(100, SENS_RAW_CM),
+    TOPIC_FROM_SRC(101, SENS_CM),
+    TOPIC_FROM_SRC(102, SENS_PERCENT),
+    TOPIC_FROM_SRC(103, SENS_TIMESTAMP),
+    TOPIC_FROM_SRC(104, SENS_LOC_TIMESTAMP),
+    
+    TOPIC_FROM_DST(200, SENS_RAW_CM),
+    TOPIC_FROM_DST(201, SENS_CM),
+    TOPIC_FROM_DST(202, SENS_PERCENT),
+    TOPIC_FROM_DST(203, SENS_TIMESTAMP),
+    TOPIC_FROM_DST(204, SENS_LOC_TIMESTAMP)
 };
 
 #endif // CONTROLLER_TOPICS_H
-

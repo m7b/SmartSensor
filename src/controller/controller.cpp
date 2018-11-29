@@ -6,6 +6,11 @@ controller::controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pub
     _ntp       = ntp;
     _syslog    = syslog;
     _mqtt      = mqtt;
+    
+    _function_mode_src_req = 0;
+    _function_mode_src_ack = 0;
+    _function_mode_dst_req = 0;
+    _function_mode_dst_ack = 0;
 
     _light = new rgbled(ONBOARD_LED_RED, ONBOARD_LED_GREEN, ONBOARD_LED_BLUE);
 }
@@ -128,16 +133,54 @@ void controller::mqtt_callback(char* topic, uint8_t* payload, unsigned int lengt
         {
             switch(el.first)
             {
-                case 0:     
-                    Serial.printf("Function mode received: %d\r\n", payload[0]);
+                case 0:
+                    Serial.printf("Function mode ack received from sensor_src: %d\r\n", payload[0]);
+                    _function_mode_src_ack = payload[0];
                     break;
 
                 case 1:
-                    Serial.printf("inTopic received: ");
-                    for (unsigned int i=0; i<length; i++) {
-                        Serial.print((char)payload[i]);
-                    }
-                    Serial.println(); 
+                    Serial.printf("Function mode ack received from sensor_dst: %d\r\n", payload[0]);
+                    _function_mode_dst_ack = payload[0];
+                    break;
+
+                case 100:
+                    Serial.printf("RAW_CM from sensor_src: %s\r\n", payload_to_string(payload, length).c_str());
+                    break;
+
+                case 101:
+                    Serial.printf("CM from sensor_src: %s\r\n", payload_to_string(payload, length).c_str());
+                    break;
+
+                case 102:
+                    Serial.printf("PERCENT from sensor_src: %s\r\n", payload_to_string(payload, length).c_str());
+                    break;
+
+                case 103:
+                    Serial.printf("TIMESTAMP from sensor_src: %s\r\n", payload_to_string(payload, length).c_str());
+                    break;
+
+                case 104:
+                    Serial.printf("LOC_TIMESTAMP from sensor_src: %s\r\n", payload_to_string(payload, length).c_str());
+                    break;
+
+                case 200:
+                    Serial.printf("RAW_CM from sensor_dst: %s\r\n", payload_to_string(payload, length).c_str());
+                    break;
+
+                case 201:
+                    Serial.printf("CM from sensor_dst: %s\r\n", payload_to_string(payload, length).c_str());
+                    break;
+
+                case 202:
+                    Serial.printf("PERCENT from sensor_dst: %s\r\n", payload_to_string(payload, length).c_str());
+                    break;
+
+                case 203:
+                    Serial.printf("TIMESTAMP from sensor_dst: %s\r\n", payload_to_string(payload, length).c_str());
+                    break;
+
+                case 204:
+                    Serial.printf("LOC_TIMESTAMP from sensor_dst: %s\r\n", payload_to_string(payload, length).c_str());
                     break;
             }
         }

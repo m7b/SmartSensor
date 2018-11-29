@@ -8,13 +8,13 @@
  * @brief Topics to publish
  * 
  */
-#define LEVEL_SENSOR_CM_TOPIC       TOP_LEVEL_TOPIC LOCATION_TYPE "Lvl/raw_cm"
-#define LEVEL_CM_TOPIC              TOP_LEVEL_TOPIC LOCATION_TYPE "Lvl/cm"
-#define LEVEL_PERCENT_TOPIC         TOP_LEVEL_TOPIC LOCATION_TYPE "Lvl/percent"
-#define LEVEL_TIMESTAMP_TOPIC       TOP_LEVEL_TOPIC LOCATION_TYPE "Lvl/timestamp"
-#define LEVEL_LOCAL_TIMESTAMP_TOPIC TOP_LEVEL_TOPIC LOCATION_TYPE "Lvl/local_timestamp"
+#define LEVEL_SENSOR_CM_TOPIC       TOP_LEVEL_TOPIC LOCATION_TYPE SENS_RAW_CM
+#define LEVEL_CM_TOPIC              TOP_LEVEL_TOPIC LOCATION_TYPE SENS_CM
+#define LEVEL_PERCENT_TOPIC         TOP_LEVEL_TOPIC LOCATION_TYPE SENS_PERCENT
+#define LEVEL_TIMESTAMP_TOPIC       TOP_LEVEL_TOPIC LOCATION_TYPE SENS_TIMESTAMP
+#define LEVEL_LOCAL_TIMESTAMP_TOPIC TOP_LEVEL_TOPIC LOCATION_TYPE SENS_LOC_TIMESTAMP
 
-#define FUNCTION_MODE_ACK           TOP_LEVEL_TOPIC LOCATION_TYPE "FunctionModeAck"
+#define FUNCTION_MODE_ACK           TOP_LEVEL_TOPIC LOCATION_TYPE FUNCTION_MODE_ACK
 
 
 /**
@@ -23,7 +23,7 @@
  */
 static const std::vector<std::pair<const int, const char*>> topics_to_subscribe = {
 /*  TOPIC(<idx>, "<topic>"), */
-    TOPIC(0, "FunctionModeRequest"),
+    TOPIC(0, FUNCTION_MODE_REQ),
     TOPIC(1, "inTopic")
 };
 

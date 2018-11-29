@@ -30,3 +30,9 @@ constexpr unsigned long get_id(void)
     return id++;
 }
 */
+
+
+std::string payload_to_string(uint8_t* payload, unsigned int length)
+{
+    return std::string();
+}
