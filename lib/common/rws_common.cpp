@@ -34,5 +34,12 @@ constexpr unsigned long get_id(void)
 
 std::string payload_to_string(uint8_t* payload, unsigned int length)
 {
-    return std::string();
+    std::string tmp;
+
+    if (payload[length-1] == '\0')
+        tmp.append((const char*) payload);
+    else
+        tmp.assign((const char*) payload, length);
+
+    return tmp;
 }

@@ -25,14 +25,14 @@
 #define SENS_PERCENT       "Lvl/percent"
 #define SENS_TIMESTAMP     "Lvl/timestamp"
 #define SENS_LOC_TIMESTAMP "Lvl/local_timestamp"
-#define FUNCTION_MODE_ACK  "FunctionModeAck"
+#define MODE_ACK           "FunctionModeAck"
 
 
 /**
  * @brief Topics for controller
  * 
  */
-#define FUNCTION_MODE_REQ  "FunctionModeReq"
+#define MODE_REQ           "FunctionModeReq"
 
 
 /**

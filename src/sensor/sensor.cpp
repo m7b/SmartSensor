@@ -131,11 +131,7 @@ void sensor::mqtt_callback(char* topic, uint8_t* payload, unsigned int length) {
                     break;
 
                 case 1:
-                    Serial.printf("inTopic received: ");
-                    for (unsigned int i=0; i<length; i++) {
-                        Serial.print((char)payload[i]);
-                    }
-                    Serial.println(); 
+                    Serial.printf("inTopic received: %s\r\n", payload_to_string(payload, length).c_str());
                     break;
             }
         }

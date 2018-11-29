@@ -14,7 +14,7 @@
 #define LEVEL_TIMESTAMP_TOPIC       TOP_LEVEL_TOPIC LOCATION_TYPE SENS_TIMESTAMP
 #define LEVEL_LOCAL_TIMESTAMP_TOPIC TOP_LEVEL_TOPIC LOCATION_TYPE SENS_LOC_TIMESTAMP
 
-#define FUNCTION_MODE_ACK           TOP_LEVEL_TOPIC LOCATION_TYPE FUNCTION_MODE_ACK
+#define FUNCTION_MODE_ACK           TOP_LEVEL_TOPIC LOCATION_TYPE MODE_ACK
 
 
 /**
@@ -23,7 +23,7 @@
  */
 static const std::vector<std::pair<const int, const char*>> topics_to_subscribe = {
 /*  TOPIC(<idx>, "<topic>"), */
-    TOPIC(0, FUNCTION_MODE_REQ),
+    TOPIC(0, MODE_REQ),
     TOPIC(1, "inTopic")
 };
 
