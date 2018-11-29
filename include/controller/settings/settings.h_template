@@ -3,16 +3,4 @@
 
 #include "common/settings/settings.h"
 
-#define LOCATION_TYPE          LOCATION_TYPE_CONTROLLER
-
-/**
- * @brief Topics to subscribe
- * 
- */
-static const std::vector<std::pair<const int, const char*>> topics_to_subscribe = {
-/*  TOPIC(<idx>, "<topic>"), */
-    TOPIC(0, "FunctionMode"),
-    TOPIC(1, "inTopic")
-};
-
 #endif // CONTROLLER_SETTINGS_H
