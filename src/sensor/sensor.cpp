@@ -210,6 +210,10 @@ void sensor::operating(void)
                     Serial.println("Going to sleep ...");
                     set_next_step(N080_START_TIMEOUT_DS);
                 }
+
+                //Check function mode change request
+                if (FunctionMode != FunctionModeRequest)
+                    set_next_step(N050_CHANGE_TO_REQ_FUNCTION_MODE);
             }
             break;
 
