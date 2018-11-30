@@ -32,6 +32,8 @@ class controller : public statemachine
         rws_ntp *_ntp;
         rws_syslog *_syslog;
         rws_pubsubclient *_mqtt;
+        
+        unsigned long _start_time;
 
         uint8_t _function_mode_src_req;
         uint8_t _function_mode_src_ack;
@@ -56,6 +58,8 @@ class controller : public statemachine
 
 
 STEP_DEF(N000_INIT_STEP,                      "N000: Init step");    
+STEP_DEF(N001_START_TIMEOUT_FOR_ACTIVATION,   "N001: Start timeout for activation");
+STEP_DEF(N002_WAIT_TIMEOUT_FOR_ACTIVATION,    "N002: Wait timeout for activation");   
 STEP_DEF(N010_CHECK_PUMP_NOT_ACTIVE,          "N010: Check pump not active");
 STEP_DEF(N020_CHECK_DST_LEVEL_BELOW_MAX,      "N020: Check destination level below max");
 STEP_DEF(N030_CHECK_SRC_LEVEL_OVER_MIN,       "N030: Check source level over min");

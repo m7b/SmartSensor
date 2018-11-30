@@ -192,9 +192,21 @@ void controller::operating(void)
     switch (get_step())
     {
         case N000_INIT_STEP:
-            set_next_step(N010_CHECK_PUMP_NOT_ACTIVE);
+            set_next_step(N001_START_TIMEOUT_FOR_ACTIVATION);
             break;
-            
+
+        case N001_START_TIMEOUT_FOR_ACTIVATION:
+            _start_time = millis();
+            set_next_step(N002_WAIT_TIMEOUT_FOR_ACTIVATION);
+            break;
+
+        case N002_WAIT_TIMEOUT_FOR_ACTIVATION:
+            //wait timeout depending on operation mode
+            if (get_duration_ms(_start_time) >= 10000)
+                set_next_step(N010_CHECK_PUMP_NOT_ACTIVE);
+
+            break;
+
         case N010_CHECK_PUMP_NOT_ACTIVE:
             if (true)
                 set_next_step(N020_CHECK_DST_LEVEL_BELOW_MAX);
