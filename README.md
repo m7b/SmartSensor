@@ -1,3 +1,10 @@
+### Test results
+
+Branches  | Linux | Windows | Test coverage |
+----------|-------|---------|---------------|
+Master:   | [![Build Status](https://travis-ci.org/m7b/SmartSensor.svg?branch=master)](https://travis-ci.org/m7b/SmartSensor) |   |   |
+
+
 MQTT Topics
 -----------
 
