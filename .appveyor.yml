@@ -1,0 +1,16 @@
+build: off
+environment:
+
+#  matrix:
+#    - PLATFORMIO_CI_SRC: "path\\to\\source\\file.c"
+#    - PLATFORMIO_CI_SRC: "path\\to\\source\\file.ino"
+#    - PLATFORMIO_CI_SRC: "path\\to\\source\\directory"
+
+install:
+    - cmd: git submodule update --init --recursive
+    - cmd: SET PATH=%PATH%;C:\Python27\Scripts
+    - cmd: pip install -U platformio
+    - cmd: platformio update
+
+test_script:
+    - cmd: platformio run
