@@ -13,7 +13,7 @@ IoT project for an automated watering system with serval ESP8266 for water level
 
 ### Build instructions
 
-Mainly developed with VS Code and Platformio.
+Developed with [Visual Studio Code](https://code.visualstudio.com) and [PlatformIO](https://platformio.org).
 
 ### MQTT Topics
 
