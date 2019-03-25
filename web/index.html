@@ -23,15 +23,16 @@
     <!-- MQTT Websocket -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.2/mqttws31.js"></script>
     <script type="text/javascript">
-        var host = 'iot.eclipse.org';
-        var port = 80;
+        var host = 'bierfass';
+        var port = 9001;
         var topic = '#';
         var useTLS = false;
         var cleansession = true;
         var mqtt;
         var reconnectTimeout = 2000;
+		var livingTemp = new Array(20);
         function MQTTconnect() {
-		console.log("myPort: " + my_port);
+		//console.log("myPort: " + my_port);
 	        if (typeof path == "undefined") {
 		        path = '/mqtt';
 	        }
@@ -57,7 +58,7 @@
             mqtt.subscribe(topic, {qos: 0});
             $('#topic').html(topic);
         };
-        function onConnectionLost(response) {
+        function onConnectionLost(responseObject) {
             setTimeout(MQTTconnect, reconnectTimeout);
             $('#status').html("Connection lost: " + responseObject.errorMessage + ". Reconnecting...");
         };
@@ -68,7 +69,7 @@
             $('#message').html(topic + ', ' + payload);
             var timestamp = Math.round((new Date()).getTime() / 1000);
             switch (topic) {
-                case 'tele/sonoff1/LWT': 
+                case 'WS/RWS/EG/BarrelSrc/Lvl/cm__': 
                     $('#value1').html('(Switch value: ' + payload + ')');
                     if (payload == 'Online') {
                         $('#label1').text('Closed');
@@ -88,7 +89,7 @@
                         $('#label2').removeClass('label-success').addClass('label-danger');
                     }
                     break;
-              case 'living':
+                case 'WS/RWS/EG/BarrelSrc/Lvl/cm':
                     $('#livingTempSensor').html('(Sensor value: ' + payload + ')');
                     $('#livingTempLabel').text(payload + '°C');
                     $('#livingTempLabel').removeClass('').addClass('label-default');
@@ -135,7 +136,7 @@
                         }
                     });
                     break;
-                case 'basement':
+                case 'WS/RWS/EG/BarrelSrc/Lvl/raw_cm':
                     $('#basementTempSensor').html('(Sensor value: ' + payload + ')');
                     if (payload >= 25) {
                             $('#basementTempLabel').text(payload + '°C - too hot');
@@ -186,15 +187,15 @@
         <div class="panel panel-default">
           <div class="panel-body">
                 <table class="table table-striped">
-                    <!-- Entrace door -->
+                    <!-- BarrelSrc -->
                     <th>
                     <td width="40%" style="vertical-align:middle;"><h3>Barrel Source</h3></td>
                     <td style="vertical-align:middle;"></td>
                     <td width="30%" style="vertical-align:middle;"></td>
                     </th>
-                    <!-- Entrace door -->
+                    <!-- Level cm -->
                     <tr>
-                    <td width="40%" style="vertical-align:middle;"><h3>Entrance</h3><small id="value1">(no value recieved)</small></td>
+                    <td width="40%" style="vertical-align:middle;"><h3>Level cm</h3><small id="value1">(no value recieved)</small></td>
                     <td style="vertical-align:middle;"></td>
                     <td width="30%" style="vertical-align:middle;"><h4>&nbsp;<span id="label1" class="label">Unknown</span></h4></td>
                     </tr>
