@@ -300,6 +300,15 @@
                 default: console.log('Error: Data do not match the MQTT topic.'); break;
             }
         };
+
+        function myFunction(fct_mode) {
+            message = new Paho.Message(fct_mode);
+            message.destinationName = "WS/RWS/EG/BarrelSrc/FunctionModeReq";
+            mqtt.send(message);
+            message.destinationName = "WS/RWS/DG/BarrelDst/FunctionModeReq";
+            mqtt.send(message);
+        };
+
         $(document).ready(function() {
             MQTTconnect();
         });
@@ -311,6 +320,14 @@
     <div id="wrap">
       <div class="container">
         <div class="page-header"><h1><b>Watering System</b></h1></div>
+        <div class="pt-3"></div>
+
+        <button type="button" class="btn btn-primary"   onclick="myFunction('0')">Permanent Meassure</button>
+        <button type="button" class="btn btn-secondary" onclick="myFunction('1')">Interval 5 sec</button>
+        <button type="button" class="btn btn-success"   onclick="myFunction('2')">Interval 10 sec</button>
+        <button type="button" class="btn btn-danger"    onclick="myFunction('3')">Interval 5 min</button>
+        <button type="button" class="btn btn-warning"   onclick="myFunction('4')">Deep Sleep 20 sec</button>
+        <button type="button" class="btn btn-info"      onclick="myFunction('5')">Deep Sleep 5 min</button>
         <div class="pt-3"></div>
 
         <div class="panel panel-default">
