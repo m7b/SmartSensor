@@ -23,8 +23,8 @@
     <!-- MQTT Websocket -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.1.0/paho-mqtt.js"></script>
     <script type="text/javascript">
-        var host = 'iot.eclipse.org'; //'bierfass';
-        var port = 80; //9001;
+        var host = 'bierfass'; //'iot.eclipse.org'; //'bierfass';
+        var port = 9001; //80; //9001;
         var topic = 'WS/RWS/#';
         var useTLS = false;
         var cleansession = true;
@@ -76,7 +76,7 @@
                     $('#value0').html('(Payload value: ' + payload + ')');
                     $('#label0').text(payload + '');
                     break;
-                case 'WS/RWS/EG/BarrelSrc/Lvl/cm_raw': 
+                case 'WS/RWS/EG/BarrelSrc/Lvl/raw_cm': 
                     $('#value1').html('(Payload value: ' + payload + ')');
                     $('#label1').text(payload + 'cm');
                     break;
@@ -190,7 +190,7 @@
                     $('#DstValue0').html('(Payload value: ' + payload + ')');
                     $('#DstLabel0').text(payload + '');
                     break;
-                case 'WS/RWS/DG/BarrelDst/Lvl/cm_raw': 
+                case 'WS/RWS/DG/BarrelDst/Lvl/raw_cm': 
                     $('#DstValue1').html('(Payload value: ' + payload + ')');
                     $('#DstLabel1').text(payload + 'cm');
                     break;
