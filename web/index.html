@@ -21,23 +21,26 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.canvasAxisLabelRenderer.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.dateAxisRenderer.js"></script>
     <!-- MQTT Websocket -->
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.2/mqttws31.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.1.0/paho-mqtt.js"></script>
     <script type="text/javascript">
-        var host = 'bierfass';
-        var port = 9001;
-        var topic = '#';
+        var host = 'iot.eclipse.org'; //'bierfass';
+        var port = 80; //9001;
+        var topic = 'WS/RWS/#';
         var useTLS = false;
         var cleansession = true;
         var mqtt;
         var reconnectTimeout = 2000;
-		var livingTemp = new Array(20);
+		var srcLevelChart = new Array;
+        var srcLevel = new Array;
+		var dstLevelChart = new Array;
+        var dstLevel = new Array;
+        
         function MQTTconnect() {
 		//console.log("myPort: " + my_port);
 	        if (typeof path == "undefined") {
 		        path = '/mqtt';
 	        }
-	        mqtt = new Paho.MQTT.Client(host, port, path, "mqtt_panel" + parseInt(Math.random() * 100, 10)
-	    );
+	        mqtt = new Paho.Client(host, port, path, "mqtt_panel" + parseInt(Math.random() * 100, 10));
             var options = {
                 timeout: 3,
                 useSSL: useTLS,
@@ -69,39 +72,26 @@
             $('#message').html(topic + ', ' + payload);
             var timestamp = Math.round((new Date()).getTime() / 1000);
             switch (topic) {
-                case 'WS/RWS/EG/BarrelSrc/Lvl/cm__': 
-                    $('#value1').html('(Switch value: ' + payload + ')');
-                    if (payload == 'Online') {
-                        $('#label1').text('Closed');
-                        $('#label1').removeClass('label-danger').addClass('label-success');
-                    } else {
-                        $('#label1').text('Open');
-                        $('#label1').removeClass('label-success').addClass('label-danger');
-                    }
+                case 'WS/RWS/EG/BarrelSrc/Lvl/local_timestamp': 
+                    $('#value0').html('(Payload value: ' + payload + ')');
+                    $('#label0').text(payload + '');
                     break;
-                case 'back':
-                    $('#value2').html('(Switch value: ' + payload + ')');
-                    if (payload == 'true') {
-                        $('#label2').text('Closed');
-                        $('#label2').removeClass('label-danger').addClass('label-success');
-                    } else {
-                        $('#label2').text('Open');
-                        $('#label2').removeClass('label-success').addClass('label-danger');
-                    }
+                case 'WS/RWS/EG/BarrelSrc/Lvl/cm_raw': 
+                    $('#value1').html('(Payload value: ' + payload + ')');
+                    $('#label1').text(payload + 'cm');
                     break;
-                case 'WS/RWS/EG/BarrelSrc/Lvl/cm':
-                    $('#livingTempSensor').html('(Sensor value: ' + payload + ')');
-                    $('#livingTempLabel').text(payload + '°C');
-                    $('#livingTempLabel').removeClass('').addClass('label-default');
+                case 'WS/RWS/EG/BarrelSrc/Lvl/cm': 
+                    $('#value2').html('(Payload value: ' + payload + ')');
+                    $('#label2').text(payload + 'cm');
                     var entry = new Array();
                     entry.push(timestamp);
                     entry.push(parseInt(payload));
-                    livingTemp.push(entry);
+                    srcLevelChart.push(entry);
                     // Show only 20 values
-                    if (livingTemp.length >= 20) {
-                        livingTemp.shift()
+                    if (srcLevelChart.length >= 20) {
+                        srcLevelChart.shift()
                     }
-                    var livingTempPlot = $.jqplot ('livingTempChart', [livingTemp], {
+                    var livingTempPlot = $.jqplot ('srcLevelChart', [srcLevelChart], {
                         axesDefaults: {
                             labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
                             tickOptions: {
@@ -136,31 +126,175 @@
                         }
                     });
                     break;
-                case 'WS/RWS/EG/BarrelSrc/Lvl/raw_cm':
-                    $('#basementTempSensor').html('(Sensor value: ' + payload + ')');
-                    if (payload >= 25) {
-                            $('#basementTempLabel').text(payload + '°C - too hot');
-                            $('#basementTempLabel').removeClass('label-warning label-success label-info label-primary').addClass('label-danger');
-                    } else if (payload >= 21) {
-                            $('#basementTempLabel').text(payload + '°C - hot');
-                            $('#basementTempLabel').removeClass('label-danger label-success label-info label-primary').addClass('label-warning');
-                    } else if (payload >= 18) {
-                            $('#basementTempLabel').text(payload + '°C - normal');
-                            $('#basementTempLabel').removeClass('label-danger label-warning label-info label-primary').addClass('label-success');
-                    } else if (payload >= 15) {
-                            $('#basementTempLabel').text(payload + '°C - low');
-                            $('#basementTempLabel').removeClass('label-danger label-warning label-success label-primary').addClass('label-info');
-                    } else if (mpayload <= 12) {
-                            $('#basementTempLabel').text(payload + '°C - too low');
-                            $('#basementTempLabel').removeClass('label-danger label-warning label-success label-info').addClass('label-primary');
-                    basementTemp.push(parseInt(payload));
-                    if (basementTemp.length >= 20) {
-                        basementTemp.shift()
+                case 'WS/RWS/EG/BarrelSrc/Lvl/percent': 
+                    $('#value3').html('(Payload value: ' + payload + ')');
+                    $('#label3').text(payload + '%');
+                    $('#barSrc').css('width', payload + '%');
+                    srcLevel.push(parseInt(payload));
+                    if (srcLevel.length >= 20) {
+                        srcLevel.shift()
                     }
-                    $('.basementTempSparkline').sparkline(basementTemp, {
+                    $('.srcLevelSparkline').sparkline(srcLevel, {
                         type: 'line',
                         width: '160',
                         height: '40'});
+                    break;
+                case 'WS/RWS/EG/BarrelSrc/FunctionModeReq':
+                    $('#FunctionModeRequest').html('(Payload value: ' + payload + ')');
+                    $('#FunctionModeRequestLabel').removeClass('').addClass('label-default');
+                    switch (payload){
+                        case '0':
+                            $('#FunctionModeRequestLabel').text('Permanent Meassure'); break;
+                        case '1':
+                            $('#FunctionModeRequestLabel').text('Interval Meassure 5 Sec'); break;
+                        case '2':
+                            $('#FunctionModeRequestLabel').text('Interval Meassure 10 Sec'); break;
+                        case '3':
+                            $('#FunctionModeRequestLabel').text('Interval Meassure 5 Min'); break;
+                        case '4':
+                            $('#FunctionModeRequestLabel').text('Deep Sleep Meassure 20 Sec'); break;
+                        case '5':
+                            $('#FunctionModeRequestLabel').text('Deep Sleep Meassure 5 Min'); break;
+                        default:
+                            $('#FunctionModeRequestLabel').text('Mode not defined'); break;
+                            console.log('Error: No Function Mode for this payload.');
+                            break;
+                    }
+                    break;
+                case 'WS/RWS/EG/BarrelSrc/FunctionModeAck':
+                    $('#FunctionModeAcknowledge').html('(Payload value: ' + payload + ')');
+                    $('#FunctionModeAcknowledgeLabel').removeClass('').addClass('label-default');
+                    switch (payload){
+                        case '0':
+                            $('#FunctionModeAcknowledgeLabel').text('Permanent Meassure'); break;
+                        case '1':
+                            $('#FunctionModeAcknowledgeLabel').text('Interval Meassure 5 Sec'); break;
+                        case '2':
+                            $('#FunctionModeAcknowledgeLabel').text('Interval Meassure 10 Sec'); break;
+                        case '3':
+                            $('#FunctionModeAcknowledgeLabel').text('Interval Meassure 5 Min'); break;
+                        case '4':
+                            $('#FunctionModeAcknowledgeLabel').text('Deep Sleep Meassure 20 Sec'); break;
+                        case '5':
+                            $('#FunctionModeAcknowledgeLabel').text('Deep Sleep Meassure 5 Min'); break;
+                        default:
+                            $('#FunctionModeAcknowledgeLabel').text('Mode not defined'); break;
+                            console.log('Error: No Function Mode for this payload.');
+                            break;
+                    }
+                    break;
+                    
+                // DESTINATION BARREL
+
+                case 'WS/RWS/DG/BarrelDst/Lvl/local_timestamp': 
+                    $('#DstValue0').html('(Payload value: ' + payload + ')');
+                    $('#DstLabel0').text(payload + '');
+                    break;
+                case 'WS/RWS/DG/BarrelDst/Lvl/cm_raw': 
+                    $('#DstValue1').html('(Payload value: ' + payload + ')');
+                    $('#DstLabel1').text(payload + 'cm');
+                    break;
+                case 'WS/RWS/DG/BarrelDst/Lvl/cm': 
+                    $('#DstValue2').html('(Payload value: ' + payload + ')');
+                    $('#DstLabel2').text(payload + 'cm');
+                    var entry = new Array();
+                    entry.push(timestamp);
+                    entry.push(parseInt(payload));
+                    dstLevelChart.push(entry);
+                    // Show only 20 values
+                    if (dstLevelChart.length >= 20) {
+                        dstLevelChart.shift()
+                    }
+                    var livingTempPlot = $.jqplot ('dstLevelChart', [dstLevelChart], {
+                        axesDefaults: {
+                            labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+                            tickOptions: {
+                                showMark: false,
+                                showGridline: false,
+                                show: false,
+                                showLabel: false,
+                            }
+                          },
+                        grid: {
+                            gridLineColor: '#FFFFFF',
+                            borderWidth: 0,
+                            shadow: false,
+                        },
+                        seriesDefaults: {
+                            rendererOptions: {
+                                smooth: true
+                            },
+                            showMarker: false,
+                            lineWidth: 2,
+                          },
+                          axes: {
+                            xaxis: {
+                              renderer:$.jqplot.DateAxisRenderer,
+                              tickOptions:{
+                                formatString:'%T'
+                              },
+                              pad: 0
+                            },
+                            yaxis: {
+                            }
+                        }
+                    });
+                    break;
+                case 'WS/RWS/DG/BarrelDst/Lvl/percent': 
+                    $('#DstValue3').html('(Payload value: ' + payload + ')');
+                    $('#DstLabel3').text(payload + '%');
+                    $('#barDst').css('width', payload + '%');
+                    dstLevel.push(parseInt(payload));
+                    if (dstLevel.length >= 20) {
+                        dstLevel.shift()
+                    }
+                    $('.dstLevelSparkline').sparkline(dstLevel, {
+                        type: 'line',
+                        width: '160',
+                        height: '40'});
+                    break;
+                case 'WS/RWS/DG/BarrelDst/FunctionModeReq':
+                    $('#DstFunctionModeRequest').html('(Payload value: ' + payload + ')');
+                    $('#DstFunctionModeRequestLabel').removeClass('').addClass('label-default');
+                    switch (payload){
+                        case '0':
+                            $('#DstFunctionModeRequestLabel').text('Permanent Meassure'); break;
+                        case '1':
+                            $('#DstFunctionModeRequestLabel').text('Interval Meassure 5 Sec'); break;
+                        case '2':
+                            $('#DstFunctionModeRequestLabel').text('Interval Meassure 10 Sec'); break;
+                        case '3':
+                            $('#DstFunctionModeRequestLabel').text('Interval Meassure 5 Min'); break;
+                        case '4':
+                            $('#DstFunctionModeRequestLabel').text('Deep Sleep Meassure 20 Sec'); break;
+                        case '5':
+                            $('#DstFunctionModeRequestLabel').text('Deep Sleep Meassure 5 Min'); break;
+                        default:
+                            $('#DstFunctionModeRequestLabel').text('Mode not defined'); break;
+                            console.log('Error: No Function Mode for this payload.');
+                            break;
+                    }
+                    break;
+                case 'WS/RWS/DG/BarrelDst/FunctionModeAck':
+                    $('#DstFunctionModeAcknowledge').html('(Payload value: ' + payload + ')');
+                    $('#DstFunctionModeAcknowledgeLabel').removeClass('').addClass('label-default');
+                    switch (payload){
+                        case '0':
+                            $('#DstFunctionModeAcknowledgeLabel').text('Permanent Meassure'); break;
+                        case '1':
+                            $('#DstFunctionModeAcknowledgeLabel').text('Interval Meassure 5 Sec'); break;
+                        case '2':
+                            $('#DstFunctionModeAcknowledgeLabel').text('Interval Meassure 10 Sec'); break;
+                        case '3':
+                            $('#DstFunctionModeAcknowledgeLabel').text('Interval Meassure 5 Min'); break;
+                        case '4':
+                            $('#DstFunctionModeAcknowledgeLabel').text('Deep Sleep Meassure 20 Sec'); break;
+                        case '5':
+                            $('#DstFunctionModeAcknowledgeLabel').text('Deep Sleep Meassure 5 Min'); break;
+                        default:
+                            $('#DstFunctionModeAcknowledgeLabel').text('Mode not defined'); break;
+                            console.log('Error: No Function Mode for this payload.');
+                            break;
                     }
                     break;
                 default: console.log('Error: Data do not match the MQTT topic.'); break;
@@ -177,57 +311,117 @@
     <div id="wrap">
       <div class="container">
         <div class="page-header"><h1><b>Watering System</b></h1></div>
+        <div class="pt-3"></div>
 
-        <div class="progress">
-            <div class="progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width:75%">
-                <span class="sr-only">70% Complete</span>
+        <div class="panel panel-default">
+          <div class="panel-body">
+
+            <div class="progress">
+                <div id="barSrc" class="progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width:75%">
+                    <span class="sr-only">70% Complete</span>
+                </div>
             </div>
+            <table class="table table-striped">
+                <!-- BarrelSrc -->
+                <tr>
+                <td colspan="3" align="center" style="vertical-align:middle;"><h3>Barrel Source</h3></td>
+                </tr>
+                <!-- Level Zeitstempel -->
+                <tr>
+                <td width="40%" style="vertical-align:middle;"><h5>Level Zeitstempel</h5><small id="value0">(no value recieved)</small></td>
+                <td style="vertical-align:middle;"></td>
+                <td width="40%" style="vertical-align:middle;"><h5>&nbsp;<span id="label0" class="label">Unknown</span></h5></td>
+                </tr>
+                <!-- Level cm (Rohwert)-->
+                <tr>
+                <td width="40%" style="vertical-align:middle;"><h5>Level cm (Rohwert)</h5><small id="value1">(no value recieved)</small></td>
+                <td style="vertical-align:middle;"></td>
+                <td width="40%" style="vertical-align:middle;"><h5>&nbsp;<span id="label1" class="label">Unknown</span></h5></td>
+                </tr>
+                <!-- Level cm -->
+                <tr>
+                <td width="40%" style="vertical-align:middle;"><h5>Level cm</h5><small id="value2">(no value recieved)</small></td>
+                <td style="vertical-align:middle;"><div id="srcLevelChart" style="height:60px; width:180px;"></div></td>
+                <td width="40%" style="vertical-align:middle;"><h5>&nbsp;<span id="label2" class="label">Unknown</span></h5></td>
+                </tr>
+                <!-- Level % -->
+                <tr>
+                <td width="40%" style="vertical-align:middle;"><h5>Level %</h5><small id="value3">(no value recieved)</small></td>
+                <td style="vertical-align:middle;"><span class="srcLevelSparkline"></span></td>
+                <td width="40%" style="vertical-align:middle;"><h5>&nbsp;<span id="label3" class="label">Unknown</span></h5></td>
+                </tr>
+                <!-- Function Mode Request -->
+                <tr>
+                <td width="40%" style="vertical-align:middle;"><h5>Function Mode Request</h5><small id="FunctionModeRequest">(no value recieved)</small></td>
+                <td style="vertical-align:middle;"></td>
+                <td width="40%" style="vertical-align:middle;"><h5>&nbsp;<span id="FunctionModeRequestLabel" class="label">Unknown</span></h5></td>
+                </tr>
+                <!-- Function Mode Acknowledge -->
+                <tr>
+                <td width="40%" style="vertical-align:middle;"><h5>Function Mode Acknowledge</h5><small id="FunctionModeAcknowledge">(no value recieved)</small></td>
+                <td style="vertical-align:middle;"></td>
+                <td width="40%" style="vertical-align:middle;"><h5>&nbsp;<span id="FunctionModeAcknowledgeLabel" class="label">Unknown</span></h5></td>
+                </tr>
+            </table>
+
+            <div class="pt-3"></div>
+            
+            <div class="progress">
+                <div id="barDst" class="progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width:75%">
+                    <span class="sr-only">70% Complete</span>
+                </div>
+            </div>
+            <table class="table table-striped">
+                <!-- BarrelDst -->
+                <tr>
+                <td colspan="3" align="center" style="vertical-align:middle;"><h3>Barrel Destination</h3></td>
+                </tr>
+                <!-- Level Zeitstempel -->
+                <tr>
+                <td width="40%" style="vertical-align:middle;"><h5>Level Zeitstempel</h5><small id="DstValue0">(no value recieved)</small></td>
+                <td style="vertical-align:middle;"></td>
+                <td width="40%" style="vertical-align:middle;"><h5>&nbsp;<span id="DstLabel0" class="label">Unknown</span></h5></td>
+                </tr>
+                <!-- Level cm (Rohwert)-->
+                <tr>
+                <td width="40%" style="vertical-align:middle;"><h5>Level cm (Rohwert)</h5><small id="DstValue1">(no value recieved)</small></td>
+                <td style="vertical-align:middle;"></td>
+                <td width="40%" style="vertical-align:middle;"><h5>&nbsp;<span id="DstLabel1" class="label">Unknown</span></h5></td>
+                </tr>
+                <!-- Level cm -->
+                <tr>
+                <td width="40%" style="vertical-align:middle;"><h5>Level cm</h5><small id="DstValue2">(no value recieved)</small></td>
+                <td style="vertical-align:middle;"><div id="dstLevelChart" style="height:60px; width:180px;"></div></td>
+                <td width="40%" style="vertical-align:middle;"><h5>&nbsp;<span id="DstLabel2" class="label">Unknown</span></h5></td>
+                </tr>
+                <!-- Level % -->
+                <tr>
+                <td width="40%" style="vertical-align:middle;"><h5>Level %</h5><small id="DstValue3">(no value recieved)</small></td>
+                <td style="vertical-align:middle;"><span class="dstLevelSparkline"></span></td>
+                <td width="40%" style="vertical-align:middle;"><h5>&nbsp;<span id="DstLabel3" class="label">Unknown</span></h5></td>
+                </tr>
+                <!-- Function Mode Request -->
+                <tr>
+                <td width="40%" style="vertical-align:middle;"><h5>Function Mode Request</h5><small id="DstFunctionModeRequest">(no value recieved)</small></td>
+                <td style="vertical-align:middle;"></td>
+                <td width="40%" style="vertical-align:middle;"><h5>&nbsp;<span id="DstFunctionModeRequestLabel" class="label">Unknown</span></h5></td>
+                </tr>
+                <!-- Function Mode Acknowledge -->
+                <tr>
+                <td width="40%" style="vertical-align:middle;"><h5>Function Mode Acknowledge</h5><small id="DstFunctionModeAcknowledge">(no value recieved)</small></td>
+                <td style="vertical-align:middle;"></td>
+                <td width="40%" style="vertical-align:middle;"><h5>&nbsp;<span id="DstFunctionModeAcknowledgeLabel" class="label">Unknown</span></h5></td>
+                </tr>
+            </table>
+          </div>
         </div>
 
-        <div class="panel panel-default">
-          <div class="panel-body">
-                <table class="table table-striped">
-                    <!-- BarrelSrc -->
-                    <th>
-                    <td width="40%" style="vertical-align:middle;"><h3>Barrel Source</h3></td>
-                    <td style="vertical-align:middle;"></td>
-                    <td width="30%" style="vertical-align:middle;"></td>
-                    </th>
-                    <!-- Level cm -->
-                    <tr>
-                    <td width="40%" style="vertical-align:middle;"><h3>Level cm</h3><small id="value1">(no value recieved)</small></td>
-                    <td style="vertical-align:middle;"></td>
-                    <td width="30%" style="vertical-align:middle;"><h4>&nbsp;<span id="label1" class="label">Unknown</span></h4></td>
-                    </tr>
-                    <!-- Back door -->
-                    <tr>
-                    <td width="40%" style="vertical-align:middle;"><h3>Back door</h3><small id="value2">(no value recieved)</small></td>
-                    <td style="vertical-align:middle;"></td>
-                    <td width="30%" style="vertical-align:middle;"><h4>&nbsp;<span id="label2" class="label">Unknown</span></h4></td>
-                    </tr>
-                    <!-- Living room temperature -->
-                    <tr>
-                    <td width="40%" style="vertical-align:middle;"><h3>Living room temperature</h3><small id="livingTempSensor">(no value recieved)</small></td>
-                    <td style="vertical-align:middle;"><div id="livingTempChart" style="height:80px; width:180px;"></div></td>
-                    <td width="30%" style="vertical-align:middle;"><h4>&nbsp;<span id="livingTempLabel" class="label">Unknown</span></h4></td>
-                    </tr>
-                    <!-- Basement temperature -->
-                    <tr>
-                    <td width="40%" style="vertical-align:middle;"><h3>Basement temperature</h3><small id="basementTempSensor">(no value recieved)</small></td>
-                    <td style="vertical-align:middle;"><span class="basementTempSparkline"></span></td>
-                    <td width="30%" style="vertical-align:middle;"><h4>&nbsp;<span id="basementTempLabel" class="label">Unknown</span></h4></td>
-                    </tr>
-                </table>
-          </div>
+        <div class="row">
+            <div class="col-md-6"><b>Latest MQTT message:  </b> <small id="message">no message recieved</small></div>
+            <div class="col-md-6"><b>Status: </b>  <small id='status'></small></div>
         </div>
-        <div class="panel panel-default">
-          <div class="panel-body">
-              <div class="row">
-                <div class="col-md-6"><b>Latest MQTT message:  </b> <small id="message">no message recieved</small></div>
-                <div class="col-md-6"><b>Status: </b>  <small id='status'></small></div>
-              </div>
-          </div>
-        </div>
+        <div class="pt-3"></div>
+
         <div class="footer">
           <small><p class="text-center">&copy; <a href="http://bierfass">Bierfass</a></p></small>
         </div>
