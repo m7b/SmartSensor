@@ -31,7 +31,13 @@ void statemachine::set_next_step(const step &next_step)
 }
 
 
-unsigned long statemachine::get_step(void)
+statemachine::step statemachine::get_step(void)
 {
     return _step;
+}
+
+
+unsigned long statemachine::get_step_start(void)
+{
+    return _step_start;
 }

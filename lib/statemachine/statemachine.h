@@ -23,7 +23,8 @@ class statemachine
         };
 
         void set_next_step(const step &next);
-        unsigned long get_step(void);
+        step get_step(void);
+        unsigned long get_step_start(void);
 
     private:
         step _step;
