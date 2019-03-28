@@ -3,6 +3,7 @@
 rgbled::rgbled()
 {
     _setup    = false;
+    _enable   = false;
 
     _red      = 0;
     _green    = 0;
@@ -16,6 +17,7 @@ rgbled::rgbled()
 rgbled::rgbled(uint8_t red, uint8_t green, uint8_t blue)
 {
     _setup    = false;
+    _enable   = false;
     
     _red      = red;
     _green    = green;
@@ -42,6 +44,17 @@ void rgbled::setup(void)
     pinMode(_blue,  OUTPUT);
 
     _setup = true;
+}
+
+void rgbled::set_enable(bool val)
+{
+    _enable = val;
+     if (!_enable)
+     {
+         digitalWrite(_red, LOW);
+         digitalWrite(_green, LOW);
+         digitalWrite(_blue, LOW);
+     }
 }
 
 void rgbled::loop(void)
@@ -101,7 +114,7 @@ void rgbled::set_delay_ms(uint32_t delay_ms)
 
 bool rgbled::conditions_ok(void)
 {
-    if (!_setup)
+    if (!_setup || !_enable)
         return false;
     
     return true;

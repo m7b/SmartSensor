@@ -182,6 +182,17 @@ void controller::mqtt_callback(char* topic, uint8_t* payload, unsigned int lengt
                 case 204:
                     Serial.printf("LOC_TIMESTAMP from sensor_dst: %s\r\n", payload_to_string(payload, length).c_str());
                     break;
+
+                case 500:
+                    Serial.printf("MANUAL_PUMP_REQ from dashboard: %s\r\n", payload_to_string(payload, length).c_str());
+                    _light->set_enable(payload[0] == '1');
+                    _mqtt->publish(MANUAL_PUMP_ACKNOWLEDGE, payload_to_string(payload, length));
+                    break;
+
+                case 501:
+                    Serial.printf("MANUAL_VALVE_REQ from dashboard: %s\r\n", payload_to_string(payload, length).c_str());
+                    _mqtt->publish(MANUAL_VALVE_ACKNOWLEDGE, payload_to_string(payload, length));
+                    break;
             }
         }
     }

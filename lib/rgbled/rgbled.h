@@ -11,6 +11,7 @@ class rgbled
         ~rgbled();
 
         void setup(void);
+        void set_enable(bool val);
         void loop(void);
 
         void set_rgb_port(uint8_t red, uint8_t green, uint8_t blue);
@@ -18,6 +19,7 @@ class rgbled
 
     private:
         bool _setup;
+        bool _enable;
         uint16_t _step;
 
         uint8_t _red;
