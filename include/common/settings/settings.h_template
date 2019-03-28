@@ -79,5 +79,6 @@ static const std::vector<std::pair<const char*, const char*>> wifi_access_creden
 #define LOCATION_TYPE_CONTROLLER    "DG/Controller/"
 #define LOCATION_TYPE_BARREL_SRC    "EG/BarrelSrc/"
 #define LOCATION_TYPE_BARREL_DST    "DG/BarrelDst/"
+#define DASHBOARD                   "Dashboard/"
 
 #endif // COMMON_SETTINGS_H
