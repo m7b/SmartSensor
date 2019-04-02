@@ -25,6 +25,8 @@ Developed with [Visual Studio Code](https://code.visualstudio.com) and [Platform
 
  - WS/RWS/EG/BarrelSrc/FunctionModeReq
  - WS/RWS/EG/BarrelSrc/FunctionModeAck
+
+ - WS/RWS/EG/BarrelSrc/Status (also mqtt last will topic)
  
  WS = WateringSystem
  RWS = RainWaterSystem
