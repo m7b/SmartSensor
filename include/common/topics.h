@@ -20,12 +20,13 @@
  * @brief Topics from sensor
  * 
  */
-#define SENS_RAW_CM        "Lvl/raw_cm"
-#define SENS_CM            "Lvl/cm"
-#define SENS_PERCENT       "Lvl/percent"
-#define SENS_TIMESTAMP     "Lvl/timestamp"
-#define SENS_LOC_TIMESTAMP "Lvl/local_timestamp"
-#define MODE_ACK           "FunctionModeAck"
+#define SENS_RAW_CM          "Lvl/raw_cm"
+#define SENS_CM              "Lvl/cm"
+#define SENS_PERCENT         "Lvl/percent"
+#define SENS_TIMESTAMP       "Lvl/timestamp"
+#define SENS_LOC_TIMESTAMP   "Lvl/local_timestamp"
+#define MODE_ACK             "FunctionModeAck"
+#define SENS_LAST_WILL_TOPIC "Status"
 
 
 /**

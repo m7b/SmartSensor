@@ -6,6 +6,9 @@
 #define ON 1
 #define OFF 0
 
+#define TRUE true
+#define FALSE false
+
 //Debug flag ON or OFF
 #define DEBUG OFF
 
@@ -66,8 +69,11 @@ static const std::vector<std::pair<const char*, const char*>> wifi_access_creden
  * @brief MQTT Connection settings
  * 
  */
-#define MQTT_SERVER "broker.hivemq.com"
-#define MQTT_PORT   1883
+#define MQTT_SERVER        "broker.hivemq.com"
+#define MQTT_PORT          1883
+#define LAST_WILL_QOS      1
+#define LAST_WILL_RETAIN   TRUE
+#define LAST_WILL_MESSAGE  "Offline"
 
 /**
  * @brief Topic prefixes.

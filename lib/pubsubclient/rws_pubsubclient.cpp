@@ -8,6 +8,29 @@ rws_pubsubclient::rws_pubsubclient(const char *server, uint16_t port)
     setServer(server, port);
 //  setCallback(callback);
 
+    _willTopic = 0;
+    _willQos = 0;
+    _willRetain = 0;
+    _willMessage = 0;
+
+    clientId = "";
+
+    max_connection_tries = 3;
+}
+
+rws_pubsubclient::rws_pubsubclient(const char *server, uint16_t port, const char* willTopic, uint8_t willQos, boolean willRetain, const char* willMessage)
+: PubSubClient(espClient)
+{
+    this->server = server;
+    this->port   = port;
+    setServer(server, port);
+//  setCallback(callback);
+
+    _willTopic = willTopic;
+    _willQos = willQos;
+    _willRetain = willRetain;
+    _willMessage = willMessage;
+
     clientId = "";
 
     max_connection_tries = 3;
@@ -121,13 +144,16 @@ void rws_pubsubclient::reconnect(void)
     clientId = "ESP8266Client-" + String(random(0xffff), HEX);
 
     // Attempt to connect
-    if (connect(clientId.c_str()))
-
+    
+    if (connect(clientId.c_str(), _willTopic, _willQos, _willRetain, _willMessage))
     {
         Serial.println("MQTT connected");
         Serial.println("CLient ID is: " + clientId);
+
         // Once connected, publish an announcement...
-        //publish("outTopic", "hello world");
+        if (_willTopic)
+            publish(_willTopic, "Online", _willRetain);
+
         // ... and resubscribe
         for(auto topic : *_topics_to_subscribe) 
             subscribe(topic.second);
