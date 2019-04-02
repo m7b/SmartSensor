@@ -35,6 +35,9 @@ class controller : public statemachine
         
         unsigned long _start_time;
 
+        bool _sens_src_online;
+        bool _sens_dst_online;
+
         uint8_t _function_mode_src_req;
         uint8_t _function_mode_src_ack;
         uint8_t _function_mode_dst_req;
@@ -59,10 +62,12 @@ class controller : public statemachine
 
 STEP_DEF(N000_INIT_STEP,                      "N000: Init step");    
 STEP_DEF(N001_START_TIMEOUT_FOR_ACTIVATION,   "N001: Start timeout for activation");
-STEP_DEF(N002_WAIT_TIMEOUT_FOR_ACTIVATION,    "N002: Wait timeout for activation");   
+STEP_DEF(N002_WAIT_TIMEOUT_FOR_ACTIVATION,    "N002: Wait timeout for activation");
 STEP_DEF(N010_CHECK_PUMP_NOT_ACTIVE,          "N010: Check pump not active");
 STEP_DEF(N020_CHECK_DST_LEVEL_BELOW_MAX,      "N020: Check destination level below max");
 STEP_DEF(N030_CHECK_SRC_LEVEL_OVER_MIN,       "N030: Check source level over min");
+STEP_DEF(N035_CHANGE_MEAS_MODE_SENSORS,       "N035: Change meassuring mode of sensors");
+STEP_DEF(N036_WAIT_MEAS_MODE_SENSORS_CHANGED, "N036: Wait meassuring mode of sensors changed");
 STEP_DEF(N040_CHECK_PUMP_READY,               "N040: Check pump ready");
 STEP_DEF(N050_CHECK_START_PUMP,               "N050: Check start pump");
 STEP_DEF(N060_WAIT_PUMP_STARTED,              "N060: Wait pump started");
@@ -78,6 +83,8 @@ STEP_DEF(N200_REPORT_ERROR,                   "N200: Report error");
 STEP_DEF(N300_CHECK_STOP_PUMP,                "N300: Check pump stop");
 STEP_DEF(N310_CHECK_PUMP_STOPPED,             "N310: Check pump stopped");
 STEP_DEF(N320_STORE_PUMP_DATA,                "N320: Store pump data");
+STEP_DEF(N400_CHANGE_MEAS_MODE_SENSORS,       "N400: Change meassuring mode of sensors");
+STEP_DEF(N410_WAIT_MEAS_MODE_SENSORS_CHANGED, "N410: Wait meassuring mode of sensors changed");
 STEP_DEF(N999_END,                            "N999: End");
 
 #endif // CONTROLLER_H

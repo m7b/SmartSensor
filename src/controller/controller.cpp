@@ -7,6 +7,9 @@ controller::controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pub
     _syslog    = syslog;
     _mqtt      = mqtt;
     
+    _sens_src_online = false;
+    _sens_dst_online = false;
+
     _function_mode_src_req = 0;
     _function_mode_src_ack = 0;
     _function_mode_dst_req = 0;
@@ -163,6 +166,11 @@ void controller::mqtt_callback(char* topic, uint8_t* payload, unsigned int lengt
                     Serial.printf("LOC_TIMESTAMP from sensor_src: %s\r\n", payload_to_string(payload, length).c_str());
                     break;
 
+                case 105:
+                    Serial.printf("SENS_LAST_WILL_TOPIC (Status) from sensor_src: %s\r\n", payload_to_string(payload, length).c_str());
+                    _sens_src_online = (payload_to_string(payload, length).compare("Online") == 0);
+                    break;
+
                 case 200:
                     Serial.printf("RAW_CM from sensor_dst: %s\r\n", payload_to_string(payload, length).c_str());
                     break;
@@ -181,6 +189,11 @@ void controller::mqtt_callback(char* topic, uint8_t* payload, unsigned int lengt
 
                 case 204:
                     Serial.printf("LOC_TIMESTAMP from sensor_dst: %s\r\n", payload_to_string(payload, length).c_str());
+                    break;
+
+                case 205:
+                    Serial.printf("SENS_LAST_WILL_TOPIC (Status) from sensor_dst: %s\r\n", payload_to_string(payload, length).c_str());
+                    _sens_dst_online = (payload_to_string(payload, length).compare("Online") == 0);
                     break;
 
                 case 500:
@@ -234,9 +247,19 @@ void controller::operating(void)
             
         case N030_CHECK_SRC_LEVEL_OVER_MIN:
             if (true)
-                set_next_step(N040_CHECK_PUMP_READY);
+                set_next_step(N035_CHANGE_MEAS_MODE_SENSORS);
             else
                 set_next_step(N999_END);
+            break;
+            
+        case N035_CHANGE_MEAS_MODE_SENSORS:
+            if (true)
+                set_next_step(N036_WAIT_MEAS_MODE_SENSORS_CHANGED);
+            break;
+            
+        case N036_WAIT_MEAS_MODE_SENSORS_CHANGED:
+            if (true)
+                set_next_step(N040_CHECK_PUMP_READY);
             break;
             
         case N040_CHECK_PUMP_READY:
@@ -317,7 +340,17 @@ void controller::operating(void)
             break;
             
         case N320_STORE_PUMP_DATA:
-            set_next_step(N999_END);
+            set_next_step(N400_CHANGE_MEAS_MODE_SENSORS);
+            break;
+            
+        case N400_CHANGE_MEAS_MODE_SENSORS:
+            if (true)
+                set_next_step(N410_WAIT_MEAS_MODE_SENSORS_CHANGED);
+            break;
+            
+        case N410_WAIT_MEAS_MODE_SENSORS_CHANGED:
+            if (true)
+                set_next_step(N999_END);
             break;
             
         case N999_END:
