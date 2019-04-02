@@ -1,4 +1,4 @@
-var debug = 0;
+var debug = false;
 var host = 'iot.eclipse.org'; //'iot.eclipse.org'; //'bierfass';
 var port = 80; //80; //9001;
 var topic = 'WS/RWS/#';
@@ -258,6 +258,12 @@ function onMessageArrived(message) {
 };
 
 
+function ToggleDebug() {
+    debug = !debug;
+    ShowDebugInfos();
+}
+
+
 function ManualSensMeasMode(fct_mode) {
     message = new Paho.Message(fct_mode);
     message.retained = true;
@@ -288,6 +294,9 @@ function ManualFctValve(fct_mode) {
 
 
 function AddEventHandlers() {
+
+    $('#ToggleMoreInfos').click(function(){ToggleDebug()});
+    
     $('#ManFctPumpOn').click(function(){ManualFctPump('1')});
     $('#ManFctPumpOff').click(function(){ManualFctPump('0')});
     
@@ -304,35 +313,37 @@ function AddEventHandlers() {
 
 
 function ShowDebugInfos() {
-    if (debug == 1)
-        return;
+    var display_val = "none";
 
-    $('#ManualPumpReqValue').css("display", "none");
-    $('#ManualPumpAckValue').css("display", "none");
+    if (debug == true)
+        display_val = "initial"
 
-    $('#ManualValveReqValue').css("display", "none");
-    $('#ManualValveAckValue').css("display", "none");
+    $('#ManualPumpReqValue').css("display", display_val);
+    $('#ManualPumpAckValue').css("display", display_val);
 
-    $('#SrcStatusValue').css("display", "none");
-    $('#DstStatusValue').css("display", "none");
+    $('#ManualValveReqValue').css("display", display_val);
+    $('#ManualValveAckValue').css("display", display_val);
 
-    $('#value0').css("display", "none");
-    $('#DstValue0').css("display", "none");
+    $('#SrcStatusValue').css("display", display_val);
+    $('#DstStatusValue').css("display", display_val);
 
-    $('#value1').css("display", "none");
-    $('#DstValue1').css("display", "none");
+    $('#value0').css("display", display_val);
+    $('#DstValue0').css("display", display_val);
 
-    $('#value2').css("display", "none");
-    $('#DstValue2').css("display", "none");
+    $('#value1').css("display", display_val);
+    $('#DstValue1').css("display", display_val);
 
-    $('#value3').css("display", "none");
-    $('#DstValue3').css("display", "none");
+    $('#value2').css("display", display_val);
+    $('#DstValue2').css("display", display_val);
 
-    $('#FunctionModeRequest').css("display", "none");
-    $('#DstFunctionModeRequest').css("display", "none");
+    $('#value3').css("display", display_val);
+    $('#DstValue3').css("display", display_val);
 
-    $('#FunctionModeAcknowledge').css("display", "none");
-    $('#DstFunctionModeAcknowledge').css("display", "none");
+    $('#FunctionModeRequest').css("display", display_val);
+    $('#DstFunctionModeRequest').css("display", display_val);
+
+    $('#FunctionModeAcknowledge').css("display", display_val);
+    $('#DstFunctionModeAcknowledge').css("display", display_val);
 }
 
 
