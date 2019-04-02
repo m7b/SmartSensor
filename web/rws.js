@@ -76,14 +76,17 @@ function onMessageArrived(message) {
             $('#label3').text(payload + '%');
             $('#barSrc').css('width', payload + '%');
             $('#barSrc').text(payload + '%');
-            srcLevel.push(parseInt(payload));
+            //srcLevel.push(parseInt(payload));
+            srcLevel.push(parseFloat(payload));
             if (srcLevel.length >= 20) {
                 srcLevel.shift()
             }
             $('.srcLevelSparkline').sparkline(srcLevel, {
                 type: 'line',
+                tooltipSuffix: " %",
                 width: '160',
-                height: '25'});
+                height: '25'
+            });
             break;
         case 'WS/RWS/EG/BarrelSrc/FunctionModeReq':
             $('#FunctionModeRequest').html('(Payload value: ' + payload + ')');
@@ -153,12 +156,13 @@ function onMessageArrived(message) {
             $('#DstLabel3').text(payload + '%');
             $('#barDst').css('width', payload + '%');
             $('#barDst').text(payload + '%');
-            dstLevel.push(parseInt(payload));
+            dstLevel.push(parseFloat(payload));
             if (dstLevel.length >= 20) {
                 dstLevel.shift()
             }
             $('.dstLevelSparkline').sparkline(dstLevel, {
                 type: 'line',
+                tooltipSuffix: " %",
                 width: '160',
                 height: '30'});
             break;

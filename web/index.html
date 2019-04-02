@@ -20,7 +20,8 @@
     <script src="https://unpkg.com/ionicons@4.5.5/dist/ionicons.js"></script>
     <!-- MQTT Websocket -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.1.0/paho-mqtt.js"></script>
-    <!-- RWS script -->
+    <!-- RWS css/script -->
+    <link rel="stylesheet" href="rws.css">
     <script type="text/javascript" src="rws.js"></script>
   </head>
 
@@ -50,8 +51,9 @@
                         <td style="vertical-align:middle;">
                             <div class="btn-group" role="group" aria-label="Pump functions">
                                 <button id="ManFctPumpOn"  type="button" class="btn btn-success active">An</button>
-                                <button id="ManFctPumpOff" type="button" class="btn btn-danger active">Aus</button></td>
+                                <button id="ManFctPumpOff" type="button" class="btn btn-danger active">Aus</button>
                             </div>
+                        </td>
                         <td align="center" style="vertical-align:middle;"><h5>&nbsp;<span id="ManualPumpReqLabel" class="label">Unknown</span></h5><small id="ManualPumpReqValue">(no value recieved)</small></td>
                         <td align="center" style="vertical-align:middle;"><h5>&nbsp;<span id="ManualPumpAckLabel" class="label">Unknown</span></h5><small id="ManualPumpAckValue">(no value recieved)</small></td>
                         <td align="right" style="vertical-align:middle;">3245 mA</td>
@@ -63,8 +65,9 @@
                         <td style="vertical-align:middle;">
                             <div class="btn-group" role="group" aria-label="Valve functions">
                                 <button id="ManFctValveOn"  type="button" class="btn btn-success active">An</button>
-                                <button id="ManFctValveOff" type="button" class="btn btn-danger active">Aus</button></td>
+                                <button id="ManFctValveOff" type="button" class="btn btn-danger active">Aus</button>
                             </div>
+                        </td>
                         <td align="center" style="vertical-align:middle;"><h5>&nbsp;<span id="ManualValveReqLabel" class="label">Unknown</span></h5><small id="ManualValveReqValue">(no value recieved)</small></td>
                         <td align="center" style="vertical-align:middle;"><h5>&nbsp;<span id="ManualValveAckLabel" class="label">Unknown</span></h5><small id="ManualValveAckValue">(no value recieved)</small></td>
                         <td align="right" style="vertical-align:middle;">412 mA</td>
