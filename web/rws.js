@@ -1,4 +1,4 @@
-
+var debug = 0;
 var host = 'iot.eclipse.org'; //'iot.eclipse.org'; //'bierfass';
 var port = 80; //80; //9001;
 var topic = 'WS/RWS/#';
@@ -70,48 +70,6 @@ function onMessageArrived(message) {
         case 'WS/RWS/EG/BarrelSrc/Lvl/cm': 
             $('#value2').html('(Payload value: ' + payload + ')');
             $('#label2').text(payload + 'cm');
-            var entry = new Array();
-            entry.push(timestamp);
-            entry.push(parseInt(payload));
-            srcLevelChart.push(entry);
-            // Show only 20 values
-            if (srcLevelChart.length >= 20) {
-                srcLevelChart.shift()
-            }
-            var livingTempPlot = $.jqplot ('srcLevelChart', [srcLevelChart], {
-                axesDefaults: {
-                    labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
-                    tickOptions: {
-                        showMark: false,
-                        showGridline: false,
-                        show: false,
-                        showLabel: false,
-                    }
-                    },
-                grid: {
-                    gridLineColor: '#FFFFFF',
-                    borderWidth: 0,
-                    shadow: false,
-                },
-                seriesDefaults: {
-                    rendererOptions: {
-                        smooth: true
-                    },
-                    showMarker: false,
-                    lineWidth: 2,
-                    },
-                    axes: {
-                    xaxis: {
-                        renderer:$.jqplot.DateAxisRenderer,
-                        tickOptions:{
-                        formatString:'%T'
-                        },
-                        pad: 0
-                    },
-                    yaxis: {
-                    }
-                }
-            });
             break;
         case 'WS/RWS/EG/BarrelSrc/Lvl/percent': 
             $('#value3').html('(Payload value: ' + payload + ')');
@@ -125,7 +83,7 @@ function onMessageArrived(message) {
             $('.srcLevelSparkline').sparkline(srcLevel, {
                 type: 'line',
                 width: '160',
-                height: '40'});
+                height: '25'});
             break;
         case 'WS/RWS/EG/BarrelSrc/FunctionModeReq':
             $('#FunctionModeRequest').html('(Payload value: ' + payload + ')');
@@ -189,48 +147,6 @@ function onMessageArrived(message) {
         case 'WS/RWS/DG/BarrelDst/Lvl/cm': 
             $('#DstValue2').html('(Payload value: ' + payload + ')');
             $('#DstLabel2').text(payload + 'cm');
-            var entry = new Array();
-            entry.push(timestamp);
-            entry.push(parseInt(payload));
-            dstLevelChart.push(entry);
-            // Show only 20 values
-            if (dstLevelChart.length >= 20) {
-                dstLevelChart.shift()
-            }
-            var livingTempPlot = $.jqplot ('dstLevelChart', [dstLevelChart], {
-                axesDefaults: {
-                    labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
-                    tickOptions: {
-                        showMark: false,
-                        showGridline: false,
-                        show: false,
-                        showLabel: false,
-                    }
-                    },
-                grid: {
-                    gridLineColor: '#FFFFFF',
-                    borderWidth: 0,
-                    shadow: false,
-                },
-                seriesDefaults: {
-                    rendererOptions: {
-                        smooth: true
-                    },
-                    showMarker: false,
-                    lineWidth: 2,
-                    },
-                    axes: {
-                    xaxis: {
-                        renderer:$.jqplot.DateAxisRenderer,
-                        tickOptions:{
-                        formatString:'%T'
-                        },
-                        pad: 0
-                    },
-                    yaxis: {
-                    }
-                }
-            });
             break;
         case 'WS/RWS/DG/BarrelDst/Lvl/percent': 
             $('#DstValue3').html('(Payload value: ' + payload + ')');
@@ -244,7 +160,7 @@ function onMessageArrived(message) {
             $('.dstLevelSparkline').sparkline(dstLevel, {
                 type: 'line',
                 width: '160',
-                height: '40'});
+                height: '30'});
             break;
         case 'WS/RWS/DG/BarrelDst/FunctionModeReq':
             $('#DstFunctionModeRequest').html('(Payload value: ' + payload + ')');
@@ -333,7 +249,7 @@ function onMessageArrived(message) {
                 }
                 break;
 
-        default: console.log('Error: Data do not match the MQTT topic.'); break;
+        default: console.log('Error: Data do not match the MQTT topic. (topic: ' + topic + ', payload: ' + payload + ')'); break;
     }
 };
 
@@ -367,10 +283,7 @@ function ManualFctValve(fct_mode) {
 };
 
 
-
-$(document).ready(function() {
-    MQTTconnect();
-    
+function AddEventHandlers() {
     $('#ManFctPumpOn').click(function(){ManualFctPump('1')});
     $('#ManFctPumpOff').click(function(){ManualFctPump('0')});
     
@@ -383,5 +296,44 @@ $(document).ready(function() {
     $('#ManFctSensMeasMode3').click(function(){ManualSensMeasMode('3')});
     $('#ManFctSensMeasMode4').click(function(){ManualSensMeasMode('4')});
     $('#ManFctSensMeasMode5').click(function(){ManualSensMeasMode('5')});
-});
+}
 
+
+function ShowDebugInfos() {
+    if (debug == 1)
+        return;
+
+    $('#ManualPumpReqValue').css("display", "none");
+    $('#ManualPumpAckValue').css("display", "none");
+
+    $('#ManualValveReqValue').css("display", "none");
+    $('#ManualValveAckValue').css("display", "none");
+
+    $('#SrcStatusValue').css("display", "none");
+    $('#DstStatusValue').css("display", "none");
+
+    $('#value0').css("display", "none");
+    $('#DstValue0').css("display", "none");
+
+    $('#value1').css("display", "none");
+    $('#DstValue1').css("display", "none");
+
+    $('#value2').css("display", "none");
+    $('#DstValue2').css("display", "none");
+
+    $('#value3').css("display", "none");
+    $('#DstValue3').css("display", "none");
+
+    $('#FunctionModeRequest').css("display", "none");
+    $('#DstFunctionModeRequest').css("display", "none");
+
+    $('#FunctionModeAcknowledge').css("display", "none");
+    $('#DstFunctionModeAcknowledge').css("display", "none");
+}
+
+
+$(document).ready(function() {
+    MQTTconnect();
+    AddEventHandlers();
+    ShowDebugInfos();
+});
