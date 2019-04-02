@@ -28,9 +28,6 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.1.0/paho-mqtt.js"></script>
     <!-- RWS script -->
     <script type="text/javascript" src="rws.js"></script>
-    
-    
-
   </head>
 
   <body>
@@ -58,8 +55,8 @@
                         <td style="vertical-align:middle;"><h5>Pumpe</h5></td>
                         <td style="vertical-align:middle;">
                             <div class="btn-group" role="group" aria-label="Pump functions">
-                                <button type="button" class="btn btn-success active" onclick="ManualFctPump('1')">An</button>
-                                <button type="button" class="btn btn-danger active" onclick="ManualFctPump('0')">Aus</button></td>
+                                <button id="ManFctPumpOn"  type="button" class="btn btn-success active">An</button>
+                                <button id="ManFctPumpOff" type="button" class="btn btn-danger active">Aus</button></td>
                             </div>
                         <td align="center" style="vertical-align:middle;"><h5>&nbsp;<span id="ManualPumpReqLabel" class="label">Unknown</span></h5><small id="ManualPumpReqValue">(no value recieved)</small></td>
                         <td align="center" style="vertical-align:middle;"><h5>&nbsp;<span id="ManualPumpAckLabel" class="label">Unknown</span></h5><small id="ManualPumpAckValue">(no value recieved)</small></td>
@@ -71,8 +68,8 @@
                         <td style="vertical-align:middle;"><h5>Ventil</h5></td>
                         <td style="vertical-align:middle;">
                             <div class="btn-group" role="group" aria-label="Valve functions">
-                                <button type="button" class="btn btn-success active" onclick="ManualFctValve('1')">An</button>
-                                <button type="button" class="btn btn-danger active" onclick="ManualFctValve('0')">Aus</button></td>
+                                <button id="ManFctValveOn"  type="button" class="btn btn-success active">An</button>
+                                <button id="ManFctValveOff" type="button" class="btn btn-danger active">Aus</button></td>
                             </div>
                         <td align="center" style="vertical-align:middle;"><h5>&nbsp;<span id="ManualValveReqLabel" class="label">Unknown</span></h5><small id="ManualValveReqValue">(no value recieved)</small></td>
                         <td align="center" style="vertical-align:middle;"><h5>&nbsp;<span id="ManualValveAckLabel" class="label">Unknown</span></h5><small id="ManualValveAckValue">(no value recieved)</small></td>
@@ -84,12 +81,12 @@
                         <td style="vertical-align:middle;"><h5>Sensor Meassure Mode</h5></td>
                         <td colspan="5" style="vertical-align:middle;">
                             <div class="btn-group" role="group" aria-label="Sensor function modes">
-                                <button type="button" class="btn btn-primary"   onclick="myFunction('0')">Permanent Meassure</button>
-                                <button type="button" class="btn btn-secondary" onclick="myFunction('1')">Interval 5 sec</button>
-                                <button type="button" class="btn btn-success"   onclick="myFunction('2')">Interval 10 sec</button>
-                                <button type="button" class="btn btn-danger"    onclick="myFunction('3')">Interval 5 min</button>
-                                <button type="button" class="btn btn-warning"   onclick="myFunction('4')">Deep Sleep 20 sec</button>
-                                <button type="button" class="btn btn-info"      onclick="myFunction('5')">Deep Sleep 5 min</button>
+                                <button id="ManFctSensMeasMode0" type="button" class="btn btn-primary"  >Permanent Meassure</button>
+                                <button id="ManFctSensMeasMode1" type="button" class="btn btn-secondary">Interval 5 sec</button>
+                                <button id="ManFctSensMeasMode2" type="button" class="btn btn-success"  >Interval 10 sec</button>
+                                <button id="ManFctSensMeasMode3" type="button" class="btn btn-danger"   >Interval 5 min</button>
+                                <button id="ManFctSensMeasMode4" type="button" class="btn btn-warning"  >Deep Sleep 20 sec</button>
+                                <button id="ManFctSensMeasMode5" type="button" class="btn btn-info"     >Deep Sleep 5 min</button>
                             </div>
                         </td>
                     </tr>

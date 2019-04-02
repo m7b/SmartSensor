@@ -338,7 +338,7 @@ function onMessageArrived(message) {
 };
 
 
-function myFunction(fct_mode) {
+function ManualSensMeasMode(fct_mode) {
     message = new Paho.Message(fct_mode);
     message.retained = true;
     message.qos = 1;
@@ -367,6 +367,21 @@ function ManualFctValve(fct_mode) {
 };
 
 
+
 $(document).ready(function() {
     MQTTconnect();
+    
+    $('#ManFctPumpOn').click(function(){ManualFctPump('1')});
+    $('#ManFctPumpOff').click(function(){ManualFctPump('0')});
+    
+    $('#ManFctValveOn').click(function(){ManualFctValve('1')});
+    $('#ManFctValveOff').click(function(){ManualFctValve('0')});
+    
+    $('#ManFctSensMeasMode0').click(function(){ManualSensMeasMode('0')});
+    $('#ManFctSensMeasMode1').click(function(){ManualSensMeasMode('1')});
+    $('#ManFctSensMeasMode2').click(function(){ManualSensMeasMode('2')});
+    $('#ManFctSensMeasMode3').click(function(){ManualSensMeasMode('3')});
+    $('#ManFctSensMeasMode4').click(function(){ManualSensMeasMode('4')});
+    $('#ManFctSensMeasMode5').click(function(){ManualSensMeasMode('5')});
 });
+
