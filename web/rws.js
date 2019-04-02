@@ -1,6 +1,6 @@
 var debug = false;
-var host = 'iot.eclipse.org'; //'iot.eclipse.org'; //'bierfass';
-var port = 80; //80; //9001;
+var host = 'bierfass'; //'iot.eclipse.org'; //'bierfass';
+var port = 9001; //80; //9001;
 var topic = 'WS/RWS/#';
 var useTLS = false;
 var cleansession = true;
