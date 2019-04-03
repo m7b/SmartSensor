@@ -52,10 +52,10 @@
  * @brief Helper to subscribe to topics with apropriate root
  * 
  */
-#define TOPIC(NUM, NAME)                 {(const int) NUM, TOP_LEVEL_TOPIC LOCATION_TYPE NAME}
-#define TOPIC_FROM_SRC(NUM, NAME)        {(const int) NUM, TOP_LEVEL_TOPIC LOCATION_TYPE_BARREL_SRC NAME}
-#define TOPIC_FROM_DST(NUM, NAME)        {(const int) NUM, TOP_LEVEL_TOPIC LOCATION_TYPE_BARREL_DST NAME}
-#define TOPIC_FROM_CONTROLLER(NUM, NAME) {(const int) NUM, TOP_LEVEL_TOPIC LOCATION_TYPE_CONTROLLER NAME}
-#define TOPIC_FROM_DASHBOARD(NUM, NAME)  {(const int) NUM, TOP_LEVEL_TOPIC DASHBOARD NAME}
+#define TOPIC(NUM, NAME, QOS)                 {std::make_tuple((const int) NUM, TOP_LEVEL_TOPIC LOCATION_TYPE NAME, (const uint8_t) QOS)}
+#define TOPIC_FROM_SRC(NUM, NAME, QOS)        {std::make_tuple((const int) NUM, TOP_LEVEL_TOPIC LOCATION_TYPE_BARREL_SRC NAME, (const uint8_t) QOS)}
+#define TOPIC_FROM_DST(NUM, NAME, QOS)        {std::make_tuple((const int) NUM, TOP_LEVEL_TOPIC LOCATION_TYPE_BARREL_DST NAME, (const uint8_t) QOS)}
+#define TOPIC_FROM_CONTROLLER(NUM, NAME, QOS) {std::make_tuple((const int) NUM, TOP_LEVEL_TOPIC LOCATION_TYPE_CONTROLLER NAME, (const uint8_t) QOS)}
+#define TOPIC_FROM_DASHBOARD(NUM, NAME, QOS)  {std::make_tuple((const int) NUM, TOP_LEVEL_TOPIC DASHBOARD NAME, (const uint8_t) QOS)}
 
 #endif // COMMON_TOPICS_H

@@ -22,10 +22,10 @@
  * @brief Topics to subscribe
  * 
  */
-static const std::vector<std::pair<const int, const char*>> topics_to_subscribe = {
-/*  TOPIC(<idx>, "<topic>"), */
-    TOPIC(0, MODE_REQ),
-    TOPIC(1, "inTopic")
+static const std::vector<std::tuple<const int, const char*, const uint8_t>> topics_to_subscribe = {
+/*  TOPIC(<idx>, "<topic>", <qos>), */
+    TOPIC(0, MODE_REQ, QOS1),
+    TOPIC(1, "inTopic", QOS0)
 };
 
 #endif // SENSOR_TOPICS_H

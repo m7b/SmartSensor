@@ -40,7 +40,7 @@ rws_pubsubclient::~rws_pubsubclient()
 {
 }
 
-void rws_pubsubclient::set_topics_to_subscribe(const std::vector<std::pair<const int, const char*>> *topics_to_subscribe)
+void rws_pubsubclient::set_topics_to_subscribe(const std::vector<std::tuple<const int, const char*, const uint8_t>> *topics_to_subscribe)
 {
     _topics_to_subscribe = topics_to_subscribe;
 }
@@ -170,7 +170,7 @@ void rws_pubsubclient::reconnect(void)
 
         // ... and resubscribe
         for(auto topic : *_topics_to_subscribe) 
-            subscribe(topic.second);
+        subscribe(std::get<1>(topic), std::get<2>(topic));
     }
     else
     {
