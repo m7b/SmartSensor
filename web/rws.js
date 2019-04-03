@@ -57,6 +57,11 @@ function onMessageArrived(message) {
     var timestamp = Math.round((new Date()).getTime() / 1000);
     switch (topic) {
 
+        case 'WS/RWS/DG/Controller/Status': 
+            $('#CtrlStatusValue').html('(Payload value: ' + payload + ')');
+            $('#CtrlStatusLabel').text(payload + '');
+            break;
+
         case 'WS/RWS/DG/Controller/AmbientBrightness': 
             $('#CtrlAmbBrightValue').html('(Payload value: ' + payload + ')');
             $('#CtrlAmbBrightLabel').text(payload + '?');
@@ -331,8 +336,11 @@ function AddEventHandlers() {
 function ShowDebugInfos() {
     var display_val = "none";
 
-    if (debug == true)
-        display_val = "initial"
+    if (debug == true) {
+        display_val = "initial";
+    }
+
+    $('#CtrlStatusValue').css("display", display_val);
 
     $('#CtrlAmbBrightValue').css("display", display_val);
 

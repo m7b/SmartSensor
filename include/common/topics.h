@@ -33,10 +33,11 @@
  * @brief Topics from controller
  * 
  */
-#define MODE_REQ           "FunctionModeReq"
-#define MANUAL_PUMP_ACK    "ManualPumpAck"
-#define MANUAL_VALVE_ACK   "ManualValveAck"
-#define AMBIENT_BRIGHTNESS "AmbientBrightness"
+#define MODE_REQ              "FunctionModeReq"
+#define MANUAL_PUMP_ACK       "ManualPumpAck"
+#define MANUAL_VALVE_ACK      "ManualValveAck"
+#define AMBIENT_BRIGHTNESS    "AmbientBrightness"
+#define CONTR_LAST_WILL_TOPIC "Status"
 
 
 /**
