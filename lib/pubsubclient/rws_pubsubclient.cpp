@@ -1,24 +1,6 @@
 #include "rws_pubsubclient.h"
 
-rws_pubsubclient::rws_pubsubclient(const char *server, uint16_t port)
-: PubSubClient(espClient)
-{
-    this->server = server;
-    this->port   = port;
-    setServer(server, port);
-//  setCallback(callback);
-
-    _willTopic = 0;
-    _willQos = 0;
-    _willRetain = 0;
-    _willMessage = 0;
-
-    clientId = "";
-
-    max_connection_tries = 3;
-}
-
-rws_pubsubclient::rws_pubsubclient(const char *server, uint16_t port, const char* willTopic, uint8_t willQos, boolean willRetain, const char* willMessage)
+rws_pubsubclient::rws_pubsubclient(const char *server, uint16_t port, const char* willTopic, uint8_t willQos, bool willRetain, const char* willMessage)
 : PubSubClient(espClient)
 {
     this->server = server;

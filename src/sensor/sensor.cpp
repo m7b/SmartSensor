@@ -99,6 +99,9 @@ void sensor::setup_mqtt(void)
 
     // We start by connecting to MQTT server
     _mqtt->check_connection();
+
+    // Shout actual meassuring mode
+    _mqtt->publish(FUNCTION_MODE_ACK, FunctionModeAck);
 }
 
 

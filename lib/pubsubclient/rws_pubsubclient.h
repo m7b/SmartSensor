@@ -17,8 +17,7 @@
 class rws_pubsubclient : public PubSubClient
 {
     public:
-        rws_pubsubclient(const char *server, uint16_t port);
-        rws_pubsubclient(const char *server, uint16_t port, const char* willTopic, uint8_t willQos, boolean willRetain, const char* willMessage);
+        rws_pubsubclient(const char *server, uint16_t port, const char* willTopic, uint8_t willQos, bool willRetain, const char* willMessage);
         ~rws_pubsubclient();
 
         void check_connection(void);
