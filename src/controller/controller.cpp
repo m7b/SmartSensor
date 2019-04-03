@@ -226,9 +226,13 @@ void controller::operating(void)
 
         case N002_WAIT_TIMEOUT_FOR_ACTIVATION:
             //wait timeout depending on operation mode
-            if (get_duration_ms(_start_time) >= 10000)
-                set_next_step(N010_CHECK_PUMP_NOT_ACTIVE);
+            if (get_duration_ms(_start_time) >= 2500)
+            {
+                //Test analog input
+                _mqtt->publish(VAL_AMBIENT_BRIGHTNESS, analogRead(A0));
 
+                set_next_step(N010_CHECK_PUMP_NOT_ACTIVE);
+            }
             break;
 
         case N010_CHECK_PUMP_NOT_ACTIVE:

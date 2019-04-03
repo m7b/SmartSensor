@@ -1,11 +1,12 @@
 var debug = false;
-var host = 'bierfass'; //'iot.eclipse.org'; //'bierfass';
-var port = 9001; //80; //9001;
+var host = 'iot.eclipse.org'; //'iot.eclipse.org'; //'bierfass';
+var port = 80; //80; //9001;
 var topic = 'WS/RWS/#';
 var useTLS = false;
 var cleansession = true;
 var mqtt;
 var reconnectTimeout = 2000;
+var ctrlAmbBright = new Array;
 var srcLevelChart = new Array;
 var srcLevel = new Array;
 var dstLevelChart = new Array;
@@ -55,6 +56,22 @@ function onMessageArrived(message) {
     $('#message').html(topic + ', ' + payload);
     var timestamp = Math.round((new Date()).getTime() / 1000);
     switch (topic) {
+
+        case 'WS/RWS/DG/Controller/AmbientBrightness': 
+            $('#CtrlAmbBrightValue').html('(Payload value: ' + payload + ')');
+            $('#CtrlAmbBrightLabel').text(payload + '?');
+            ctrlAmbBright.push(parseInt(payload));
+            if (ctrlAmbBright.length >= 200) {
+                ctrlAmbBright.shift()
+            }
+            $('.CtrlAmbBrightSparkline').sparkline(ctrlAmbBright, {
+                type: 'line',
+                tooltipSuffix: " ?",
+                width: 'auto',
+                height: '25'
+            });
+            break;
+
         case 'WS/RWS/EG/BarrelSrc/Status': 
             $('#SrcStatusValue').html('(Payload value: ' + payload + ')');
             $('#SrcStatusLabel').text(payload + '');
@@ -76,9 +93,8 @@ function onMessageArrived(message) {
             $('#label3').text(payload + '%');
             $('#barSrc').css('width', payload + '%');
             $('#barSrc').text(payload + '%');
-            //srcLevel.push(parseInt(payload));
             srcLevel.push(parseFloat(payload));
-            if (srcLevel.length >= 20) {
+            if (srcLevel.length >= 50) {
                 srcLevel.shift()
             }
             $('.srcLevelSparkline').sparkline(srcLevel, {
@@ -157,7 +173,7 @@ function onMessageArrived(message) {
             $('#barDst').css('width', payload + '%');
             $('#barDst').text(payload + '%');
             dstLevel.push(parseFloat(payload));
-            if (dstLevel.length >= 20) {
+            if (dstLevel.length >= 50) {
                 dstLevel.shift()
             }
             $('.dstLevelSparkline').sparkline(dstLevel, {
@@ -317,6 +333,8 @@ function ShowDebugInfos() {
 
     if (debug == true)
         display_val = "initial"
+
+    $('#CtrlAmbBrightValue').css("display", display_val);
 
     $('#ManualPumpReqValue').css("display", display_val);
     $('#ManualPumpAckValue').css("display", display_val);

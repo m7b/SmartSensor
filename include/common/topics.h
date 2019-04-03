@@ -36,6 +36,7 @@
 #define MODE_REQ           "FunctionModeReq"
 #define MANUAL_PUMP_ACK    "ManualPumpAck"
 #define MANUAL_VALVE_ACK   "ManualValveAck"
+#define AMBIENT_BRIGHTNESS "AmbientBrightness"
 
 
 /**

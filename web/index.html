@@ -51,8 +51,8 @@
                         <td style="vertical-align:middle;"><h5>Pumpe</h5></td>
                         <td style="vertical-align:middle;">
                             <div class="btn-group" role="group" aria-label="Pump functions">
-                                <button id="ManFctPumpOn"  type="button" class="btn btn-success active">An</button>
-                                <button id="ManFctPumpOff" type="button" class="btn btn-danger active">Aus</button>
+                                <button id="ManFctPumpOn"  type="button" class="btn btn-sm btn-success active">An</button>
+                                <button id="ManFctPumpOff" type="button" class="btn btn-sm btn-danger active">Aus</button>
                             </div>
                         </td>
                         <td align="center" style="vertical-align:middle;"><h5>&nbsp;<span id="ManualPumpReqLabel" class="label">Unknown</span></h5><small id="ManualPumpReqValue">(no value recieved)</small></td>
@@ -65,8 +65,8 @@
                         <td style="vertical-align:middle;"><h5>Ventil</h5></td>
                         <td style="vertical-align:middle;">
                             <div class="btn-group" role="group" aria-label="Valve functions">
-                                <button id="ManFctValveOn"  type="button" class="btn btn-success active">An</button>
-                                <button id="ManFctValveOff" type="button" class="btn btn-danger active">Aus</button>
+                                <button id="ManFctValveOn"  type="button" class="btn btn-sm btn-success active">An</button>
+                                <button id="ManFctValveOff" type="button" class="btn btn-sm btn-danger active">Aus</button>
                             </div>
                         </td>
                         <td align="center" style="vertical-align:middle;"><h5>&nbsp;<span id="ManualValveReqLabel" class="label">Unknown</span></h5><small id="ManualValveReqValue">(no value recieved)</small></td>
@@ -78,18 +78,32 @@
                     <tr>
                         <td style="vertical-align:middle;"><h5>Sensor Meassure Mode</h5></td>
                         <td colspan="5" style="vertical-align:middle;">
-                            <button id="ManFctSensMeasMode0" type="button" class="btn btn-primary"  >Permanent Meassure</button>
-                            <button id="ManFctSensMeasMode1" type="button" class="btn btn-secondary">Interval 5 sec</button>
-                            <button id="ManFctSensMeasMode2" type="button" class="btn btn-success"  >Interval 10 sec</button>
-                            <button id="ManFctSensMeasMode3" type="button" class="btn btn-danger"   >Interval 5 min</button>
-                            <button id="ManFctSensMeasMode4" type="button" class="btn btn-warning"  >Deep Sleep 20 sec</button>
-                            <button id="ManFctSensMeasMode5" type="button" class="btn btn-info"     >Deep Sleep 5 min</button>
+                            <button id="ManFctSensMeasMode0" type="button" class="btn btn-sm btn-primary"  >Permanent Meassure</button>
+                            <button id="ManFctSensMeasMode1" type="button" class="btn btn-sm btn-secondary">Interval 5 sec</button>
+                            <button id="ManFctSensMeasMode2" type="button" class="btn btn-sm btn-success"  >Interval 10 sec</button>
+                            <button id="ManFctSensMeasMode3" type="button" class="btn btn-sm btn-danger"   >Interval 5 min</button>
+                            <button id="ManFctSensMeasMode4" type="button" class="btn btn-sm btn-warning"  >Deep Sleep 20 sec</button>
+                            <button id="ManFctSensMeasMode5" type="button" class="btn btn-sm btn-info"     >Deep Sleep 5 min</button>
                         </td>
                     </tr>
                 </table>
             </div>
             <div class="pt-3"></div>
         </div>
+
+        <table class="table table-striped">
+            <!-- Controller -->
+            <tr>
+                <td width="25%" style="vertical-align:top;"><ion-icon name="play" size="large"></ion-icon></td>
+                <td align="center" style="vertical-align:middle;"><h4>Controller</h4></td>
+            </tr>
+            <!-- Ambient Brightness -->
+            <tr>
+                <td style="vertical-align:middle;"><h5>Ambient Brightness</h5></td>
+                <td style="vertical-align:middle;"><h5>&nbsp;<span id="CtrlAmbBrightLabel" class="label">Unknown</span>&nbsp;<span class="CtrlAmbBrightSparkline"></span></h5><small id="CtrlAmbBrightValue">(no value recieved)</small></td>
+            </tr>
+        </table>
+        <div class="pt-3"></div>
 
         <table class="table table-striped">
             <!-- Barrels -->
