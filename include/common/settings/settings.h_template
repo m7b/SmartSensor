@@ -3,6 +3,9 @@
 
 #include <vector>
 
+#define QOS0 0
+#define QOS1 1
+
 #define ON 1
 #define OFF 0
 
@@ -71,7 +74,7 @@ static const std::vector<std::pair<const char*, const char*>> wifi_access_creden
  */
 #define MQTT_SERVER        "broker.hivemq.com"
 #define MQTT_PORT          1883
-#define LAST_WILL_QOS      1
+#define LAST_WILL_QOS      QOS1
 #define LAST_WILL_RETAIN   TRUE
 #define LAST_WILL_MESSAGE  "Offline"
 

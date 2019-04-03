@@ -132,9 +132,9 @@ void controller::mqtt_callback(char* topic, uint8_t* payload, unsigned int lengt
 
     for(auto el: topics_to_subscribe)
     {
-        if (strcmp(topic, el.second) == 0)
+        if (strcmp(topic, std::get<TP_TOP>(el)) == 0)
         {
-            switch(el.first)
+            switch(std::get<TP_NUM>(el))
             {
                 case 0:
                     Serial.printf("Function mode ack received from sensor_src: %d\r\n", payload[0]);
@@ -258,11 +258,13 @@ void controller::operating(void)
             
         case N035_CHANGE_MEAS_MODE_SENSORS:
             if (true)
+                _function_mode_src_req = FunctionModes::FUNCTION_MODE_INTERVAL_MEASURE__5_SEK;
+                _mqtt->publish(FUNCTION_MODE_SRC_REQUEST, _function_mode_src_req);
                 set_next_step(N036_WAIT_MEAS_MODE_SENSORS_CHANGED);
             break;
             
         case N036_WAIT_MEAS_MODE_SENSORS_CHANGED:
-            if (true)
+            if (_function_mode_src_ack == _function_mode_src_req)
                 set_next_step(N040_CHECK_PUMP_READY);
             break;
             
@@ -349,11 +351,13 @@ void controller::operating(void)
             
         case N400_CHANGE_MEAS_MODE_SENSORS:
             if (true)
+                _function_mode_src_req = FunctionModes::FUNCTION_MODE_INTERVAL_MEASURE__5_MIN;
+                _mqtt->publish(FUNCTION_MODE_SRC_REQUEST, _function_mode_src_req);
                 set_next_step(N410_WAIT_MEAS_MODE_SENSORS_CHANGED);
             break;
             
         case N410_WAIT_MEAS_MODE_SENSORS_CHANGED:
-            if (true)
+            if (_function_mode_src_ack == _function_mode_src_req)
                 set_next_step(N999_END);
             break;
             

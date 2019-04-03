@@ -170,7 +170,7 @@ void rws_pubsubclient::reconnect(void)
 
         // ... and resubscribe
         for(auto topic : *_topics_to_subscribe) 
-        subscribe(std::get<1>(topic), std::get<2>(topic));
+        subscribe(std::get<TP_TOP>(topic), std::get<TP_QOS>(topic));
     }
     else
     {

@@ -6,6 +6,14 @@
 
 #define MAX_MSG_SIZE 50
 
+/**
+ * @brief Helper to get the values from tuple
+ * 
+ */
+#define TP_NUM 0
+#define TP_TOP 1
+#define TP_QOS 2
+
 class rws_pubsubclient : public PubSubClient
 {
     public:

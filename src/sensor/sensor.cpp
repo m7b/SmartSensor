@@ -121,9 +121,9 @@ void sensor::mqtt_callback(char* topic, uint8_t* payload, unsigned int length) {
 
     for(auto el: topics_to_subscribe)
     {
-        if (strcmp(topic, el.second) == 0)
+        if (strcmp(topic, std::get<TP_TOP>(el)) == 0)
         {
-            switch(el.first)
+            switch(std::get<TP_NUM>(el))
             {
                 case 0:     
                     Serial.printf("Function mode request received: %d\r\n", payload[0]);
