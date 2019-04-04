@@ -29,10 +29,16 @@
     <div id="wrap">
       <div class="container-fluid">
 
-        <h1><b>Watering System Dashboard</b> <ion-icon name="beaker" size="large"></ion-icon></h1>
-
-        <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#ManualFct">Manual Functions <ion-icon name="people"></ion-icon></button>
-        <button id="ToggleMoreInfos" type="button" class="btn btn-info">More infos <ion-icon name="code-working"></ion-icon></button>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <span class="navbar-brand"><ion-icon name="beaker"></ion-icon> Watering System Dashboard</span>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="navbar-nav">      
+                    <button type="button" class="btn btn-outline-info" data-toggle="collapse" data-target="#ManualFct">Manual Functions <ion-icon name="people"></ion-icon></button>
+                    &nbsp;
+                    <button id="ToggleMoreInfos" type="button" class="btn btn-outline-info">More infos <ion-icon name="code-working"></ion-icon></button>
+                </div>
+            </div>
+        </nav>
         <div class="pt-3"></div>
 
         <div id="ManualFct" class="collapse">
