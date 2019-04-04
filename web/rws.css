@@ -1,8 +1,10 @@
 body { padding-top: 50px; }
 
-//@media screen and (min-width: 450px) {
-//    body { padding-top: 100; }
-//}
+/*
+@media screen and (min-width: 450px) {
+    body { padding-top: 100; }
+}
+*/
 
 .jqstooltip {
     -webkit-box-sizing: content-box;
