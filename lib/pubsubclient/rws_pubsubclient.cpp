@@ -67,11 +67,11 @@ bool rws_pubsubclient::publish(const char *topic, const uint8_t value)
 
 /**
  * @brief Publish an unsigned long value to specific topic
- * 
- * @param topic 
- * @param value 
- * @return true 
- * @return false 
+ *
+ * @param topic
+ * @param value
+ * @return true
+ * @return false
  */
 bool rws_pubsubclient::publish(const char *topic, const unsigned long ul_value)
 {
@@ -126,7 +126,7 @@ bool rws_pubsubclient::publish(const char *topic, const std::string s_value)
 
 /**
  * @brief Reconnect to MQTT publisher
- * 
+ *
  */
 void rws_pubsubclient::reconnect(void)
 {
@@ -140,7 +140,7 @@ void rws_pubsubclient::reconnect(void)
     clientId = "ESP8266Client-" + String(random(0xffff), HEX);
 
     // Attempt to connect
-    
+
     if (connect(clientId.c_str(), _willTopic, _willQos, _willRetain, _willMessage))
     {
         Serial.println("MQTT connected");
@@ -151,7 +151,7 @@ void rws_pubsubclient::reconnect(void)
             publish(_willTopic, "Online", _willRetain);
 
         // ... and resubscribe
-        for(auto topic : *_topics_to_subscribe) 
+        for(auto topic : *_topics_to_subscribe)
         subscribe(std::get<TP_TOP>(topic), std::get<TP_QOS>(topic));
     }
     else

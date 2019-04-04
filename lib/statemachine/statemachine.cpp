@@ -7,8 +7,8 @@ statemachine::statemachine()
 
     _step_start = 0;
 }
- 
- 
+
+
 statemachine::~statemachine()
 {
 }

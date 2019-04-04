@@ -4,7 +4,7 @@
 #include <rws_common.h>
 #include <NTPClient.h>
 #include <WiFiUdp.h>
-#include <Timezone.h> 
+#include <Timezone.h>
 
 class rws_ntp : public NTPClient
 {

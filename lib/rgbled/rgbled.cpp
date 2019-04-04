@@ -18,12 +18,12 @@ rgbled::rgbled(uint8_t red, uint8_t green, uint8_t blue)
 {
     _setup    = false;
     _enable   = false;
-    
+
     _red      = red;
     _green    = green;
     _blue     = blue;
     _act_led  = 0;
-    
+
     _step     = 0;
     _delay_ms = 1000;
 
@@ -76,7 +76,7 @@ void rgbled::loop(void)
             else
             if (_act_led == _blue)
                 _act_led = _red;
-            
+
             _step++;
 
         case 1:
@@ -84,12 +84,12 @@ void rgbled::loop(void)
             _start = millis();
             _step++;
             break;
-            
+
         case 2:
             if (get_duration_ms(_start) >= _delay_ms)
                 _step++;
             break;
-            
+
         case 3:
             digitalWrite(_act_led, LOW);
             _step = 0;
@@ -116,6 +116,6 @@ bool rgbled::conditions_ok(void)
 {
     if (!_setup || !_enable)
         return false;
-    
+
     return true;
 }
