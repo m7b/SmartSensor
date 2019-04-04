@@ -260,12 +260,18 @@ void controller::operating(void)
             if (true)
                 _function_mode_src_req = FunctionModes::FUNCTION_MODE_INTERVAL_MEASURE__5_SEK;
                 _mqtt->publish(FUNCTION_MODE_SRC_REQUEST, _function_mode_src_req);
+                _start_time = millis();
                 set_next_step(N036_WAIT_MEAS_MODE_SENSORS_CHANGED);
             break;
             
         case N036_WAIT_MEAS_MODE_SENSORS_CHANGED:
             if (_function_mode_src_ack == _function_mode_src_req)
                 set_next_step(N040_CHECK_PUMP_READY);
+            
+            //Retry request to change mode after timeout
+            if (get_duration_ms(_start_time) >= 5000)
+                set_next_step(N035_CHANGE_MEAS_MODE_SENSORS);
+
             break;
             
         case N040_CHECK_PUMP_READY:
@@ -353,12 +359,18 @@ void controller::operating(void)
             if (true)
                 _function_mode_src_req = FunctionModes::FUNCTION_MODE_INTERVAL_MEASURE__5_MIN;
                 _mqtt->publish(FUNCTION_MODE_SRC_REQUEST, _function_mode_src_req);
+                _start_time = millis();
                 set_next_step(N410_WAIT_MEAS_MODE_SENSORS_CHANGED);
             break;
             
         case N410_WAIT_MEAS_MODE_SENSORS_CHANGED:
             if (_function_mode_src_ack == _function_mode_src_req)
                 set_next_step(N999_END);
+                
+            //Retry request to change mode after timeout
+            if (get_duration_ms(_start_time) >= 5000)
+                set_next_step(N400_CHANGE_MEAS_MODE_SENSORS);
+
             break;
             
         case N999_END:
