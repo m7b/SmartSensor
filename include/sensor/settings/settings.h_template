@@ -11,9 +11,11 @@
  * the ultrasonic sensor can be used to connect to one of those GPIOs.
  * 
  */
-#define TRIGGER_PIN                  0   //Trigger-Pin (high impedanz)
-#define ECHO_PIN                     3   //Echo-Pin
-#define MAX_DISTANCE_CM            100   //Max distance in [cm]
-#define MAX_FILL_LEVEL_CM          73   //Max fill level of barrel in [cm]
+#define TRIGGER_PIN                  0     //Trigger-Pin (high impedanz)
+#define ECHO_PIN                     3     //Echo-Pin
+#define MAX_DISTANCE_CM            100     //Max distance in [cm]
+#define MAX_FILL_LEVEL_CM           73.0   //Max fill level of barrel in [cm]
+#define RADIUS_R                    38.0   //Radius R in [cm]
+#define RADIUS_r                    20.0   //Radius r in [cm]
 
 #endif // SENSOR_SETTINGS_H

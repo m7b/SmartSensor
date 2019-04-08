@@ -109,6 +109,10 @@ function onMessageArrived(message) {
                 height: '25'
             });
             break;
+        case 'WS/RWS/EG/BarrelSrc/Lvl/litres': 
+            $('#SrcLitresValue').html('(Payload value: ' + payload + ')');
+            $('#SrcLitres').text(payload + 'cm');
+            break;
         case 'WS/RWS/EG/BarrelSrc/FunctionModeReq':
             $('#FunctionModeRequest').html('(Payload value: ' + payload + ')');
             $('#FunctionModeRequestLabel').removeClass('').addClass('label-default');
@@ -186,6 +190,10 @@ function onMessageArrived(message) {
                 tooltipSuffix: " %",
                 width: '160',
                 height: '30'});
+            break;
+        case 'WS/RWS/DG/BarrelDst/Lvl/litres': 
+            $('#DstLitresValue').html('(Payload value: ' + payload + ')');
+            $('#DstLitres').text(payload + 'cm');
             break;
         case 'WS/RWS/DG/BarrelDst/FunctionModeReq':
             $('#DstFunctionModeRequest').html('(Payload value: ' + payload + ')');
@@ -364,6 +372,9 @@ function ShowDebugInfos() {
 
     $('#value3').css("display", display_val);
     $('#DstValue3').css("display", display_val);
+
+    $('#DstLitresValue').css("display", display_val);
+    $('#SrcLitresValue').css("display", display_val);
 
     $('#FunctionModeRequest').css("display", display_val);
     $('#DstFunctionModeRequest').css("display", display_val);

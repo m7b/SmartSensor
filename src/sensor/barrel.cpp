@@ -14,6 +14,8 @@ barrel::barrel(rws_ntp *ntp, rws_pubsubclient *mqtt, rws_syslog *syslog)
 : NewPing(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE_CM), ntp(ntp), mqtt(mqtt), syslog(syslog)
 {
     this->max_fill_level_cm = MAX_FILL_LEVEL_CM;
+    this->_R = RADIUS_R;
+    this->_r = RADIUS_r;
 }
 
 /**
@@ -43,6 +45,8 @@ bool barrel::do_measure(void)
         
     fill_level.cm        = max_fill_level_cm - fill_level.sensor_cm;
     fill_level.percent   = (100.0 * (float)fill_level.cm) / (float)max_fill_level_cm;
+
+    fill_level.litres    = calc_Volume();
     
     rc = true;
 
@@ -111,6 +115,20 @@ std::string barrel::get_local_datetime(void)
 }
 
 /**
+ * @brief Return fill level in litres
+ * 
+ * @return float 
+ */
+float barrel::calc_Volume(void)
+{
+    float V = 1/3 * PI * fill_level.cm * (powf(_R, 2.0) + _R*_r + powf(_r, 2.0));
+
+    //from cm^3 to litres (dm^3)
+    V = V / 1000;
+    return V;
+}
+
+/**
  * @brief Publish fill level as MQTT
  * 
  * @return true 
@@ -125,6 +143,7 @@ bool barrel::do_publish_mqtt(void)
     rc = rc & mqtt->publish(LEVEL_SENSOR_CM_TOPIC,       fill_level.sensor_cm);
     rc = rc & mqtt->publish(LEVEL_CM_TOPIC,              fill_level.cm);
     rc = rc & mqtt->publish(LEVEL_PERCENT_TOPIC,         fill_level.percent);
+    rc = rc & mqtt->publish(LEVEL_LITRES_TOPIC,          fill_level.litres);
     rc = rc & mqtt->publish(LEVEL_TIMESTAMP_TOPIC,       fill_level.utc);
     rc = rc & mqtt->publish(LEVEL_LOCAL_TIMESTAMP_TOPIC, get_local_datetime());
 

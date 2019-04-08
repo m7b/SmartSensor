@@ -23,6 +23,7 @@
 #define SENS_RAW_CM          "Lvl/raw_cm"
 #define SENS_CM              "Lvl/cm"
 #define SENS_PERCENT         "Lvl/percent"
+#define SENS_LITRES          "Lvl/litres"
 #define SENS_TIMESTAMP       "Lvl/timestamp"
 #define SENS_LOC_TIMESTAMP   "Lvl/local_timestamp"
 #define MODE_ACK             "FunctionModeAck"
