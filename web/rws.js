@@ -111,7 +111,7 @@ function onMessageArrived(message) {
             break;
         case 'WS/RWS/EG/BarrelSrc/Lvl/litres': 
             $('#SrcLitresValue').html('(Payload value: ' + payload + ')');
-            $('#SrcLitres').text(payload + 'cm');
+            $('#SrcLitres').text(payload + 'l');
             break;
         case 'WS/RWS/EG/BarrelSrc/FunctionModeReq':
             $('#FunctionModeRequest').html('(Payload value: ' + payload + ')');
@@ -193,7 +193,7 @@ function onMessageArrived(message) {
             break;
         case 'WS/RWS/DG/BarrelDst/Lvl/litres': 
             $('#DstLitresValue').html('(Payload value: ' + payload + ')');
-            $('#DstLitres').text(payload + 'cm');
+            $('#DstLitres').text(payload + 'l');
             break;
         case 'WS/RWS/DG/BarrelDst/FunctionModeReq':
             $('#DstFunctionModeRequest').html('(Payload value: ' + payload + ')');

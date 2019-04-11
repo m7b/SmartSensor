@@ -121,7 +121,7 @@ std::string barrel::get_local_datetime(void)
  */
 float barrel::calc_Volume(void)
 {
-    float V = 1/3 * PI * fill_level.cm * (powf(_R, 2.0) + _R*_r + powf(_r, 2.0));
+    float V = 1.f/3 * PI * fill_level.cm * (powf(_R, 2.0) + _R*_r + powf(_r, 2.0));
 
     //from cm^3 to litres (dm^3)
     V = V / 1000;
@@ -160,10 +160,11 @@ bool barrel::do_publish_syslog(void)
 {
     bool rc;
 
-    rc = syslog->logf(LOG_INFO, "Zeitstempel: %s; Füllstand: %dcm; Prozentual: %.2f%%",
+    rc = syslog->logf(LOG_INFO, "Zeitstempel: %s; Füllstand: %dcm; Prozentual: %.2f%%; Liter: %.2f",
         get_local_datetime().c_str(),
         (int)fill_level.cm,
-        fill_level.percent);
+        fill_level.percent,
+        fill_level.litres);
 
     return rc;
 }
@@ -178,10 +179,11 @@ bool barrel::do_publish_serial(void)
 {
     bool rc = false;
 
-    int len = Serial.printf("%s - Füllstand: %dcm; Prozentual: %.2f%%\r\n",
+    int len = Serial.printf("%s - Füllstand: %dcm; Prozentual: %.2f%%; Liter: %.2f\r\n",
         get_local_datetime().c_str(),
         (int)fill_level.cm,
-        fill_level.percent);
+        fill_level.percent,
+        fill_level.litres);
 
     if (len > 0)
         rc = true;
