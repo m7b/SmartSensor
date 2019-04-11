@@ -20,6 +20,7 @@ Developed with [Visual Studio Code](https://code.visualstudio.com) and [Platform
  - WS/RWS/EG/BarrelSrc/Lvl/sensorcm
  - WS/RWS/EG/BarrelSrc/Lvl/cm
  - WS/RWS/EG/BarrelSrc/Lvl/percent
+ - WS/RWS/EG/BarrelSrc/Lvl/litres
  - WS/RWS/EG/BarrelSrc/Lvl/timestamp
  - WS/RWS/EG/BarrelSrc/Lvl/local_timestamp
 
