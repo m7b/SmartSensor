@@ -207,7 +207,7 @@ void sensor::operating(void)
                 if ((FunctionMode == FUNCTION_MODE_DEEP_SLEEP_20_SEK) || (FunctionMode == FUNCTION_MODE_DEEP_SLEEP__5_MIN))
                 {
                     Serial.println("Going to sleep ...");
-                    set_next_step(N080_START_TIMEOUT_DS);
+                    set_next_step(N080_ACK_DS_FUNCTION_MODE);
                 }
 
                 //Check function mode change request
@@ -216,23 +216,29 @@ void sensor::operating(void)
             }
             break;
 
-        case N080_START_TIMEOUT_DS:
+        case N080_ACK_DS_FUNCTION_MODE:
+            FunctionModeAck = FunctionMode;
+            _mqtt->publish(FUNCTION_MODE_ACK, FunctionModeAck);
+            set_next_step(N090_START_TIMEOUT_DS);
+            break;
+
+        case N090_START_TIMEOUT_DS:
             _start_time = millis();
-            set_next_step(N090_WAIT_TIMEOUT_DS);
+            set_next_step(N100_WAIT_TIMEOUT_DS);
             break;
 
-        case N090_WAIT_TIMEOUT_DS:
+        case N100_WAIT_TIMEOUT_DS:
             if (get_duration_ms(_start_time) >= 200)
-                set_next_step(N100_ENTER_DS);
+                set_next_step(N110_ENTER_DS);
 
             break;
 
-        case N100_ENTER_DS:
+        case N110_ENTER_DS:
             ESP.deepSleep(_ds_time);
-            set_next_step(N110_WAIT_DS);
+            set_next_step(N120_WAIT_DS);
             break;
 
-        case N110_WAIT_DS: //wait until deep sleep has performed. CPU stops working
+        case N120_WAIT_DS: //wait until deep sleep has performed. CPU stops working
             delay(20);
             break;
     }

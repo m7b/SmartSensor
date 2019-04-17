@@ -62,9 +62,10 @@ STEP_DEF(N040_CHECK_FUNCTION_MODE_CHANGE_REQ, "N040: Check function mode change 
 STEP_DEF(N050_CHANGE_TO_REQ_FUNCTION_MODE,    "N050: Change to requested function mode");
 STEP_DEF(N060_ACK_NEW_FUNCTION_MODE,          "N060: Acknowledge new function mode");
 STEP_DEF(N070_WAIT_TIMEOUT,                   "N070: Wait timeout, depending on operation mode");
-STEP_DEF(N080_START_TIMEOUT_DS,               "N080: Start timeout for deep sleep");
-STEP_DEF(N090_WAIT_TIMEOUT_DS,                "N090: Wait timeout for deep sleep");
-STEP_DEF(N100_ENTER_DS,                       "N100: Enter deep sleep");
-STEP_DEF(N110_WAIT_DS,                        "N110: Wait until deep sleep has performed, CPU stops working");
+STEP_DEF(N080_ACK_DS_FUNCTION_MODE,           "N080: Acknowledge deep sleep function mode");
+STEP_DEF(N090_START_TIMEOUT_DS,               "N090: Start timeout for deep sleep");
+STEP_DEF(N100_WAIT_TIMEOUT_DS,                "N100: Wait timeout for deep sleep");
+STEP_DEF(N110_ENTER_DS,                       "N110: Enter deep sleep");
+STEP_DEF(N120_WAIT_DS,                        "N120: Wait until deep sleep has performed, CPU stops working");
 
 #endif // SENSOR_H
