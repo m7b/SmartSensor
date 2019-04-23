@@ -8,6 +8,6 @@ Operating current (3.3V): 2.2mA
 [Table example values](https://www.dinotools.de/2015/07/14/esp8266-01-power-consumption)
 
 
-|Mode               | Current consumption |
+| Mode              | Current consumption |
 |-------------------|---------------------|
 | Normal operation  |                     |

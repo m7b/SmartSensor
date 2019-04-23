@@ -42,10 +42,10 @@ void sensor::loop(void)
 
     //check all conditions are ok
     if (!check_all_conditions())
+    {
+        set_next_step(N000_INIT_STEP);
         return;
-
-    //keep mqtt alive
-    _mqtt->loop();
+    }
 
     //operation
     operating();
@@ -97,11 +97,8 @@ void sensor::setup_mqtt(void)
     //Set callback function
     _mqtt->setCallback([this] (char* topic, uint8_t* payload, unsigned int length) { this->mqtt_callback(topic, payload, length); });
 
-    // We start by connecting to MQTT server
-    _mqtt->check_connection();
-
-    // Shout actual meassuring mode
-    _mqtt->publish(FUNCTION_MODE_ACK, FunctionModeAck);
+    //Set on connection pub function
+    _mqtt->set_on_con_fct([this] (void) {_mqtt->publish(FUNCTION_MODE_ACK, FunctionModeAck); Serial.printf("Publish actual function mode: %d\r\n", FunctionModeAck); });
 }
 
 

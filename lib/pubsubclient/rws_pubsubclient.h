@@ -14,6 +14,8 @@
 #define TP_TOP 1
 #define TP_QOS 2
 
+#define ON_CON_FCT_SIGNATURE std::function<void(void)> on_connect_publish_fct
+
 class rws_pubsubclient : public PubSubClient
 {
     public:
@@ -23,6 +25,7 @@ class rws_pubsubclient : public PubSubClient
         void check_connection(void);
 
         void set_topics_to_subscribe(const std::vector<std::tuple<const int, const char*, const uint8_t>> *topics_to_subscribe);
+        void set_on_con_fct(ON_CON_FCT_SIGNATURE);
 
         bool publish(const char *topic, const int i_value);
         bool publish(const char *topic, const uint8_t value);
@@ -44,9 +47,12 @@ class rws_pubsubclient : public PubSubClient
         String clientId;
         const std::vector<std::tuple<const int, const char*, const uint8_t>> *_topics_to_subscribe;
         char msg[MAX_MSG_SIZE];
-        int max_connection_tries;
 
-        void reconnect(void);
+        long lastReconnectAttempt;
+
+        bool reconnect(void);
+
+        ON_CON_FCT_SIGNATURE;
 };
 
 #endif // RWS_PUBSUBCLIENT_H

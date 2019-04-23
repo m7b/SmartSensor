@@ -18,6 +18,9 @@ void statemachine::set_next_step(const step &next_step)
 {
     bool print_step_id = false;
 
+    if (_step == next_step)
+        return;
+
     _step       = next_step;
     _step_start = millis();
 

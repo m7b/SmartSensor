@@ -14,8 +14,8 @@ rws_pubsubclient::rws_pubsubclient(const char *server, uint16_t port, const char
     _willMessage = willMessage;
 
     clientId = "";
-
-    max_connection_tries = 3;
+    
+    lastReconnectAttempt = 0;
 }
 
 rws_pubsubclient::~rws_pubsubclient()
@@ -27,13 +27,31 @@ void rws_pubsubclient::set_topics_to_subscribe(const std::vector<std::tuple<cons
     _topics_to_subscribe = topics_to_subscribe;
 }
 
+void rws_pubsubclient::set_on_con_fct(ON_CON_FCT_SIGNATURE)
+{
+    this->on_connect_publish_fct = on_connect_publish_fct;
+}
+
 void rws_pubsubclient::check_connection(void)
 {
-    int try_counter = 0;
-    while (!connected() && (try_counter < max_connection_tries))
+    if (!connected())
     {
-        reconnect();
-        try_counter++;
+        long now = millis();
+        if (now - lastReconnectAttempt > 5000)
+        {
+            lastReconnectAttempt = now;
+            // Attempt to reconnect
+            if (reconnect()) {
+                lastReconnectAttempt = 0;
+            }
+        }
+    }
+    else
+    {
+        // Client connected
+        
+        //keep mqtt alive
+        loop();
     }
 }
 
@@ -128,7 +146,7 @@ bool rws_pubsubclient::publish(const char *topic, const std::string s_value)
  * @brief Reconnect to MQTT publisher
  *
  */
-void rws_pubsubclient::reconnect(void)
+bool rws_pubsubclient::reconnect(void)
 {
     Serial.print("Attempting MQTT connection to ");
     Serial.print(server);
@@ -150,14 +168,18 @@ void rws_pubsubclient::reconnect(void)
         if (_willTopic)
             publish(_willTopic, "Online", _willRetain);
 
+        // Publish other things
+        if (on_connect_publish_fct)
+            on_connect_publish_fct();
+
         // ... and resubscribe
         for(auto topic : *_topics_to_subscribe)
         subscribe(std::get<TP_TOP>(topic), std::get<TP_QOS>(topic));
     }
     else
     {
-        Serial.printf("failed, rc=%d, try again in 5 seconds.\r\n", state());
-        // Wait 5 seconds before retrying
-        delay(5000);
+        Serial.printf("MQTT connection failed, rc=%d.\r\n", state());
     }
+
+    return connected();
 }
