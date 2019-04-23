@@ -95,10 +95,15 @@ void sensor::setup_mqtt(void)
     _mqtt->set_topics_to_subscribe(&topics_to_subscribe);
 
     //Set callback function
-    _mqtt->setCallback([this] (char* topic, uint8_t* payload, unsigned int length) { this->mqtt_callback(topic, payload, length); });
+    _mqtt->setCallback([this] (char* topic, uint8_t* payload, unsigned int length) {
+        this->mqtt_callback(topic, payload, length);
+        });
 
     //Set on connection pub function
-    _mqtt->set_on_con_fct([this] (void) {_mqtt->publish(FUNCTION_MODE_ACK, FunctionModeAck); Serial.printf("Publish actual function mode: %d\r\n", FunctionModeAck); });
+    _mqtt->set_on_con_fct([this] (void) {
+        _mqtt->publish(FUNCTION_MODE_ACK, FunctionModeAck);
+        Serial.printf("Publish actual function mode: %d\r\n", FunctionModeAck);
+        });
 }
 
 

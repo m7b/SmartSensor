@@ -259,13 +259,15 @@ void controller::operating(void)
         case N035_CHANGE_MEAS_MODE_SENSORS:
             if (true)
                 _function_mode_src_req = FunctionModes::FUNCTION_MODE_INTERVAL_MEASURE__5_SEK;
+                _function_mode_dst_req = FunctionModes::FUNCTION_MODE_INTERVAL_MEASURE__5_SEK;
                 _mqtt->publish(FUNCTION_MODE_SRC_REQUEST, _function_mode_src_req);
+                _mqtt->publish(FUNCTION_MODE_DST_REQUEST, _function_mode_dst_req);
                 _start_time = millis();
                 set_next_step(N036_WAIT_MEAS_MODE_SENSORS_CHANGED);
             break;
             
         case N036_WAIT_MEAS_MODE_SENSORS_CHANGED:
-            if (_function_mode_src_ack == _function_mode_src_req)
+            if ( (_function_mode_src_ack == _function_mode_src_req) && (_function_mode_dst_ack == _function_mode_dst_req) )
                 set_next_step(N040_CHECK_PUMP_READY);
             
             //Retry request to change mode after timeout
@@ -358,13 +360,15 @@ void controller::operating(void)
         case N400_CHANGE_MEAS_MODE_SENSORS:
             if (true)
                 _function_mode_src_req = FunctionModes::FUNCTION_MODE_INTERVAL_MEASURE__5_MIN;
+                _function_mode_dst_req = FunctionModes::FUNCTION_MODE_INTERVAL_MEASURE__5_MIN;
                 _mqtt->publish(FUNCTION_MODE_SRC_REQUEST, _function_mode_src_req);
+                _mqtt->publish(FUNCTION_MODE_DST_REQUEST, _function_mode_dst_req);
                 _start_time = millis();
                 set_next_step(N410_WAIT_MEAS_MODE_SENSORS_CHANGED);
             break;
             
         case N410_WAIT_MEAS_MODE_SENSORS_CHANGED:
-            if (_function_mode_src_ack == _function_mode_src_req)
+            if ( (_function_mode_src_ack == _function_mode_src_req) && (_function_mode_dst_ack == _function_mode_dst_req) )
                 set_next_step(N999_END);
                 
             //Retry request to change mode after timeout
