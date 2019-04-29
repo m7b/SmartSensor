@@ -11,3 +11,8 @@ Operating current (3.3V): 2.2mA
 | Mode              | Current consumption |
 |-------------------|---------------------|
 | Normal operation  |                     |
+
+
+# Mosquitto Server logging
+
+[Understanding and Configuring Logging – Mosquitto Broker Configuration](http://www.steves-internet-guide.com/mosquitto-logging/)
