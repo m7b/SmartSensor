@@ -13,6 +13,10 @@ Operating current (3.3V): 2.2mA
 | Normal operation  |                     |
 
 
+# Mosquitto on Synology NAS
+
+https://www.msxfaq.de/sonst/iot/mqtt.htm
+
 # Mosquitto Server logging
 
 [Understanding and Configuring Logging – Mosquitto Broker Configuration](http://www.steves-internet-guide.com/mosquitto-logging/)
