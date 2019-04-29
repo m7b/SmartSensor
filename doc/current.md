@@ -18,6 +18,8 @@ Operating current (3.3V): 2.2mA
 
 https://www.msxfaq.de/sonst/iot/mqtt.htm
 
+/usr/local/mosquitto/var/mosquitto.conf
+
 # Mosquitto Server logging
 
 [Understanding and Configuring Logging – Mosquitto Broker Configuration](http://www.steves-internet-guide.com/mosquitto-logging/)
