@@ -78,6 +78,19 @@ static const std::vector<std::pair<const char*, const char*>> wifi_access_creden
 #define LAST_WILL_RETAIN   TRUE
 #define LAST_WILL_MESSAGE  "Offline"
 
+
+/**
+ * @brief MQTT Client Id
+ * 
+ */
+#if defined(SRC_BARREL)
+    #define MQTT_CLIENT_ID           "Client_Src_Barrel"
+#elif defined(DST_BARREL)
+    #define MQTT_CLIENT_ID           "Client_Dst_Barrel"
+#else
+    #define MQTT_CLIENT_ID           "Client_Controller"
+#endif
+
 /**
  * @brief Topic prefixes.
  * 

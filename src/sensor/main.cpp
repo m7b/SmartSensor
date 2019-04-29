@@ -16,7 +16,7 @@ Timezone tz(rCEST, rCET);
 rws_wifi wifiMulti;
 rws_ntp ntp(NTP_SERVER, NTP_OFFSET_S, NTP_UPDATE_INTERVAL_MS, &tz);
 rws_syslog syslog(SYSLOG_SERVER, SYSLOG_PORT, DEVICE_HOSTNAME, APP_NAME, LOG_KERN);
-rws_pubsubclient mqtt(MQTT_SERVER, MQTT_PORT, LAST_WILL_TOPIC, LAST_WILL_QOS, LAST_WILL_RETAIN, LAST_WILL_MESSAGE);
+rws_pubsubclient mqtt(MQTT_SERVER, MQTT_PORT, MQTT_CLIENT_ID, LAST_WILL_TOPIC, LAST_WILL_QOS, LAST_WILL_RETAIN, LAST_WILL_MESSAGE);
 
 sensor sens(&wifiMulti, &ntp, &syslog, &mqtt);
 

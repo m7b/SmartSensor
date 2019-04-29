@@ -1,6 +1,6 @@
 #include "rws_pubsubclient.h"
 
-rws_pubsubclient::rws_pubsubclient(const char *server, uint16_t port, const char* willTopic, uint8_t willQos, bool willRetain, const char* willMessage)
+rws_pubsubclient::rws_pubsubclient(const char *server, uint16_t port, String clientId, const char* willTopic, uint8_t willQos, bool willRetain, const char* willMessage)
 : PubSubClient(espClient)
 {
     this->server = server;
@@ -13,7 +13,9 @@ rws_pubsubclient::rws_pubsubclient(const char *server, uint16_t port, const char
     _willRetain = willRetain;
     _willMessage = willMessage;
 
-    clientId = "";
+    //clientId = "ESP8266Client-" + String(random(0xffff), HEX);
+    clientId = clientId;
+    cleanSession = true;
     
     lastReconnectAttempt = 0;
 }
@@ -156,10 +158,10 @@ bool rws_pubsubclient::reconnect(void)
 
     // Create a random client ID
     clientId = "ESP8266Client-" + String(random(0xffff), HEX);
+    bool cleanSession = true;
 
     // Attempt to connect
-
-    if (connect(clientId.c_str(), _willTopic, _willQos, _willRetain, _willMessage))
+    if (connect(clientId.c_str(), 0, 0, _willTopic, _willQos, _willRetain, _willMessage, cleanSession))
     {
         Serial.println("MQTT connected");
         Serial.println("CLient ID is: " + clientId);

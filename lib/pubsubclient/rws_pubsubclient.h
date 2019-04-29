@@ -19,7 +19,7 @@
 class rws_pubsubclient : public PubSubClient
 {
     public:
-        rws_pubsubclient(const char *server, uint16_t port, const char* willTopic, uint8_t willQos, bool willRetain, const char* willMessage);
+        rws_pubsubclient(const char *server, uint16_t port, String clientId, const char* willTopic, uint8_t willQos, bool willRetain, const char* willMessage);
         ~rws_pubsubclient();
 
         void check_connection(void);
@@ -45,6 +45,8 @@ class rws_pubsubclient : public PubSubClient
         const char* _willMessage;
 
         String clientId;
+        bool cleanSession;
+
         const std::vector<std::tuple<const int, const char*, const uint8_t>> *_topics_to_subscribe;
         char msg[MAX_MSG_SIZE];
 
