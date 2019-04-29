@@ -66,6 +66,5 @@ STEP_DEF(N080_ACK_DS_FUNCTION_MODE,           "N080: Acknowledge deep sleep func
 STEP_DEF(N090_START_TIMEOUT_DS,               "N090: Start timeout for deep sleep");
 STEP_DEF(N100_WAIT_TIMEOUT_DS,                "N100: Wait timeout for deep sleep");
 STEP_DEF(N110_ENTER_DS,                       "N110: Enter deep sleep");
-STEP_DEF(N120_WAIT_DS,                        "N120: Wait until deep sleep has performed, CPU stops working");
 
 #endif // SENSOR_H

@@ -237,11 +237,6 @@ void sensor::operating(void)
 
         case N110_ENTER_DS:
             ESP.deepSleep(_ds_time);
-            set_next_step(N120_WAIT_DS);
-            break;
-
-        case N120_WAIT_DS: //wait until deep sleep has performed. CPU stops working
-            delay(20);
-            break;
+            delay(10000);
     }
 }

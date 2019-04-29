@@ -163,7 +163,7 @@ function onMessageArrived(message) {
             
         // DESTINATION BARREL
 
-        case 'WS/RWS/EG/BarrelDst/Status': 
+        case 'WS/RWS/DG/BarrelDst/Status': 
             $('#DstStatusValue').html('(Payload value: ' + payload + ')');
             $('#DstStatusLabel').text(payload + '');
             break;
