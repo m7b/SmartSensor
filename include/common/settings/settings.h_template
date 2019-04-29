@@ -59,16 +59,6 @@ static const std::vector<std::pair<const char*, const char*>> wifi_access_creden
 
 
 /**
- * @brief Syslog server connection info
- * 
- */
-#define SYSLOG_SERVER "192.168.0.1"
-#define SYSLOG_PORT 514
-#define DEVICE_HOSTNAME "my-device"
-#define APP_NAME "smartsensor"
-
-
-/**
  * @brief MQTT Connection settings
  * 
  */
@@ -102,5 +92,15 @@ static const std::vector<std::pair<const char*, const char*>> wifi_access_creden
 #define LOCATION_TYPE_BARREL_SRC    "EG/BarrelSrc/"
 #define LOCATION_TYPE_BARREL_DST    "DG/BarrelDst/"
 #define DASHBOARD                   "Dashboard/"
+
+
+/**
+ * @brief Syslog server connection info
+ * 
+ */
+#define SYSLOG_SERVER "192.168.0.1"
+#define SYSLOG_PORT 514
+#define DEVICE_HOSTNAME MQTT_CLIENT_ID
+#define APP_NAME "smartsensor"
 
 #endif // COMMON_SETTINGS_H
