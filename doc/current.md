@@ -11,6 +11,7 @@ Operating current (3.3V): 2.2mA
 | Mode              | Current consumption |
 |-------------------|---------------------|
 | Normal operation  |                     |
+| Deep sleep        |                     |
 
 
 # Mosquitto on Synology NAS
