@@ -1,9 +1,11 @@
 var debug = false;
-var host = 'iot.eclipse.org'; //'iot.eclipse.org'; //'bierfass';
+var host = 'iot.eclipse.org'; //'iot.eclipse.org'; //'bierfass'; //'broker.hivemq.com'
 var port = 80; //80; //9001;
 var path = '/ws'
 var topic = 'WS/RWS/#';
 var useTLS = false;
+//var clientId = 'Client_Panel' + parseInt(Math.random() * 100, 10);
+var clientId = 'Client_Panel';
 var cleansession = true;
 var mqtt;
 var reconnectTimeout = 2000;
@@ -19,8 +21,7 @@ function MQTTconnect() {
     if (typeof path == "undefined") {
         path = '/mqtt';
     }
-//  mqtt = new Paho.Client(host, port, path, "mqtt_panel" + parseInt(Math.random() * 100, 10));
-    mqtt = new Paho.Client(host, port, path, "Client_Panel", 10);
+    mqtt = new Paho.Client(host, port, path, clientId);
     var options = {
         timeout: 3,
         useSSL: useTLS,
