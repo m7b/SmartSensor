@@ -9,6 +9,8 @@ sensor::sensor(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclien
     
     _barrel = new barrel(_ntp, _mqtt, _syslog);
 
+    _mqtt_online = true;
+
     //Initial operation mode
     FunctionModeRequest = FUNCTION_MODE_INTERVAL_MEASURE__5_SEK;
     FunctionModeAck     = FUNCTION_MODE_INTERVAL_MEASURE__5_SEK;
@@ -38,7 +40,8 @@ void sensor::loop(void)
     _wifiMulti->check_connection();
 
     //check and renew MQTT connection
-    _mqtt->check_connection();
+    if (_mqtt_online)
+        _mqtt->check_connection();
 
     //check all conditions are ok
     if (!check_all_conditions())
@@ -101,8 +104,9 @@ void sensor::setup_mqtt(void)
 
     //Set on connection pub function
     _mqtt->set_on_con_fct([this] (void) {
-        _mqtt->publish(FUNCTION_MODE_ACK, FunctionModeAck);
-        Serial.printf("Publish actual function mode: %d\r\n", FunctionModeAck);
+        //Things to do after connection is established
+        //_mqtt->publish(FUNCTION_MODE_ACK, FunctionModeAck);
+        //Serial.printf("Publish actual function mode: %d\r\n", FunctionModeAck);
         });
 }
 
@@ -112,7 +116,10 @@ bool sensor::check_all_conditions(void)
     bool rc = true;
     
     rc = rc & _wifiMulti->connected();
-    rc = rc & _mqtt->connected();
+
+    if (_mqtt_online)
+        rc = rc & _mqtt->connected();
+
     rc = rc & _ntp->update();
 
     return rc;
@@ -209,7 +216,7 @@ void sensor::operating(void)
                 if ((FunctionMode == FUNCTION_MODE_DEEP_SLEEP_20_SEK) || (FunctionMode == FUNCTION_MODE_DEEP_SLEEP__5_MIN))
                 {
                     Serial.println("Going to sleep ...");
-                    set_next_step(N080_ACK_DS_FUNCTION_MODE);
+                    set_next_step(N080_PUBLISH_SENSOR_OFFLINE);
                 }
 
                 //Check function mode change request
@@ -218,9 +225,8 @@ void sensor::operating(void)
             }
             break;
 
-        case N080_ACK_DS_FUNCTION_MODE:
-            FunctionModeAck = FunctionMode;
-            _mqtt->publish(FUNCTION_MODE_ACK, FunctionModeAck);
+        case N080_PUBLISH_SENSOR_OFFLINE:
+            mqtt_offline_demand();
             set_next_step(N090_START_TIMEOUT_DS);
             break;
 
@@ -231,7 +237,9 @@ void sensor::operating(void)
 
         case N100_WAIT_TIMEOUT_DS:
             if (get_duration_ms(_start_time) >= 200)
+            {
                 set_next_step(N110_ENTER_DS);
+            }
 
             break;
 
@@ -239,4 +247,13 @@ void sensor::operating(void)
             ESP.deepSleep(_ds_time);
             delay(10000);
     }
+}
+
+
+void sensor::mqtt_offline_demand(void)
+{
+    //Publish offline
+    _mqtt->publish(LAST_WILL_TOPIC, LAST_WILL_MESSAGE, LAST_WILL_RETAIN);
+    _mqtt_online = false;
+    _mqtt->disconnect();
 }

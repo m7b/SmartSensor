@@ -33,6 +33,8 @@ class sensor : public statemachine
         
         unsigned long _start_time;
         unsigned long _ds_time;
+
+        bool _mqtt_online;
     
         //Function mode
         uint8_t FunctionModeRequest;
@@ -51,6 +53,8 @@ class sensor : public statemachine
         void mqtt_callback(char* topic, uint8_t* payload, unsigned int length);
         
         void operating(void);
+
+        void mqtt_offline_demand(void);
 };
 
 
@@ -62,7 +66,7 @@ STEP_DEF(N040_CHECK_FUNCTION_MODE_CHANGE_REQ, "N040: Check function mode change 
 STEP_DEF(N050_CHANGE_TO_REQ_FUNCTION_MODE,    "N050: Change to requested function mode");
 STEP_DEF(N060_ACK_NEW_FUNCTION_MODE,          "N060: Acknowledge new function mode");
 STEP_DEF(N070_WAIT_TIMEOUT,                   "N070: Wait timeout, depending on operation mode");
-STEP_DEF(N080_ACK_DS_FUNCTION_MODE,           "N080: Acknowledge deep sleep function mode");
+STEP_DEF(N080_PUBLISH_SENSOR_OFFLINE,         "N080: Publish sensor offline");
 STEP_DEF(N090_START_TIMEOUT_DS,               "N090: Start timeout for deep sleep");
 STEP_DEF(N100_WAIT_TIMEOUT_DS,                "N100: Wait timeout for deep sleep");
 STEP_DEF(N110_ENTER_DS,                       "N110: Enter deep sleep");
