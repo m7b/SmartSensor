@@ -81,6 +81,7 @@ static const std::vector<std::pair<const char*, const char*>> wifi_access_creden
     #define MQTT_CLIENT_ID           "Client_Controller"
 #endif
 
+
 /**
  * @brief Topic prefixes.
  * 
