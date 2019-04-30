@@ -4,7 +4,7 @@ var port = 80; //80; //9001;
 var path = '/ws'
 var topic = 'WS/RWS/#';
 var useTLS = false;
-var clientId = 'Client_Panel-' + parseInt(Math.random() * 100, 10);
+var clientId = 'Panel-' + parseInt(Math.random() * 100, 10);
 var cleansession = true;
 var mqtt;
 var reconnectTimeout = 2000;
