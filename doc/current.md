@@ -10,7 +10,7 @@ Operating current (3.3V): 2.2mA
 
 | Mode              | Current consumption |
 |-------------------|---------------------|
-| Normal operation  |                     |
+| Normal operation  | 140 - 160 mA        |
 | Deep sleep        |                     |
 
 
