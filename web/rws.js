@@ -4,8 +4,7 @@ var port = 80; //80; //9001;
 var path = '/ws'
 var topic = 'WS/RWS/#';
 var useTLS = false;
-//var clientId = 'Client_Panel' + parseInt(Math.random() * 100, 10);
-var clientId = 'Client_Panel';
+var clientId = 'Client_Panel-' + parseInt(Math.random() * 100, 10);
 var cleansession = true;
 var mqtt;
 var reconnectTimeout = 2000;
@@ -28,7 +27,7 @@ function MQTTconnect() {
         cleanSession: cleansession,
         onSuccess: onConnect,
         onFailure: function (message) {
-            $('#status').html("Connection failed: " + message.errorMessage + "Retrying...");
+            $('#status').html("Connection failed: " + message.errorMessage + " Retrying...");
             setTimeout(MQTTconnect, reconnectTimeout);
         }
     };
