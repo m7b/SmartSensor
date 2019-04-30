@@ -46,7 +46,6 @@ void sensor::loop(void)
     //check all conditions are ok
     if (!check_all_conditions())
     {
-        set_next_step(N000_INIT_STEP);
         return;
     }
 
@@ -105,8 +104,9 @@ void sensor::setup_mqtt(void)
     //Set on connection pub function
     _mqtt->set_on_con_fct([this] (void) {
         //Things to do after connection is established
-        //_mqtt->publish(FUNCTION_MODE_ACK, FunctionModeAck);
-        //Serial.printf("Publish actual function mode: %d\r\n", FunctionModeAck);
+        set_next_step(N000_INIT_STEP);
+        //Publish actual function mode acknowledge
+        _mqtt->publish(FUNCTION_MODE_ACK, FunctionModeAck);
         });
 }
 
@@ -126,7 +126,7 @@ bool sensor::check_all_conditions(void)
 }
 
 void sensor::mqtt_callback(char* topic, uint8_t* payload, unsigned int length) {
-    Serial.print("Message arrived [");
+    Serial.print("  - Message arrived [");
     Serial.print(topic);
     Serial.print("] ");
     Serial.println();
@@ -138,12 +138,12 @@ void sensor::mqtt_callback(char* topic, uint8_t* payload, unsigned int length) {
             switch(std::get<TP_NUM>(el))
             {
                 case 0:     
-                    Serial.printf("Function mode request received: %d\r\n", payload[0]);
+                    Serial.printf("  - Function mode request received: %d\r\n", payload[0]);
                     FunctionModeRequest = payload[0];
                     break;
 
                 case 1:
-                    Serial.printf("inTopic received: %s\r\n", payload_to_string(payload, length).c_str());
+                    Serial.printf("  - inTopic received: %s\r\n", payload_to_string(payload, length).c_str());
                     break;
             }
         }
@@ -208,17 +208,21 @@ void sensor::operating(void)
                     default:                                    duration =   3000; break;
                 }
 
-                //wait timeout depending on operation mode
-                if (get_duration_ms(_start_time) >= duration)
-                    set_next_step(N000_INIT_STEP);
-
                 //in case of deep sleep, perform special step
                 if ((FunctionMode == FUNCTION_MODE_DEEP_SLEEP_20_SEK) || (FunctionMode == FUNCTION_MODE_DEEP_SLEEP__5_MIN))
                 {
-                    Serial.println("Going to sleep ...");
+                    Serial.printf("  - Going to Deep-Sleep for %.2f seconds ...\r\n", _ds_time/1000000.0);
+                    //Serial.print("  - Going to Deep-Sleep for ");
+                    //Serial.print(_ds_time/1000000, DEC);
+                    //Serial.println(" seconds ...");
                     set_next_step(N080_PUBLISH_SENSOR_OFFLINE);
                 }
-
+                //else - wait timeout depending on operation mode
+                else if (get_duration_ms(_start_time) >= duration)
+                {
+                    set_next_step(N000_INIT_STEP);
+                }
+                
                 //Check function mode change request
                 if (FunctionMode != FunctionModeRequest)
                     set_next_step(N050_CHANGE_TO_REQ_FUNCTION_MODE);
@@ -245,6 +249,8 @@ void sensor::operating(void)
 
         case N110_ENTER_DS:
             ESP.deepSleep(_ds_time);
+
+            //Stop program until controller is switched off. 10 sec should be enaugh.
             delay(10000);
     }
 }
@@ -252,8 +258,12 @@ void sensor::operating(void)
 
 void sensor::mqtt_offline_demand(void)
 {
-    //Publish offline
-    _mqtt->publish(LAST_WILL_TOPIC, LAST_WILL_MESSAGE, LAST_WILL_RETAIN);
+    //Publish offline - guided because of Deep-Sleep
+    _mqtt->publish(LAST_WILL_TOPIC, LAST_WILL_MESSAGE " - guided because of Deep-Sleep", LAST_WILL_RETAIN);
+
+    //Prevent reconnect in loop() after guided disconnection
     _mqtt_online = false;
+
+    //disconnect from broker
     _mqtt->disconnect();
 }

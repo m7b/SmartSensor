@@ -19,7 +19,7 @@
 class rws_pubsubclient : public PubSubClient
 {
     public:
-        rws_pubsubclient(const char *server, uint16_t port, String clientId, const char* willTopic, uint8_t willQos, bool willRetain, const char* willMessage);
+        rws_pubsubclient(const char *server, uint16_t port, const char *clientId, const char *user, const char *pass, const char* willTopic, uint8_t willQos, bool willRetain, const char* willMessage);
         ~rws_pubsubclient();
 
         void check_connection(void);
@@ -39,12 +39,14 @@ class rws_pubsubclient : public PubSubClient
         WiFiClient espClient;
         const char *server;
         uint16_t port;
+        const char *_clientId;
+        const char *_user;
+        const char *_pass;
         const char* _willTopic;
         uint8_t _willQos;
         boolean _willRetain;
         const char* _willMessage;
 
-        String clientId;
         bool cleanSession;
 
         const std::vector<std::tuple<const int, const char*, const uint8_t>> *_topics_to_subscribe;

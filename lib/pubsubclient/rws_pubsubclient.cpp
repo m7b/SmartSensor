@@ -1,10 +1,13 @@
 #include "rws_pubsubclient.h"
 
-rws_pubsubclient::rws_pubsubclient(const char *server, uint16_t port, String clientId, const char* willTopic, uint8_t willQos, bool willRetain, const char* willMessage)
+rws_pubsubclient::rws_pubsubclient(const char *server, uint16_t port, const char *clientId, const char *user, const char *pass, const char* willTopic, uint8_t willQos, bool willRetain, const char* willMessage)
 : PubSubClient(espClient)
 {
     this->server = server;
     this->port   = port;
+    _clientId    = clientId;
+    _user = user;
+    _pass = pass;
     setServer(server, port);
 //  setCallback(callback);
 
@@ -13,8 +16,6 @@ rws_pubsubclient::rws_pubsubclient(const char *server, uint16_t port, String cli
     _willRetain = willRetain;
     _willMessage = willMessage;
 
-    //clientId = "ESP8266Client-" + String(random(0xffff), HEX);
-    clientId = clientId;
     cleanSession = true;
     
     lastReconnectAttempt = 0;
@@ -156,15 +157,11 @@ bool rws_pubsubclient::reconnect(void)
     Serial.print(port);
     Serial.println(" ... ");
 
-    // Create a random client ID
-    clientId = "ESP8266Client-" + String(random(0xffff), HEX);
-    bool cleanSession = true;
-
     // Attempt to connect
-    if (connect(clientId.c_str(), 0, 0, _willTopic, _willQos, _willRetain, _willMessage, cleanSession))
+    if (connect(_clientId, _user, _pass, _willTopic, _willQos, _willRetain, _willMessage, cleanSession))
     {
         Serial.println("MQTT connected");
-        Serial.println("CLient ID is: " + clientId);
+        Serial.printf("Client ID is: %s\r\n", _clientId);
 
         // Once connected, publish an announcement...
         if (_willTopic)
@@ -181,6 +178,8 @@ bool rws_pubsubclient::reconnect(void)
     else
     {
         Serial.printf("MQTT connection failed, rc=%d.\r\n", state());
+        Serial.printf("  - Client Id: %s\r\n", _clientId);
+        Serial.printf("  - User: %s\r\n", _user);
     }
 
     return connected();
