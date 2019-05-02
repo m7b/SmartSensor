@@ -15,7 +15,9 @@
 #include "common/mqtt_comm.h"
 
 const static unsigned long ds_time_20sec = 20e6;
+const static unsigned long ds_time__1min = 6e7;
 const static unsigned long ds_time__5min = 3e8;
+const static unsigned long ds_time_10min = 6e8;
 
 class sensor : public statemachine
 {
