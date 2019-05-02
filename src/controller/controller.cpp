@@ -56,7 +56,7 @@ void controller::loop(void)
     _mqtt->loop();
 
     //test utc time
-    _ntp->test(3000);
+    //_ntp->test(3000);
 
     //control rgb led
     _light->loop();
