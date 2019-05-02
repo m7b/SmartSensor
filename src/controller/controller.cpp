@@ -128,7 +128,7 @@ bool controller::check_all_conditions(void)
 }
 
 void controller::mqtt_callback(char* topic, uint8_t* payload, unsigned int length) {
-    Serial.print("Message arrived [");
+    Serial.print("  - Message arrived [");
     Serial.print(topic);
     Serial.print("] ");
     Serial.println();
@@ -140,73 +140,73 @@ void controller::mqtt_callback(char* topic, uint8_t* payload, unsigned int lengt
             switch(std::get<TP_NUM>(el))
             {
                 case 0:
-                    Serial.printf("Function mode ack received from sensor_src: %d\r\n", payload[0]);
+                    Serial.printf("  - Function mode ack received from sensor_src: %d\r\n", payload[0]);
                     _function_mode_src_ack = payload[0];
                     break;
 
                 case 1:
-                    Serial.printf("Function mode ack received from sensor_dst: %d\r\n", payload[0]);
+                    Serial.printf("  - Function mode ack received from sensor_dst: %d\r\n", payload[0]);
                     _function_mode_dst_ack = payload[0];
                     break;
 
                 case 100:
-                    Serial.printf("RAW_CM from sensor_src: %s\r\n", payload_to_string(payload, length).c_str());
+                    Serial.printf("  - RAW_CM from sensor_src: %s\r\n", payload_to_string(payload, length).c_str());
                     break;
 
                 case 101:
-                    Serial.printf("CM from sensor_src: %s\r\n", payload_to_string(payload, length).c_str());
+                    Serial.printf("  - CM from sensor_src: %s\r\n", payload_to_string(payload, length).c_str());
                     break;
 
                 case 102:
-                    Serial.printf("PERCENT from sensor_src: %s\r\n", payload_to_string(payload, length).c_str());
+                    Serial.printf("  - PERCENT from sensor_src: %s\r\n", payload_to_string(payload, length).c_str());
                     break;
 
                 case 103:
-                    Serial.printf("TIMESTAMP from sensor_src: %s\r\n", payload_to_string(payload, length).c_str());
+                    Serial.printf("  - TIMESTAMP from sensor_src: %s\r\n", payload_to_string(payload, length).c_str());
                     break;
 
                 case 104:
-                    Serial.printf("LOC_TIMESTAMP from sensor_src: %s\r\n", payload_to_string(payload, length).c_str());
+                    Serial.printf("  - LOC_TIMESTAMP from sensor_src: %s\r\n", payload_to_string(payload, length).c_str());
                     break;
 
                 case 105:
-                    Serial.printf("SENS_LAST_WILL_TOPIC (Status) from sensor_src: %s\r\n", payload_to_string(payload, length).c_str());
+                    Serial.printf("  - SENS_LAST_WILL_TOPIC (Status) from sensor_src: %s\r\n", payload_to_string(payload, length).c_str());
                     _sens_src_online = (payload_to_string(payload, length).compare("Online") == 0);
                     break;
 
                 case 200:
-                    Serial.printf("RAW_CM from sensor_dst: %s\r\n", payload_to_string(payload, length).c_str());
+                    Serial.printf("  - RAW_CM from sensor_dst: %s\r\n", payload_to_string(payload, length).c_str());
                     break;
 
                 case 201:
-                    Serial.printf("CM from sensor_dst: %s\r\n", payload_to_string(payload, length).c_str());
+                    Serial.printf("  - CM from sensor_dst: %s\r\n", payload_to_string(payload, length).c_str());
                     break;
 
                 case 202:
-                    Serial.printf("PERCENT from sensor_dst: %s\r\n", payload_to_string(payload, length).c_str());
+                    Serial.printf("  - PERCENT from sensor_dst: %s\r\n", payload_to_string(payload, length).c_str());
                     break;
 
                 case 203:
-                    Serial.printf("TIMESTAMP from sensor_dst: %s\r\n", payload_to_string(payload, length).c_str());
+                    Serial.printf("  - TIMESTAMP from sensor_dst: %s\r\n", payload_to_string(payload, length).c_str());
                     break;
 
                 case 204:
-                    Serial.printf("LOC_TIMESTAMP from sensor_dst: %s\r\n", payload_to_string(payload, length).c_str());
+                    Serial.printf("  - LOC_TIMESTAMP from sensor_dst: %s\r\n", payload_to_string(payload, length).c_str());
                     break;
 
                 case 205:
-                    Serial.printf("SENS_LAST_WILL_TOPIC (Status) from sensor_dst: %s\r\n", payload_to_string(payload, length).c_str());
+                    Serial.printf("  - SENS_LAST_WILL_TOPIC (Status) from sensor_dst: %s\r\n", payload_to_string(payload, length).c_str());
                     _sens_dst_online = (payload_to_string(payload, length).compare("Online") == 0);
                     break;
 
                 case 500:
-                    Serial.printf("MANUAL_PUMP_REQ from dashboard: %s\r\n", payload_to_string(payload, length).c_str());
+                    Serial.printf("  - MANUAL_PUMP_REQ from dashboard: %s\r\n", payload_to_string(payload, length).c_str());
                     _light->set_enable(payload[0] == '1');
                     _mqtt->publish(MANUAL_PUMP_ACKNOWLEDGE, payload_to_string(payload, length));
                     break;
 
                 case 501:
-                    Serial.printf("MANUAL_VALVE_REQ from dashboard: %s\r\n", payload_to_string(payload, length).c_str());
+                    Serial.printf("  - MANUAL_VALVE_REQ from dashboard: %s\r\n", payload_to_string(payload, length).c_str());
                     _mqtt->publish(MANUAL_VALVE_ACKNOWLEDGE, payload_to_string(payload, length));
                     break;
             }
