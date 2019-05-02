@@ -70,6 +70,11 @@ void sensor::setup_serial(void)
 
 void sensor::setup_wifi(void)
 {
+    _wifiMulti->set_on_con_timeout_fct([this] (void) {
+        //Things to do after wlanconnection timeout occured
+        action_wlan_con_timeout();
+        });
+
     // Add WiFi connection credentials
     for(auto entry : wifi_access_credentials) 
         _wifiMulti->addAP(entry.first, entry.second);
@@ -107,6 +112,12 @@ void sensor::setup_mqtt(void)
         set_next_step(N000_INIT_STEP);
         //Publish actual function mode acknowledge
         _mqtt->publish(FUNCTION_MODE_ACK, FunctionModeAck);
+        });
+
+    //Set on connection fail function
+    _mqtt->set_on_con_failed_fct([this] (void) {
+        //Things to do after mqtt broker connection failed
+        action_mqtt_con_timeout();
         });
 }
 
@@ -203,18 +214,14 @@ void sensor::operating(void)
                     case FUNCTION_MODE_INTERVAL_MEASURE__5_SEK: duration =   5000; break;
                     case FUNCTION_MODE_INTERVAL_MEASURE_10_SEK: duration =  10000; break;
                     case FUNCTION_MODE_INTERVAL_MEASURE__5_MIN: duration = 300000; break;
-                    case FUNCTION_MODE_DEEP_SLEEP_20_SEK:       _ds_time = 20e6; break;
-                    case FUNCTION_MODE_DEEP_SLEEP__5_MIN:       _ds_time =  3e8; break;
+                    case FUNCTION_MODE_DEEP_SLEEP_20_SEK:       _ds_time = ds_time_20sec; break;
+                    case FUNCTION_MODE_DEEP_SLEEP__5_MIN:       _ds_time = ds_time__5min; break;
                     default:                                    duration =   3000; break;
                 }
 
                 //in case of deep sleep, perform special step
                 if ((FunctionMode == FUNCTION_MODE_DEEP_SLEEP_20_SEK) || (FunctionMode == FUNCTION_MODE_DEEP_SLEEP__5_MIN))
                 {
-                    Serial.printf("  - Going to Deep-Sleep for %.2f seconds ...\r\n", _ds_time/1000000.0);
-                    //Serial.print("  - Going to Deep-Sleep for ");
-                    //Serial.print(_ds_time/1000000, DEC);
-                    //Serial.println(" seconds ...");
                     set_next_step(N080_PUBLISH_SENSOR_OFFLINE);
                 }
                 //else - wait timeout depending on operation mode
@@ -248,7 +255,7 @@ void sensor::operating(void)
             break;
 
         case N110_ENTER_DS:
-            ESP.deepSleep(_ds_time);
+            do_deep_sleep(_ds_time);
 
             //Stop program until controller is switched off. 10 sec should be enaugh.
             delay(10000);
@@ -266,4 +273,26 @@ void sensor::mqtt_offline_demand(void)
 
     //disconnect from broker
     _mqtt->disconnect();
+}
+
+
+void sensor::do_deep_sleep(unsigned long ds_time)
+{
+    Serial.printf("  - Going to Deep-Sleep for %.2f seconds ...\r\n", ds_time/1000000.0);
+    ESP.deepSleep(ds_time);
+
+    //Stop program until controller is switched off. 10 sec should be enaugh.
+    delay(10000);
+}
+
+
+void sensor::action_wlan_con_timeout(void)
+{
+    do_deep_sleep(ds_time__5min);
+}
+
+
+void sensor::action_mqtt_con_timeout(void)
+{
+    do_deep_sleep(ds_time__5min);
 }

@@ -14,7 +14,8 @@
 #define TP_TOP 1
 #define TP_QOS 2
 
-#define ON_CON_FCT_SIGNATURE std::function<void(void)> on_connect_publish_fct
+#define ON_CON_FCT_SIGNATURE        std::function<void(void)> on_connect_publish_fct
+#define ON_CON_FAILED_FCT_SIGNATURE std::function<void(void)> on_connect_failed_fct
 
 class rws_pubsubclient : public PubSubClient
 {
@@ -26,6 +27,7 @@ class rws_pubsubclient : public PubSubClient
 
         void set_topics_to_subscribe(const std::vector<std::tuple<const int, const char*, const uint8_t>> *topics_to_subscribe);
         void set_on_con_fct(ON_CON_FCT_SIGNATURE);
+        void set_on_con_failed_fct(ON_CON_FAILED_FCT_SIGNATURE);
 
         bool publish(const char *topic, const int i_value);
         bool publish(const char *topic, const uint8_t value);
@@ -37,8 +39,8 @@ class rws_pubsubclient : public PubSubClient
 
     private:
         WiFiClient espClient;
-        const char *server;
-        uint16_t port;
+        const char *_server;
+        uint16_t _port;
         const char *_clientId;
         const char *_user;
         const char *_pass;
@@ -47,16 +49,18 @@ class rws_pubsubclient : public PubSubClient
         boolean _willRetain;
         const char* _willMessage;
 
-        bool cleanSession;
+        bool _cleanSession;
 
         const std::vector<std::tuple<const int, const char*, const uint8_t>> *_topics_to_subscribe;
         char msg[MAX_MSG_SIZE];
 
-        long lastReconnectAttempt;
+        long _lastReconnectAttempt;
 
         bool reconnect(void);
 
+        uint8_t _connection_tries;
         ON_CON_FCT_SIGNATURE;
+        ON_CON_FAILED_FCT_SIGNATURE;
 };
 
 #endif // RWS_PUBSUBCLIENT_H

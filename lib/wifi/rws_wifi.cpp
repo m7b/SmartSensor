@@ -21,6 +21,12 @@ rws_wifi::~rws_wifi()
     APlistClean();
 }
 
+
+void rws_wifi::set_on_con_timeout_fct(ON_CON_TIMEOUT_FCT_SIGNATURE)
+{
+    this->on_connect_timeout_fct = on_connect_timeout_fct;
+}
+
 /**
  * @brief check and wait for connection
  *
@@ -35,13 +41,25 @@ void rws_wifi::check_connection(void)
 
     //Print registred SSIDs to try to connect
     for(auto entry : APlist) {
-        Serial.print(" - ");
+        Serial.print("  - ");
         Serial.println(entry.ssid);
     }
 
+    static const uint32_t connectTimeout = 10000; //10s timeout
+    uint32_t start_time = millis();
     while (wifiMulti.run() != WL_CONNECTED) {
         delay(500);
         Serial.print(".");
+        if ((millis() - start_time) >= connectTimeout)
+        {
+            Serial.println(" wlan connection timeout occured!");
+
+            //call user defined callback if available
+            if (on_connect_timeout_fct)
+                on_connect_timeout_fct();
+
+            return;
+        }
     }
 
     Serial.println("");

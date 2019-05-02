@@ -14,6 +14,9 @@
 
 #include "common/mqtt_comm.h"
 
+const static unsigned long ds_time_20sec = 20e6;
+const static unsigned long ds_time__5min = 3e8;
+
 class sensor : public statemachine
 {
     public:
@@ -55,6 +58,9 @@ class sensor : public statemachine
         void operating(void);
 
         void mqtt_offline_demand(void);
+        void do_deep_sleep(unsigned long ds_time);
+        void action_wlan_con_timeout(void);
+        void action_mqtt_con_timeout(void);
 };
 
 

@@ -3,8 +3,8 @@
 rws_pubsubclient::rws_pubsubclient(const char *server, uint16_t port, const char *clientId, const char *user, const char *pass, const char* willTopic, uint8_t willQos, bool willRetain, const char* willMessage)
 : PubSubClient(espClient)
 {
-    this->server = server;
-    this->port   = port;
+    _server = server;
+    _port   = port;
     _clientId    = clientId;
     _user = user;
     _pass = pass;
@@ -16,9 +16,10 @@ rws_pubsubclient::rws_pubsubclient(const char *server, uint16_t port, const char
     _willRetain = willRetain;
     _willMessage = willMessage;
 
-    cleanSession = true;
+    _cleanSession = true;
     
-    lastReconnectAttempt = 0;
+    _lastReconnectAttempt = 0;
+    _connection_tries = 0;
 }
 
 rws_pubsubclient::~rws_pubsubclient()
@@ -35,17 +36,30 @@ void rws_pubsubclient::set_on_con_fct(ON_CON_FCT_SIGNATURE)
     this->on_connect_publish_fct = on_connect_publish_fct;
 }
 
+void rws_pubsubclient::set_on_con_failed_fct(ON_CON_FAILED_FCT_SIGNATURE)
+{
+    this->on_connect_failed_fct = on_connect_failed_fct;
+}
+
 void rws_pubsubclient::check_connection(void)
 {
     if (!connected())
     {
         long now = millis();
-        if (now - lastReconnectAttempt > 5000)
+        if (now - _lastReconnectAttempt > 5000)
         {
-            lastReconnectAttempt = now;
+            _lastReconnectAttempt = now;
             // Attempt to reconnect
             if (reconnect()) {
-                lastReconnectAttempt = 0;
+                _lastReconnectAttempt = 0;
+                _connection_tries = 0;
+            }
+            else
+            {
+                _connection_tries++;
+                // callback for connection failed
+                if (on_connect_failed_fct && (_connection_tries >= 5))
+                    on_connect_failed_fct();
             }
         }
     }
@@ -152,13 +166,13 @@ bool rws_pubsubclient::publish(const char *topic, const std::string s_value)
 bool rws_pubsubclient::reconnect(void)
 {
     Serial.print("Attempting MQTT connection to ");
-    Serial.print(server);
+    Serial.print(_server);
     Serial.print(":");
-    Serial.print(port);
+    Serial.print(_port);
     Serial.println(" ... ");
 
     // Attempt to connect
-    if (connect(_clientId, _user, _pass, _willTopic, _willQos, _willRetain, _willMessage, cleanSession))
+    if (connect(_clientId, _user, _pass, _willTopic, _willQos, _willRetain, _willMessage, _cleanSession))
     {
         Serial.println("MQTT connected");
         Serial.printf("Client ID is: %s\r\n", _clientId);
