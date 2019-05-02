@@ -17,7 +17,7 @@ controller::controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pub
 
     _light = new rgbled(ONBOARD_LED_RED, ONBOARD_LED_GREEN, ONBOARD_LED_BLUE);
 
-    _src_barrel_present = false;
+    _src_barrel_present = true;
     _dst_barrel_present = true;
 }
 
