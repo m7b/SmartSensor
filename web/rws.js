@@ -35,7 +35,7 @@ function MQTTconnect() {
     };
     mqtt.onConnectionLost = onConnectionLost;
     mqtt.onMessageArrived = onMessageArrived;
-    console.log("Host: "+ host + ", Port: " + port + ", Path: " + path + " TLS: " + useTLS);
+    console.log("Host: "+ host + ", Port: " + port + ", Path: " + path + ", TLS: " + useTLS + ", Client Id: " + clientId);
     mqtt.connect(options);
 };
 
