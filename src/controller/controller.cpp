@@ -17,7 +17,8 @@ controller::controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pub
 
     _light = new rgbled(ONBOARD_LED_RED, ONBOARD_LED_GREEN, ONBOARD_LED_BLUE);
 
-    _repeat_sens_requests_after_timeout = false;
+    _src_barrel_present = false;
+    _dst_barrel_present = true;
 }
 
 controller::~controller()
@@ -259,23 +260,39 @@ void controller::operating(void)
             break;
             
         case N035_CHANGE_MEAS_MODE_SENSORS:
-            if (true)
+            if (_src_barrel_present)
+            {
                 _function_mode_src_req = FunctionModes::FUNCTION_MODE_INTERVAL_MEASURE__5_SEK;
-                _function_mode_dst_req = FunctionModes::FUNCTION_MODE_INTERVAL_MEASURE__5_SEK;
                 _mqtt->publish(FUNCTION_MODE_SRC_REQUEST, _function_mode_src_req);
+            }
+            if (_dst_barrel_present)
+            {
+                _function_mode_dst_req = FunctionModes::FUNCTION_MODE_INTERVAL_MEASURE__5_SEK;
                 _mqtt->publish(FUNCTION_MODE_DST_REQUEST, _function_mode_dst_req);
-                _start_time = millis();
-                set_next_step(N036_WAIT_MEAS_MODE_SENSORS_CHANGED);
+            }
+            
+            _start_time = millis();
+            set_next_step(N036_WAIT_MEAS_MODE_SENSORS_CHANGED);
+    
             break;
             
         case N036_WAIT_MEAS_MODE_SENSORS_CHANGED:
-            if ( (_function_mode_src_ack == _function_mode_src_req) && (_function_mode_dst_ack == _function_mode_dst_req) )
-                set_next_step(N040_CHECK_PUMP_READY);
-            
-            //Retry request to change mode after timeout
-            if ( _repeat_sens_requests_after_timeout && (get_duration_ms(_start_time) >= 5000) )
-                set_next_step(N035_CHANGE_MEAS_MODE_SENSORS);
+            {
+                bool rc = true;
 
+                if (_src_barrel_present)
+                    rc = rc && (_function_mode_src_ack == _function_mode_src_req);
+
+                if (_dst_barrel_present)
+                    rc = rc && (_function_mode_dst_ack == _function_mode_dst_req);
+
+                if (rc)
+                    set_next_step(N040_CHECK_PUMP_READY);
+                
+                //Retry request to change mode after timeout
+                if (get_duration_ms(_start_time) >= 5000)
+                    set_next_step(N035_CHANGE_MEAS_MODE_SENSORS);
+            }
             break;
             
         case N040_CHECK_PUMP_READY:
@@ -360,23 +377,39 @@ void controller::operating(void)
             break;
             
         case N400_CHANGE_MEAS_MODE_SENSORS:
-            if (true)
+            if (_src_barrel_present)
+            {
                 _function_mode_src_req = FunctionModes::FUNCTION_MODE_INTERVAL_MEASURE__5_MIN;
-                _function_mode_dst_req = FunctionModes::FUNCTION_MODE_INTERVAL_MEASURE__5_MIN;
                 _mqtt->publish(FUNCTION_MODE_SRC_REQUEST, _function_mode_src_req);
+            }
+            if (_dst_barrel_present)
+            {
+                _function_mode_dst_req = FunctionModes::FUNCTION_MODE_INTERVAL_MEASURE__5_MIN;
                 _mqtt->publish(FUNCTION_MODE_DST_REQUEST, _function_mode_dst_req);
-                _start_time = millis();
-                set_next_step(N410_WAIT_MEAS_MODE_SENSORS_CHANGED);
+            }
+            
+            _start_time = millis();
+            set_next_step(N410_WAIT_MEAS_MODE_SENSORS_CHANGED);
+    
             break;
             
         case N410_WAIT_MEAS_MODE_SENSORS_CHANGED:
-            if ( (_function_mode_src_ack == _function_mode_src_req) && (_function_mode_dst_ack == _function_mode_dst_req) )
-                set_next_step(N999_END);
-                
-            //Retry request to change mode after timeout
-            if ( _repeat_sens_requests_after_timeout && (get_duration_ms(_start_time) >= 5000) )
-                set_next_step(N400_CHANGE_MEAS_MODE_SENSORS);
+            {
+                bool rc = true;
 
+                if (_src_barrel_present)
+                    rc = rc && (_function_mode_src_ack == _function_mode_src_req);
+
+                if (_dst_barrel_present)
+                    rc = rc && (_function_mode_dst_ack == _function_mode_dst_req);
+
+                if (rc)
+                    set_next_step(N999_END);
+                
+                //Retry request to change mode after timeout
+                if (get_duration_ms(_start_time) >= 5000)
+                    set_next_step(N400_CHANGE_MEAS_MODE_SENSORS);
+            }
             break;
             
         case N999_END:
