@@ -17,6 +17,10 @@ Operating current (3.3V): 2.2mA
 # Mosquitto on Synology NAS
 
 https://www.msxfaq.de/sonst/iot/mqtt.htm
+https://synocommunity.com/package/mosquitto
+https://community.home-assistant.io/t/mosquitto-systemctl-not-starting/8978/7
+https://github.com/SynoCommunity/spksrc/issues/2581
+
 
 /usr/local/mosquitto/var/mosquitto.conf
 
