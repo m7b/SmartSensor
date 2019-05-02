@@ -1,7 +1,7 @@
 var debug = false;
-var host = 'iot.eclipse.org'; //'iot.eclipse.org'; //'bierfass'; //'broker.hivemq.com'
+var host = 'iot.eclipse.org'; //'iot.eclipse.org'; //'bierfass'; //'broker.hivemq.com'; //'mqtt.flespi.io'
 var port = 80; //80; //9001;
-var path = '/ws'
+var path = '/ws';
 var topic = 'WS/RWS/#';
 var useTLS = false;
 var clientId = 'Panel' + parseInt(Math.random() * 100, 10);
@@ -22,6 +22,8 @@ function MQTTconnect() {
     }
     mqtt = new Paho.Client(host, port, path, clientId);
     var options = {
+        userName: "",
+        password: "",
         timeout: 3,
         useSSL: useTLS,
         cleanSession: cleansession,
