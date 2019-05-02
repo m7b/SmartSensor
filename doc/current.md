@@ -27,3 +27,14 @@ https://github.com/SynoCommunity/spksrc/issues/2581
 # Mosquitto Server logging
 
 [Understanding and Configuring Logging – Mosquitto Broker Configuration](http://www.steves-internet-guide.com/mosquitto-logging/)
+
+# Sensor behaviour
+
+- Sensor switch on
+[SETUP]
+- Try WLAN connection for 10 sec
+  - if no connection could be established, go to deep sleep for 5 min
+- Try MQTT connections for 5 times
+  - if no connection could be established, go to deep sleep for 5 min
+[LOOP]
+do same things as is SETUP
