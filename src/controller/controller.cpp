@@ -16,6 +16,8 @@ controller::controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pub
     _function_mode_dst_ack = 0;
 
     _light = new rgbled(ONBOARD_LED_RED, ONBOARD_LED_GREEN, ONBOARD_LED_BLUE);
+
+    _repeat_sens_requests_after_timeout = false;
 }
 
 controller::~controller()
@@ -271,7 +273,7 @@ void controller::operating(void)
                 set_next_step(N040_CHECK_PUMP_READY);
             
             //Retry request to change mode after timeout
-            if (get_duration_ms(_start_time) >= 5000)
+            if ( _repeat_sens_requests_after_timeout && (get_duration_ms(_start_time) >= 5000) )
                 set_next_step(N035_CHANGE_MEAS_MODE_SENSORS);
 
             break;
@@ -372,7 +374,7 @@ void controller::operating(void)
                 set_next_step(N999_END);
                 
             //Retry request to change mode after timeout
-            if (get_duration_ms(_start_time) >= 5000)
+            if ( _repeat_sens_requests_after_timeout && (get_duration_ms(_start_time) >= 5000) )
                 set_next_step(N400_CHANGE_MEAS_MODE_SENSORS);
 
             break;

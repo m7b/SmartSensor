@@ -33,6 +33,7 @@ class controller : public statemachine
         rws_syslog *_syslog;
         rws_pubsubclient *_mqtt;
         
+        bool _repeat_sens_requests_after_timeout;
         unsigned long _start_time;
 
         bool _sens_src_online;
