@@ -331,16 +331,18 @@ void sensor::action_mqtt_con_timeout(void)
 
 void sensor::print_stm_steps(void)
 {
-    Serial.printf("%d: %s \r\n", N000_INIT_STEP.id, N000_INIT_STEP.descr);
-    Serial.printf("%d: %s \r\n", N010_START_TIMEOUT.id, N010_START_TIMEOUT.descr);
-    Serial.printf("%d: %s \r\n", N020_START_MEASSURE.id, N020_START_MEASSURE.descr);
-    Serial.printf("%d: %s \r\n", N030_REPORT_MEASSURE.id, N030_REPORT_MEASSURE.descr);
-    Serial.printf("%d: %s \r\n", N040_CHECK_FUNCTION_MODE_CHANGE_REQ.id, N040_CHECK_FUNCTION_MODE_CHANGE_REQ.descr);
-    Serial.printf("%d: %s \r\n", N050_CHANGE_TO_REQ_FUNCTION_MODE.id, N050_CHANGE_TO_REQ_FUNCTION_MODE.descr);
-    Serial.printf("%d: %s \r\n", N060_ACK_NEW_FUNCTION_MODE.id, N060_ACK_NEW_FUNCTION_MODE.descr);
-    Serial.printf("%d: %s \r\n", N070_WAIT_TIMEOUT.id, N070_WAIT_TIMEOUT.descr);
-    Serial.printf("%d: %s \r\n", N080_PUBLISH_SENSOR_OFFLINE.id, N080_PUBLISH_SENSOR_OFFLINE.descr);
-    Serial.printf("%d: %s \r\n", N090_START_TIMEOUT_DS.id, N090_START_TIMEOUT_DS.descr);
-    Serial.printf("%d: %s \r\n", N100_WAIT_TIMEOUT_DS.id, N100_WAIT_TIMEOUT_DS.descr);
-    Serial.printf("%d: %s \r\n", N110_ENTER_DS.id, N110_ENTER_DS.descr);
+    Serial.println("");
+    Serial.printf("%ld: %s \r\n", N000_INIT_STEP.id, N000_INIT_STEP.descr);
+    Serial.printf("%ld: %s \r\n", N010_START_TIMEOUT.id, N010_START_TIMEOUT.descr);
+    Serial.printf("%ld: %s \r\n", N020_START_MEASSURE.id, N020_START_MEASSURE.descr);
+    Serial.printf("%ld: %s \r\n", N030_REPORT_MEASSURE.id, N030_REPORT_MEASSURE.descr);
+    Serial.printf("%ld: %s \r\n", N040_CHECK_FUNCTION_MODE_CHANGE_REQ.id, N040_CHECK_FUNCTION_MODE_CHANGE_REQ.descr);
+    Serial.printf("%ld: %s \r\n", N050_CHANGE_TO_REQ_FUNCTION_MODE.id, N050_CHANGE_TO_REQ_FUNCTION_MODE.descr);
+    Serial.printf("%ld: %s \r\n", N060_ACK_NEW_FUNCTION_MODE.id, N060_ACK_NEW_FUNCTION_MODE.descr);
+    Serial.printf("%ld: %s \r\n", N070_WAIT_TIMEOUT.id, N070_WAIT_TIMEOUT.descr);
+    Serial.printf("%ld: %s \r\n", N080_PUBLISH_SENSOR_OFFLINE.id, N080_PUBLISH_SENSOR_OFFLINE.descr);
+    Serial.printf("%ld: %s \r\n", N090_START_TIMEOUT_DS.id, N090_START_TIMEOUT_DS.descr);
+    Serial.printf("%ld: %s \r\n", N100_WAIT_TIMEOUT_DS.id, N100_WAIT_TIMEOUT_DS.descr);
+    Serial.printf("%ld: %s \r\n", N110_ENTER_DS.id, N110_ENTER_DS.descr);
+    Serial.println("");
 }
