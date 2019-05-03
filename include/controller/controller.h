@@ -1,7 +1,12 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
-//#include <Arduino.h>
+//Web-Updater things---------------------
+#include <ESP8266WebServer.h>
+#include <ESP8266mDNS.h>
+#include <ESP8266HTTPUpdateServer.h>
+//Web-Updater things---------------------
+
 #include <rws_wifi.h>
 #include <rws_ntp.h>
 #include <rws_syslog.h>
@@ -63,6 +68,7 @@ class controller : public statemachine
 
         void set_sens_mode(FunctionModes m);
         bool check_sens_mode(FunctionModes m);
+        void print_stm_steps(void);
 };
 
 

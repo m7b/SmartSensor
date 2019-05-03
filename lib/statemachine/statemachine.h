@@ -12,7 +12,7 @@
 class statemachine
 {
     public:
-        statemachine();
+        statemachine(unsigned long init_step);
         ~statemachine();
 
         struct step

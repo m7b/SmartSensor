@@ -1,6 +1,17 @@
 #include "sensor/sensor.h"
 
+//Web-Updater things---------------------
+#if defined(SRC_BARREL)
+    const char* dns_host_barrel = "rws-src-barrel";
+#elif defined(DST_BARREL)
+    const char* dns_host_barrel = "rws-dst-barrel";
+#endif
+ESP8266WebServer httpServer(80);
+ESP8266HTTPUpdateServer httpUpdater;
+//Web-Updater things---------------------
+
 sensor::sensor(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclient *mqtt)
+: statemachine(N000_INIT_STEP)
 {
     _wifiMulti = wifi;
     _ntp       = ntp;
@@ -29,6 +40,22 @@ void sensor::setup(void)
     setup_ntp();
     setup_syslog();
     setup_mqtt();
+
+    print_stm_steps();
+
+//Web-Updater things---------------------
+    MDNS.begin(dns_host_barrel);
+
+    httpServer.on("/", []() {
+        httpServer.send(200, "text/plain", "Hi! I am a Sensor.");
+    });
+
+    httpUpdater.setup(&httpServer);
+    httpServer.begin();
+
+    MDNS.addService("http", "tcp", 80);
+    Serial.printf("HTTPUpdateServer ready! Open http://%s.local/update in your browser\n", dns_host_barrel);
+//Web-Updater things---------------------
 }
 
 void sensor::loop(void)
@@ -51,6 +78,11 @@ void sensor::loop(void)
 
     //operation
     operating();
+
+//Web-Updater things---------------------
+    httpServer.handleClient();
+    MDNS.update();
+//Web-Updater things---------------------
 }
 
 
@@ -295,4 +327,20 @@ void sensor::action_wlan_con_timeout(void)
 void sensor::action_mqtt_con_timeout(void)
 {
     do_deep_sleep(ds_time__5min);
+}
+
+void sensor::print_stm_steps(void)
+{
+    Serial.printf("%d: %s \r\n", N000_INIT_STEP.id, N000_INIT_STEP.descr);
+    Serial.printf("%d: %s \r\n", N010_START_TIMEOUT.id, N010_START_TIMEOUT.descr);
+    Serial.printf("%d: %s \r\n", N020_START_MEASSURE.id, N020_START_MEASSURE.descr);
+    Serial.printf("%d: %s \r\n", N030_REPORT_MEASSURE.id, N030_REPORT_MEASSURE.descr);
+    Serial.printf("%d: %s \r\n", N040_CHECK_FUNCTION_MODE_CHANGE_REQ.id, N040_CHECK_FUNCTION_MODE_CHANGE_REQ.descr);
+    Serial.printf("%d: %s \r\n", N050_CHANGE_TO_REQ_FUNCTION_MODE.id, N050_CHANGE_TO_REQ_FUNCTION_MODE.descr);
+    Serial.printf("%d: %s \r\n", N060_ACK_NEW_FUNCTION_MODE.id, N060_ACK_NEW_FUNCTION_MODE.descr);
+    Serial.printf("%d: %s \r\n", N070_WAIT_TIMEOUT.id, N070_WAIT_TIMEOUT.descr);
+    Serial.printf("%d: %s \r\n", N080_PUBLISH_SENSOR_OFFLINE.id, N080_PUBLISH_SENSOR_OFFLINE.descr);
+    Serial.printf("%d: %s \r\n", N090_START_TIMEOUT_DS.id, N090_START_TIMEOUT_DS.descr);
+    Serial.printf("%d: %s \r\n", N100_WAIT_TIMEOUT_DS.id, N100_WAIT_TIMEOUT_DS.descr);
+    Serial.printf("%d: %s \r\n", N110_ENTER_DS.id, N110_ENTER_DS.descr);
 }

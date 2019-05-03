@@ -1,7 +1,12 @@
 #ifndef SENSOR_H
 #define SENSOR_H
 
-//#include <Arduino.h>
+//Web-Updater things---------------------
+#include <ESP8266WebServer.h>
+#include <ESP8266mDNS.h>
+#include <ESP8266HTTPUpdateServer.h>
+//Web-Updater things---------------------
+
 #include <rws_wifi.h>
 #include <rws_ntp.h>
 #include <rws_syslog.h>
@@ -63,6 +68,8 @@ class sensor : public statemachine
         void do_deep_sleep(unsigned long ds_time);
         void action_wlan_con_timeout(void);
         void action_mqtt_con_timeout(void);
+        
+        void print_stm_steps(void);
 };
 
 

@@ -1,11 +1,11 @@
 #include "statemachine.h"
 
-statemachine::statemachine()
+statemachine::statemachine(unsigned long init_step)
 {
-    _step.id = 0;
+    _step.id = init_step;
     memset(_step.descr, 0, sizeof(_step.descr));
 
-    _step_start = 0;
+    _step_start = init_step;
 }
 
 

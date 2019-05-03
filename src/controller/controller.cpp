@@ -1,6 +1,13 @@
 #include "controller/controller.h"
 
+//Web-Updater things---------------------
+const char* dns_host_ctrl   = "rws-ctrl";
+ESP8266WebServer httpServer(80);
+ESP8266HTTPUpdateServer httpUpdater;
+//Web-Updater things---------------------
+
 controller::controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclient *mqtt)
+: statemachine(N000_INIT_STEP)
 {
     _wifiMulti = wifi;
     _ntp       = ntp;
@@ -35,6 +42,25 @@ void controller::setup(void)
     setup_mqtt();
 
     _light->set_delay_ms(333);
+
+    print_stm_steps();
+
+//Web-Updater things---------------------
+    MDNS.begin(dns_host_ctrl);
+    httpServer.on("/", []() {
+        httpServer.send(200, "text/plain", "Hi! I am RWS Controller.");
+    });
+    
+    httpServer.on("/test", []() {
+        httpServer.send(200, "text/plain", "Hi Testpage! I am RWS Controller.");
+    });
+
+    httpUpdater.setup(&httpServer);
+    httpServer.begin();
+
+    MDNS.addService("http", "tcp", 80);
+    Serial.printf("HTTPUpdateServer ready! Open http://%s.local/update in your browser\r\n\r\n", dns_host_ctrl);
+//Web-Updater things---------------------
 }
 
 void controller::loop(void)
@@ -63,6 +89,11 @@ void controller::loop(void)
 
     //operation
     operating();
+
+//Web-Updater things--------------------
+    httpServer.handleClient();
+    MDNS.update();
+//Web-Updater things---------------------
 }
 
 
@@ -410,4 +441,34 @@ bool controller::check_sens_mode(FunctionModes m)
     //Could also check if (_function_mode_src/dst_ack == _function_mode_src/dst_req)
 
     return rc;
+}
+
+void controller::print_stm_steps(void)
+{
+    Serial.printf("%d: %s \r\n", N000_INIT_STEP.id, N000_INIT_STEP.descr);
+    Serial.printf("%d: %s \r\n", N001_START_TIMEOUT_FOR_ACTIVATION.id, N001_START_TIMEOUT_FOR_ACTIVATION.descr);
+    Serial.printf("%d: %s \r\n", N002_WAIT_TIMEOUT_FOR_ACTIVATION.id, N002_WAIT_TIMEOUT_FOR_ACTIVATION.descr);
+    Serial.printf("%d: %s \r\n", N010_CHECK_PUMP_NOT_ACTIVE.id, N010_CHECK_PUMP_NOT_ACTIVE.descr);
+    Serial.printf("%d: %s \r\n", N020_CHECK_DST_LEVEL_BELOW_MAX.id, N020_CHECK_DST_LEVEL_BELOW_MAX.descr);
+    Serial.printf("%d: %s \r\n", N030_CHECK_SRC_LEVEL_OVER_MIN.id, N030_CHECK_SRC_LEVEL_OVER_MIN.descr);
+    Serial.printf("%d: %s \r\n", N035_CHANGE_MEAS_MODE_SENSORS.id, N035_CHANGE_MEAS_MODE_SENSORS.descr);
+    Serial.printf("%d: %s \r\n", N036_WAIT_MEAS_MODE_SENSORS_CHANGED.id, N036_WAIT_MEAS_MODE_SENSORS_CHANGED.descr);
+    Serial.printf("%d: %s \r\n", N040_CHECK_PUMP_READY.id, N040_CHECK_PUMP_READY.descr);
+    Serial.printf("%d: %s \r\n", N050_CHECK_START_PUMP.id, N050_CHECK_START_PUMP.descr);
+    Serial.printf("%d: %s \r\n", N060_WAIT_PUMP_STARTED.id, N060_WAIT_PUMP_STARTED.descr);
+    Serial.printf("%d: %s \r\n", N070_STORE_START_TIME.id, N070_STORE_START_TIME.descr);
+    Serial.printf("%d: %s \r\n", N080_CHECK_ONLY_START_PUMP.id, N080_CHECK_ONLY_START_PUMP.descr);
+    Serial.printf("%d: %s \r\n", N090_CHECK_SRC_LEVEL_DECREASING.id, N090_CHECK_SRC_LEVEL_DECREASING.descr);
+    Serial.printf("%d: %s \r\n", N100_CHECK_DST_LEVEL_INCREASING.id, N100_CHECK_DST_LEVEL_INCREASING.descr);
+    Serial.printf("%d: %s \r\n", N110_CHECK_SRC_LEVEL_OVER_MIN.id, N110_CHECK_SRC_LEVEL_OVER_MIN.descr);
+    Serial.printf("%d: %s \r\n", N120_CHECK_DST_LEVEL_BELOW_MAX.id, N120_CHECK_DST_LEVEL_BELOW_MAX.descr);
+    Serial.printf("%d: %s \r\n", N130_CHECK_NO_STOP_DEMAND_FROM_USER.id, N130_CHECK_NO_STOP_DEMAND_FROM_USER.descr);
+    Serial.printf("%d: %s \r\n", N140_CHECK_PUMP_DURATION_BELOW_MAX.id, N140_CHECK_PUMP_DURATION_BELOW_MAX.descr);
+    Serial.printf("%d: %s \r\n", N200_REPORT_ERROR.id, N200_REPORT_ERROR.descr);
+    Serial.printf("%d: %s \r\n", N300_CHECK_STOP_PUMP.id, N300_CHECK_STOP_PUMP.descr);
+    Serial.printf("%d: %s \r\n", N310_CHECK_PUMP_STOPPED.id, N310_CHECK_PUMP_STOPPED.descr);
+    Serial.printf("%d: %s \r\n", N320_STORE_PUMP_DATA.id, N320_STORE_PUMP_DATA.descr);
+    Serial.printf("%d: %s \r\n", N400_CHANGE_MEAS_MODE_SENSORS.id, N400_CHANGE_MEAS_MODE_SENSORS.descr);
+    Serial.printf("%d: %s \r\n", N410_WAIT_MEAS_MODE_SENSORS_CHANGED.id, N410_WAIT_MEAS_MODE_SENSORS_CHANGED.descr);
+    Serial.printf("%d: %s \r\n", N999_END.id, N999_END.descr);
 }
