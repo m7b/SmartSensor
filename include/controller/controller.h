@@ -60,6 +60,9 @@ class controller : public statemachine
         rgbled *_light;
 
         void operating(void);
+
+        void set_sens_mode(FunctionModes m);
+        bool check_sens_mode(FunctionModes m);
 };
 
 
