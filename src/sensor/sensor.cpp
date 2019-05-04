@@ -54,8 +54,13 @@ void sensor::setup(void)
     httpServer.begin();
 
     MDNS.addService("http", "tcp", 80);
-    Serial.printf("HTTPUpdateServer ready! Open http://%s.local/update in your browser\n", dns_host_barrel);
+    Serial.printf("HTTPUpdateServer ready! Open http://%s.local/update in your browser\r\n", dns_host_barrel);
 //Web-Updater things---------------------
+
+
+    
+
+
 }
 
 void sensor::loop(void)
@@ -65,6 +70,11 @@ void sensor::loop(void)
 
     //check and renew WiFi connection
     _wifiMulti->check_connection();
+
+//Web-Updater things---------------------
+    httpServer.handleClient();
+    MDNS.update();
+//Web-Updater things---------------------
 
     //check and renew MQTT connection
     if (_mqtt_online)
@@ -78,11 +88,6 @@ void sensor::loop(void)
 
     //operation
     operating();
-
-//Web-Updater things---------------------
-    httpServer.handleClient();
-    MDNS.update();
-//Web-Updater things---------------------
 }
 
 
@@ -198,8 +203,22 @@ void sensor::operating(void)
     switch (get_step())
     {
         case N000_INIT_STEP:
-            //test utc time
-            _ntp->test();
+            {
+                //test utc time
+                _ntp->test();
+
+                IPAddress ipaddr;
+                int rc = WiFi.hostByName("bierfass", ipaddr);
+                if ( rc == 1) {
+                    Serial.printf("IP of bierfass is %s\r\n" , ipaddr.toString().c_str());
+                }
+                else
+                {
+                    Serial.printf("IP of bierfass not retrieved: err code %d\r\n", rc);
+                }
+            }
+
+
             set_next_step(N010_START_TIMEOUT);
             break;
 

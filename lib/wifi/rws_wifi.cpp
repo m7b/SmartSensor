@@ -67,7 +67,9 @@ void rws_wifi::check_connection(void)
     Serial.print("SSID: ");
     Serial.print(WiFi.SSID());
     Serial.print(", IP address: ");
-    Serial.println(WiFi.localIP());
+    Serial.print(WiFi.localIP());
+    Serial.print(", DNS address: ");
+    Serial.println(WiFi.dnsIP());
 }
 
 /**
