@@ -126,6 +126,28 @@ void controller::setup_mqtt(void)
 
 void controller::setup_webupdate(void)
 {
+
+/*
+    _webUpdate->_web_server->on("/", [this]() {
+        _web_server->send(200, "text/plain", "Hi! I am a Sensor.");
+    });
+*/
+
+/*
+    std::vector<std::pair<char*, ESP8266WebServer::THandlerFunction>> _test;
+
+    std::pair<char*, ESP8266WebServer::THandlerFunction> my_pair;
+    my_pair.first = "/";
+    my_pair.second = [_webUpdate->_web_server](){send(200, "text/plain", "Hi!")};
+    _test.push_back(my_pair);
+*/
+
+/*
+    _web_server->on("/", [this]() {
+        _web_server->send(200, "text/plain", "Hi! I am a Sensor.");
+*/
+
+
     _webUpdate->setup();
 }
 
