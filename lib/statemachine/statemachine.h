@@ -25,6 +25,7 @@ class statemachine
         void set_next_step(const step &next);
         step get_step(void);
         unsigned long get_step_start(void);
+        void print_step_info(const step &s);
 
     private:
         step _step;

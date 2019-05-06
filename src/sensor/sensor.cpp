@@ -203,21 +203,21 @@ void sensor::operating(void)
     switch (get_step())
     {
         case N000_INIT_STEP:
-            {
-                //test utc time
-                _ntp->test();
+            //test utc time
+            _ntp->test();
 
+            {
                 IPAddress ipaddr;
-                int rc = WiFi.hostByName("bierfass", ipaddr);
+                const char *host_to_resolv = "bierfass.fritz.box";
+                int rc = WiFi.hostByName(host_to_resolv, ipaddr);
                 if ( rc == 1) {
-                    Serial.printf("IP of bierfass is %s\r\n" , ipaddr.toString().c_str());
+                    Serial.printf("IP of %s is %s\r\n", host_to_resolv, ipaddr.toString().c_str());
                 }
                 else
                 {
-                    Serial.printf("IP of bierfass not retrieved: err code %d\r\n", rc);
+                    Serial.printf("IP of %s not retrieved: err code %d\r\n", host_to_resolv, rc);
                 }
             }
-
 
             set_next_step(N010_START_TIMEOUT);
             break;
@@ -351,17 +351,17 @@ void sensor::action_mqtt_con_timeout(void)
 void sensor::print_stm_steps(void)
 {
     Serial.println("");
-    Serial.printf("%ld: %s \r\n", N000_INIT_STEP.id, N000_INIT_STEP.descr);
-    Serial.printf("%ld: %s \r\n", N010_START_TIMEOUT.id, N010_START_TIMEOUT.descr);
-    Serial.printf("%ld: %s \r\n", N020_START_MEASSURE.id, N020_START_MEASSURE.descr);
-    Serial.printf("%ld: %s \r\n", N030_REPORT_MEASSURE.id, N030_REPORT_MEASSURE.descr);
-    Serial.printf("%ld: %s \r\n", N040_CHECK_FUNCTION_MODE_CHANGE_REQ.id, N040_CHECK_FUNCTION_MODE_CHANGE_REQ.descr);
-    Serial.printf("%ld: %s \r\n", N050_CHANGE_TO_REQ_FUNCTION_MODE.id, N050_CHANGE_TO_REQ_FUNCTION_MODE.descr);
-    Serial.printf("%ld: %s \r\n", N060_ACK_NEW_FUNCTION_MODE.id, N060_ACK_NEW_FUNCTION_MODE.descr);
-    Serial.printf("%ld: %s \r\n", N070_WAIT_TIMEOUT.id, N070_WAIT_TIMEOUT.descr);
-    Serial.printf("%ld: %s \r\n", N080_PUBLISH_SENSOR_OFFLINE.id, N080_PUBLISH_SENSOR_OFFLINE.descr);
-    Serial.printf("%ld: %s \r\n", N090_START_TIMEOUT_DS.id, N090_START_TIMEOUT_DS.descr);
-    Serial.printf("%ld: %s \r\n", N100_WAIT_TIMEOUT_DS.id, N100_WAIT_TIMEOUT_DS.descr);
-    Serial.printf("%ld: %s \r\n", N110_ENTER_DS.id, N110_ENTER_DS.descr);
+    print_step_info(N000_INIT_STEP);
+    print_step_info(N010_START_TIMEOUT);
+    print_step_info(N020_START_MEASSURE);
+    print_step_info(N030_REPORT_MEASSURE);
+    print_step_info(N040_CHECK_FUNCTION_MODE_CHANGE_REQ);
+    print_step_info(N050_CHANGE_TO_REQ_FUNCTION_MODE);
+    print_step_info(N060_ACK_NEW_FUNCTION_MODE);
+    print_step_info(N070_WAIT_TIMEOUT);
+    print_step_info(N080_PUBLISH_SENSOR_OFFLINE);
+    print_step_info(N090_START_TIMEOUT_DS);
+    print_step_info(N100_WAIT_TIMEOUT_DS);
+    print_step_info(N110_ENTER_DS);
     Serial.println("");
 }

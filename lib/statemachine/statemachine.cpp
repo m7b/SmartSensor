@@ -44,3 +44,9 @@ unsigned long statemachine::get_step_start(void)
 {
     return _step_start;
 }
+
+
+void statemachine::print_step_info(const step &s)
+{
+    Serial.printf("%ld: %s \r\n", s.id, s.descr);
+}

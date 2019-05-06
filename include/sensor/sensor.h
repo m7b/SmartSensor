@@ -73,7 +73,7 @@ class sensor : public statemachine
 };
 
 
-STEP_DEF(N000_INIT_STEP,                      "N000: Init step");    
+STEP_DEF(N000_INIT_STEP,                      "N000: Init step");
 STEP_DEF(N010_START_TIMEOUT,                  "N010: Start timeout");
 STEP_DEF(N020_START_MEASSURE,                 "N020: Start meassure");
 STEP_DEF(N030_REPORT_MEASSURE,                "N030: Report meassure");
