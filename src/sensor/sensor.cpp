@@ -258,20 +258,26 @@ void sensor::operating(void)
 
         case N070_WAIT_TIMEOUT: {
                 unsigned long duration = 0;
+                bool ds = false;
 
                 switch (FunctionMode)
                 {
-                    case FUNCTION_MODE_PERMANENT_MEASSURE:      duration =    200; break;
-                    case FUNCTION_MODE_INTERVAL_MEASURE__5_SEK: duration =   5000; break;
-                    case FUNCTION_MODE_INTERVAL_MEASURE_10_SEK: duration =  10000; break;
-                    case FUNCTION_MODE_INTERVAL_MEASURE__5_MIN: duration = 300000; break;
-                    case FUNCTION_MODE_DEEP_SLEEP_20_SEK:       _ds_time = ds_time_20sec; break;
-                    case FUNCTION_MODE_DEEP_SLEEP__5_MIN:       _ds_time = ds_time__5min; break;
-                    default:                                    duration =   3000; break;
+                    case FUNCTION_MODE_PERMANENT_MEASSURE:      duration = pm_time_200ms; break;
+                    case FUNCTION_MODE_INTERVAL_MEASURE__5_SEK: duration = im_time__5sec; break;
+                    case FUNCTION_MODE_INTERVAL_MEASURE_10_SEK: duration = im_time_10sec; break;
+                    case FUNCTION_MODE_INTERVAL_MEASURE__1_MIN: duration = im_time__1min; break;
+                    case FUNCTION_MODE_INTERVAL_MEASURE__5_MIN: duration = im_time__5min; break;
+                    case FUNCTION_MODE_DEEP_SLEEP_20_SEK:       _ds_time = ds_time_20sec; ds = true; break;
+                    case FUNCTION_MODE_DEEP_SLEEP__1_MIN:       _ds_time = ds_time__1min; ds = true; break;
+                    case FUNCTION_MODE_DEEP_SLEEP__5_MIN:       _ds_time = ds_time__5min; ds = true; break;
+                    case FUNCTION_MODE_DEEP_SLEEP_10_MIN:       _ds_time = ds_time_10min; ds = true; break;
+                    case FUNCTION_MODE_DEEP_SLEEP_30_MIN:       _ds_time = ds_time_30min; ds = true; break;
+                    case FUNCTION_MODE_DEEP_SLEEP__1_STD:       _ds_time = ds_time__1std; ds = true; break;
+                    default:                                    duration = im_time__5sec; break;
                 }
 
                 //in case of deep sleep, perform special step
-                if ((FunctionMode == FUNCTION_MODE_DEEP_SLEEP_20_SEK) || (FunctionMode == FUNCTION_MODE_DEEP_SLEEP__5_MIN))
+                if (ds)
                 {
                     set_next_step(N080_PUBLISH_SENSOR_OFFLINE);
                 }
@@ -327,7 +333,7 @@ void sensor::mqtt_offline_demand(void)
 }
 
 
-void sensor::do_deep_sleep(unsigned long ds_time)
+void sensor::do_deep_sleep(uint64_t ds_time)
 {
     Serial.printf("  - Going to Deep-Sleep for %.2f seconds ...\r\n", ds_time/1000000.0);
     ESP.deepSleep(ds_time);

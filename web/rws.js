@@ -120,46 +120,12 @@ function onMessageArrived(message) {
         case 'WS/RWS/EG/BarrelSrc/FunctionModeReq':
             $('#FunctionModeRequest').html('(Payload value: ' + payload + ')');
             $('#FunctionModeRequestLabel').removeClass('').addClass('label-default');
-            switch (payload){
-                case '0':
-                    $('#FunctionModeRequestLabel').text('Permanent Meassure'); break;
-                case '1':
-                    $('#FunctionModeRequestLabel').text('Interval Meassure 5 Sec'); break;
-                case '2':
-                    $('#FunctionModeRequestLabel').text('Interval Meassure 10 Sec'); break;
-                case '3':
-                    $('#FunctionModeRequestLabel').text('Interval Meassure 5 Min'); break;
-                case '4':
-                    $('#FunctionModeRequestLabel').text('Deep Sleep Meassure 20 Sec'); break;
-                case '5':
-                    $('#FunctionModeRequestLabel').text('Deep Sleep Meassure 5 Min'); break;
-                default:
-                    $('#FunctionModeRequestLabel').text('Mode not defined'); break;
-                    console.log('Error: No Function Mode for this payload.');
-                    break;
-            }
+            $('#FunctionModeRequestLabel').text(getModeStr(payload));
             break;
         case 'WS/RWS/EG/BarrelSrc/FunctionModeAck':
             $('#FunctionModeAcknowledge').html('(Payload value: ' + payload + ')');
             $('#FunctionModeAcknowledgeLabel').removeClass('').addClass('label-default');
-            switch (payload){
-                case '0':
-                    $('#FunctionModeAcknowledgeLabel').text('Permanent Meassure'); break;
-                case '1':
-                    $('#FunctionModeAcknowledgeLabel').text('Interval Meassure 5 Sec'); break;
-                case '2':
-                    $('#FunctionModeAcknowledgeLabel').text('Interval Meassure 10 Sec'); break;
-                case '3':
-                    $('#FunctionModeAcknowledgeLabel').text('Interval Meassure 5 Min'); break;
-                case '4':
-                    $('#FunctionModeAcknowledgeLabel').text('Deep Sleep Meassure 20 Sec'); break;
-                case '5':
-                    $('#FunctionModeAcknowledgeLabel').text('Deep Sleep Meassure 5 Min'); break;
-                default:
-                    $('#FunctionModeAcknowledgeLabel').text('Mode not defined'); break;
-                    console.log('Error: No Function Mode for this payload.');
-                    break;
-            }
+            $('#FunctionModeAcknowledgeLabel').text(getModeStr(payload));
             break;
             
         // DESTINATION BARREL
@@ -202,46 +168,12 @@ function onMessageArrived(message) {
         case 'WS/RWS/DG/BarrelDst/FunctionModeReq':
             $('#DstFunctionModeRequest').html('(Payload value: ' + payload + ')');
             $('#DstFunctionModeRequestLabel').removeClass('').addClass('label-default');
-            switch (payload){
-                case '0':
-                    $('#DstFunctionModeRequestLabel').text('Permanent Meassure'); break;
-                case '1':
-                    $('#DstFunctionModeRequestLabel').text('Interval Meassure 5 Sec'); break;
-                case '2':
-                    $('#DstFunctionModeRequestLabel').text('Interval Meassure 10 Sec'); break;
-                case '3':
-                    $('#DstFunctionModeRequestLabel').text('Interval Meassure 5 Min'); break;
-                case '4':
-                    $('#DstFunctionModeRequestLabel').text('Deep Sleep Meassure 20 Sec'); break;
-                case '5':
-                    $('#DstFunctionModeRequestLabel').text('Deep Sleep Meassure 5 Min'); break;
-                default:
-                    $('#DstFunctionModeRequestLabel').text('Mode not defined'); break;
-                    console.log('Error: No Function Mode for this payload.');
-                    break;
-            }
+            $('#DstFunctionModeRequestLabel').text(getModeStr(payload));
             break;
         case 'WS/RWS/DG/BarrelDst/FunctionModeAck':
             $('#DstFunctionModeAcknowledge').html('(Payload value: ' + payload + ')');
             $('#DstFunctionModeAcknowledgeLabel').removeClass('').addClass('label-default');
-            switch (payload){
-                case '0':
-                    $('#DstFunctionModeAcknowledgeLabel').text('Permanent Meassure'); break;
-                case '1':
-                    $('#DstFunctionModeAcknowledgeLabel').text('Interval Meassure 5 Sec'); break;
-                case '2':
-                    $('#DstFunctionModeAcknowledgeLabel').text('Interval Meassure 10 Sec'); break;
-                case '3':
-                    $('#DstFunctionModeAcknowledgeLabel').text('Interval Meassure 5 Min'); break;
-                case '4':
-                    $('#DstFunctionModeAcknowledgeLabel').text('Deep Sleep Meassure 20 Sec'); break;
-                case '5':
-                    $('#DstFunctionModeAcknowledgeLabel').text('Deep Sleep Meassure 5 Min'); break;
-                default:
-                    $('#DstFunctionModeAcknowledgeLabel').text('Mode not defined'); break;
-                    console.log('Error: No Function Mode for this payload.');
-                    break;
-            }
+            $('#DstFunctionModeAcknowledgeLabel').text(getModeStr(payload));
             break;
             
             // CONTROLLER
@@ -336,14 +268,36 @@ function AddEventHandlers() {
     $('#ManFctValveOn').click(function(){ManualFctValve('1')});
     $('#ManFctValveOff').click(function(){ManualFctValve('0')});
     
-    $('#ManFctSensMeasMode0').click(function(){ManualSensMeasMode('0')});
-    $('#ManFctSensMeasMode1').click(function(){ManualSensMeasMode('1')});
-    $('#ManFctSensMeasMode2').click(function(){ManualSensMeasMode('2')});
-    $('#ManFctSensMeasMode3').click(function(){ManualSensMeasMode('3')});
-    $('#ManFctSensMeasMode4').click(function(){ManualSensMeasMode('4')});
-    $('#ManFctSensMeasMode5').click(function(){ManualSensMeasMode('5')});
+    $('#ManFctSensMeasMode_200ms').click(function(){ManualSensMeasMode('0')});
+    $('#ManFctSensMeasMode__5sec').click(function(){ManualSensMeasMode('1')});
+    $('#ManFctSensMeasMode_10sec').click(function(){ManualSensMeasMode('2')});
+    $('#ManFctSensMeasMode__1min').click(function(){ManualSensMeasMode('3')});
+    $('#ManFctSensMeasMode__5min').click(function(){ManualSensMeasMode('4')});
+    $('#ManFctSensMeasModeDS_20sec').click(function(){ManualSensMeasMode('5')});
+    $('#ManFctSensMeasModeDS__1min').click(function(){ManualSensMeasMode('6')});
+    $('#ManFctSensMeasModeDS__5min').click(function(){ManualSensMeasMode('7')});
+    $('#ManFctSensMeasModeDS_10min').click(function(){ManualSensMeasMode('8')});
+    $('#ManFctSensMeasModeDS_30min').click(function(){ManualSensMeasMode('9')});
+    $('#ManFctSensMeasModeDS__1std').click(function(){ManualSensMeasMode(':')});
 }
 
+function getModeStr(mode)
+{
+    switch (mode){
+        case '0': return 'Permanent Meassure'; break;
+        case '1': return 'Interval Meassure 5 Sec'; break;
+        case '2': return 'Interval Meassure 10 Sec'; break;
+        case '3': return 'Interval Meassure 1 Min'; break;
+        case '4': return 'Interval Meassure 5 Min'; break;
+        case '5': return 'Deep Sleep Meassure 20 Sec'; break;
+        case '6': return 'Deep Sleep Meassure 1 Min'; break;
+        case '7': return 'Deep Sleep Meassure 5 Min'; break;
+        case '8': return 'Deep Sleep Meassure 10 Min'; break;
+        case '9': return 'Deep Sleep Meassure 30 Min'; break;
+        case ':': return 'Deep Sleep Meassure 1 Std'; break;
+        default: console.log('Error: No Function Mode for this payload.'); return 'Mode not defined';
+    }
+}
 
 function ShowDebugInfos() {
     var display_val = "none";
