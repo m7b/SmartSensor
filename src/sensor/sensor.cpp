@@ -323,7 +323,7 @@ void sensor::operating(void)
 void sensor::mqtt_offline_demand(void)
 {
     //Publish offline - guided because of Deep-Sleep
-    _mqtt->publish(LAST_WILL_TOPIC, LAST_WILL_MESSAGE " - guided because of Deep-Sleep", LAST_WILL_RETAIN);
+    _mqtt->publish(LAST_WILL_TOPIC, LAST_WILL_MESSAGE " - guided BC of Deep-Sleep", LAST_WILL_RETAIN);
 
     //Prevent reconnect in loop() after guided disconnection
     _mqtt_online = false;
