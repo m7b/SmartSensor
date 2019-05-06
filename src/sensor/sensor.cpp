@@ -23,9 +23,9 @@ sensor::sensor(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclien
     _mqtt_online = true;
 
     //Initial operation mode
-    FunctionModeRequest = FUNCTION_MODE_INTERVAL_MEASURE__5_SEK;
-    FunctionModeAck     = FUNCTION_MODE_INTERVAL_MEASURE__5_SEK;
-    FunctionMode        = FUNCTION_MODE_INTERVAL_MEASURE__5_SEK;
+    _FunctionModeRequest = FUNCTION_MODE_INTERVAL_MEASURE__5_SEK;
+    _FunctionModeAck     = FUNCTION_MODE_INTERVAL_MEASURE__5_SEK;
+    _FunctionMode        = FUNCTION_MODE_INTERVAL_MEASURE__5_SEK;
 }
 
 sensor::~sensor()
@@ -148,7 +148,7 @@ void sensor::setup_mqtt(void)
         //Things to do after connection is established
         set_next_step(N000_INIT_STEP);
         //Publish actual function mode acknowledge
-        _mqtt->publish(FUNCTION_MODE_ACK, FunctionModeAck);
+        _mqtt->publish(FUNCTION_MODE_ACK, _FunctionModeAck);
         });
 
     //Set on connection fail function
@@ -187,7 +187,7 @@ void sensor::mqtt_callback(char* topic, uint8_t* payload, unsigned int length) {
             {
                 case 0:     
                     Serial.printf("  - Function mode request received: %d\r\n", payload[0]);
-                    FunctionModeRequest = payload[0];
+                    _FunctionModeRequest = payload[0];
                     break;
 
                 case 1:
@@ -238,7 +238,7 @@ void sensor::operating(void)
             break;
 
         case N040_CHECK_FUNCTION_MODE_CHANGE_REQ:
-            if (FunctionMode != FunctionModeRequest)
+            if (_FunctionMode != _FunctionModeRequest)
                 set_next_step(N050_CHANGE_TO_REQ_FUNCTION_MODE);
             else
                 set_next_step(N070_WAIT_TIMEOUT);
@@ -246,13 +246,13 @@ void sensor::operating(void)
             break;
 
         case N050_CHANGE_TO_REQ_FUNCTION_MODE:
-            FunctionMode = FunctionModeRequest;
+            _FunctionMode = _FunctionModeRequest;
             set_next_step(N060_ACK_NEW_FUNCTION_MODE);
             break;
 
         case N060_ACK_NEW_FUNCTION_MODE:
-            FunctionModeAck = FunctionMode;
-            _mqtt->publish(FUNCTION_MODE_ACK, FunctionModeAck);
+            _FunctionModeAck = _FunctionMode;
+            _mqtt->publish(FUNCTION_MODE_ACK, _FunctionModeAck);
             set_next_step(N070_WAIT_TIMEOUT);
             break;
 
@@ -260,7 +260,7 @@ void sensor::operating(void)
                 unsigned long duration = 0;
                 bool ds = false;
 
-                switch (FunctionMode)
+                switch (_FunctionMode)
                 {
                     case FUNCTION_MODE_PERMANENT_MEASSURE:      duration = pm_time_200ms; break;
                     case FUNCTION_MODE_INTERVAL_MEASURE__5_SEK: duration = im_time__5sec; break;
@@ -286,9 +286,9 @@ void sensor::operating(void)
                 {
                     set_next_step(N000_INIT_STEP);
                 }
-                
+
                 //Check function mode change request
-                if (FunctionMode != FunctionModeRequest)
+                if (_FunctionMode != _FunctionModeRequest)
                     set_next_step(N050_CHANGE_TO_REQ_FUNCTION_MODE);
             }
             break;

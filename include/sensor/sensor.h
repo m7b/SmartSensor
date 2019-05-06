@@ -42,9 +42,9 @@ class sensor : public statemachine
         bool _mqtt_online;
     
         //Function mode
-        uint8_t FunctionModeRequest;
-        uint8_t FunctionModeAck;
-        uint8_t FunctionMode;
+        uint8_t _FunctionModeRequest;
+        uint8_t _FunctionModeAck;
+        uint8_t _FunctionMode;
 
         void setup_serial(void);
 
