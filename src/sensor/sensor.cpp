@@ -1,21 +1,12 @@
 #include "sensor/sensor.h"
 
-//Web-Updater things---------------------
-#if defined(SRC_BARREL)
-    const char* dns_host_barrel = "rws-src-barrel";
-#elif defined(DST_BARREL)
-    const char* dns_host_barrel = "rws-dst-barrel";
-#endif
-ESP8266WebServer httpServer(80);
-ESP8266HTTPUpdateServer httpUpdater;
-//Web-Updater things---------------------
-
-sensor::sensor(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclient *mqtt)
+sensor::sensor(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclient *mqtt, rws_webupdate *webUpd)
 : statemachine(N000_INIT_STEP)
 {
     _wifiMulti = wifi;
     _ntp       = ntp;
     _syslog    = syslog;
+    _webUpdate = webUpd;
     _mqtt      = mqtt;
     
     _barrel = new barrel(_ntp, _mqtt, _syslog);
@@ -40,27 +31,9 @@ void sensor::setup(void)
     setup_ntp();
     setup_syslog();
     setup_mqtt();
+    setup_webupdate();
 
     print_stm_steps();
-
-//Web-Updater things---------------------
-    MDNS.begin(dns_host_barrel);
-
-    httpServer.on("/", []() {
-        httpServer.send(200, "text/plain", "Hi! I am a Sensor.");
-    });
-
-    httpUpdater.setup(&httpServer);
-    httpServer.begin();
-
-    MDNS.addService("http", "tcp", 80);
-    Serial.printf("HTTPUpdateServer ready! Open http://%s.local/update in your browser\r\n", dns_host_barrel);
-//Web-Updater things---------------------
-
-
-    
-
-
 }
 
 void sensor::loop(void)
@@ -71,14 +44,12 @@ void sensor::loop(void)
     //check and renew WiFi connection
     _wifiMulti->check_connection();
 
-//Web-Updater things---------------------
-    httpServer.handleClient();
-    MDNS.update();
-//Web-Updater things---------------------
-
     //check and renew MQTT connection
     if (_mqtt_online)
         _mqtt->check_connection();
+
+    //Web-Update functionality
+    _webUpdate->loop();
 
     //check all conditions are ok
     if (!check_all_conditions())
@@ -156,6 +127,12 @@ void sensor::setup_mqtt(void)
         //Things to do after mqtt broker connection failed
         action_mqtt_con_timeout();
         });
+}
+
+
+void sensor::setup_webupdate(void)
+{
+    _webUpdate->setup();
 }
 
 

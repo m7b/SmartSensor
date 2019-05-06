@@ -1,12 +1,4 @@
-#include <Arduino.h>
-#include <rws_wifi.h>
-#include <rws_ntp.h>
-#include <rws_syslog.h>
-#include <rws_pubsubclient.h>
-
 #include "sensor/sensor.h"
-#include "sensor/settings/settings.h"
-
 
 //Set dst/std rules
 TimeChangeRule rCEST = {CEST_ABBREV, CEST_WEEK, CEST_DOW, CEST_MONTH, CEST_HOUR, CEST_OFFSET};
@@ -18,7 +10,13 @@ rws_ntp ntp(NTP_SERVER, NTP_OFFSET_S, NTP_UPDATE_INTERVAL_MS, &tz);
 rws_syslog syslog(SYSLOG_SERVER, SYSLOG_PORT, DEVICE_HOSTNAME, APP_NAME, LOG_KERN);
 rws_pubsubclient mqtt(MQTT_SERVER, MQTT_PORT, MQTT_CLIENT_ID, MQTT_USER, MQTT_PASS, LAST_WILL_TOPIC, LAST_WILL_QOS, LAST_WILL_RETAIN, LAST_WILL_MESSAGE);
 
-sensor sens(&wifiMulti, &ntp, &syslog, &mqtt);
+//Web-Updater things---------------------
+ESP8266WebServer httpServer(80);
+ESP8266HTTPUpdateServer httpUpdater;
+rws_webupdate webUpdate(MQTT_CLIENT_ID, &httpServer, &httpUpdater);
+//Web-Updater things---------------------
+
+sensor sens(&wifiMulti, &ntp, &syslog, &mqtt, &webUpdate);
 
 
 /**

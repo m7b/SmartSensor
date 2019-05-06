@@ -1,16 +1,11 @@
 #ifndef SENSOR_H
 #define SENSOR_H
 
-//Web-Updater things---------------------
-#include <ESP8266WebServer.h>
-#include <ESP8266mDNS.h>
-#include <ESP8266HTTPUpdateServer.h>
-//Web-Updater things---------------------
-
 #include <rws_wifi.h>
 #include <rws_ntp.h>
 #include <rws_syslog.h>
 #include <rws_pubsubclient.h>
+#include <rws_webupdate.h>
 #include <statemachine.h>
 
 #include "sensor/settings/settings.h"
@@ -22,7 +17,7 @@
 class sensor : public statemachine
 {
     public:
-        sensor(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclient *mqtt);
+        sensor(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclient *mqtt, rws_webupdate *webUpd);
         ~sensor();
 
         void setup(void);
@@ -32,6 +27,7 @@ class sensor : public statemachine
         rws_wifi *_wifiMulti;
         rws_ntp *_ntp;
         rws_syslog *_syslog;
+        rws_webupdate *_webUpdate;
         rws_pubsubclient *_mqtt;
 
         barrel *_barrel;
@@ -52,6 +48,7 @@ class sensor : public statemachine
         void setup_ntp(void);
         void setup_syslog(void);
         void setup_mqtt(void);
+        void setup_webupdate(void);
 
         bool check_all_conditions(void);
 

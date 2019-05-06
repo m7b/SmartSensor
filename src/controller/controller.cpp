@@ -1,17 +1,12 @@
 #include "controller/controller.h"
 
-//Web-Updater things---------------------
-const char* dns_host_ctrl   = "rws-ctrl";
-ESP8266WebServer httpServer(80);
-ESP8266HTTPUpdateServer httpUpdater;
-//Web-Updater things---------------------
-
-controller::controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclient *mqtt)
+controller::controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclient *mqtt, rws_webupdate *webUpd)
 : statemachine(N000_INIT_STEP)
 {
     _wifiMulti = wifi;
     _ntp       = ntp;
     _syslog    = syslog;
+    _webUpdate = webUpd;
     _mqtt      = mqtt;
     
     _sens_src_online = false;
@@ -40,27 +35,11 @@ void controller::setup(void)
     setup_ntp();
     setup_syslog();
     setup_mqtt();
+    setup_webupdate();
 
     _light->set_delay_ms(333);
 
     print_stm_steps();
-
-//Web-Updater things---------------------
-    MDNS.begin(dns_host_ctrl);
-    httpServer.on("/", []() {
-        httpServer.send(200, "text/plain", "Hi! I am RWS Controller.");
-    });
-    
-    httpServer.on("/test", []() {
-        httpServer.send(200, "text/plain", "Hi Testpage! I am RWS Controller.");
-    });
-
-    httpUpdater.setup(&httpServer);
-    httpServer.begin();
-
-    MDNS.addService("http", "tcp", 80);
-    Serial.printf("HTTPUpdateServer ready! Open http://%s.local/update in your browser\r\n\r\n", dns_host_ctrl);
-//Web-Updater things---------------------
 }
 
 void controller::loop(void)
@@ -73,6 +52,9 @@ void controller::loop(void)
 
     //check and renew MQTT connection
     _mqtt->check_connection();
+
+    //Web-Update functionality
+    _webUpdate->loop();
 
     //check all conditions are ok
     if (!check_all_conditions())
@@ -89,11 +71,6 @@ void controller::loop(void)
 
     //operation
     operating();
-
-//Web-Updater things--------------------
-    httpServer.handleClient();
-    MDNS.update();
-//Web-Updater things---------------------
 }
 
 
@@ -144,6 +121,12 @@ void controller::setup_mqtt(void)
 
     // We start by connecting to MQTT server
     _mqtt->check_connection();
+}
+
+
+void controller::setup_webupdate(void)
+{
+    _webUpdate->setup();
 }
 
 
