@@ -30,6 +30,8 @@ void rws_webupdate::setup(void)
     MDNS.addService("http", "tcp", 80);
     Serial.printf("HTTPUpdateServer ready! Open http://%s.local/update in your browser\r\n", _dns_host.c_str());
 }
+
+
 void rws_webupdate::loop(void)
 {
     _web_server->handleClient();

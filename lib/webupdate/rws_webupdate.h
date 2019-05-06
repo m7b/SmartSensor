@@ -19,7 +19,6 @@ class rws_webupdate
         std::string _dns_host;
         ESP8266WebServer *_web_server;
         ESP8266HTTPUpdateServer *_http_updater;
-
 };
 
 #endif // RWS_WEBUPDATE_H
