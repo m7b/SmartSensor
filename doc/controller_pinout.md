@@ -7,13 +7,13 @@
 
 GPIO    | Pin | build-in function  | using for    |
 --------|-----|--------------------|--------------|
-GPIO 16 | D0  | -                  | I^2C         |
-GPIO 5  | D1  | -                  | I^2C         |
+GPIO 16 | D0  | -                  | I<sup>2</sup>C         |
+GPIO 5  | D1  | -                  | I<sup>2</sup>C         |
 GPIO 0  | D3  | Flash-Button       | Button Pump  |
 GPIO 14 | D5  | -                  | Button Valve |
 (-)     |     |                    |              |
-(-)     |     | -                  | Output Pump  |
-(-)     |     | -                  | Output Valve |
+(-)     |     |                    | Output Pump  |
+(-)     |     |                    | Output Valve |
 (-)     |     |                    |              |
 GPIO 2  | D4  | Blue LED on module |              |
 GPIO 4  | D2  | Button             |              |
