@@ -18,6 +18,7 @@ controller::controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pub
     _function_mode_dst_ack = 0;
 
     _light = new rgbled(ONBOARD_LED_RED, ONBOARD_LED_GREEN, ONBOARD_LED_BLUE);
+    _pump  = new pump(PUMP_OUTPUT);
 
     _src_barrel_present = true;
     _dst_barrel_present = true;
@@ -26,6 +27,7 @@ controller::controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pub
 controller::~controller()
 {
     delete _light;
+    delete _pump;
 }
 
 void controller::setup(void)
