@@ -1,7 +1,7 @@
 # Controller pinout of "witty cloud" board
 
 ## Schematic
-![Schematic][witty_cloud_schematic.png]
+![Schematic](witty_cloud_schematic.png)
 
 ## Pinout
 
