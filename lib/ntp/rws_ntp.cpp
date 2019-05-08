@@ -18,6 +18,18 @@ rws_ntp::~rws_ntp()
 }
 
 
+void rws_ntp::setup(void)
+{
+    begin();
+}
+
+
+void rws_ntp::loop(void)
+{
+    update();
+}
+
+
 void rws_ntp::setRules(TimeChangeRule dstStart, TimeChangeRule stdStart)
 {
     tz->setRules(dstStart, stdStart);
@@ -53,6 +65,11 @@ std::string rws_ntp::get_local_datetime(void)
     sprintf(buf, "%.2d:%.2d:%.2d %s %.2d %s %d",
     hour(t), minute(t), second(t), dayShortStr(weekday(t)), day(t), m, year(t));
     return buf;
+}
+
+time_t rws_ntp::get_local_datetime_t()
+{
+    return tz->toLocal(getEpochTime());
 }
 
 std::string rws_ntp::get_local_datetime(time_t utc)

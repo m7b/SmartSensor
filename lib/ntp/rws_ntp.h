@@ -12,11 +12,15 @@ class rws_ntp : public NTPClient
         rws_ntp(const char* poolServerName, int timeOffset, int updateInterval, Timezone *tz);
         ~rws_ntp();
 
+        void setup(void);
+        void loop(void);
+
         void setRules(TimeChangeRule dstStart, TimeChangeRule stdStart);
 
         void test(void);
         void test(unsigned long delay_ms);
         std::string get_local_datetime(void);
+        time_t get_local_datetime_t();
         std::string get_local_datetime(time_t utc);
 
     private:

@@ -1,5 +1,26 @@
 #include "controller/controller.h"
 
+//Weekly Alarm stuff ################ S T A R T #####################
+#include <WeeklyAlarm.h>
+//create instance
+WeeklyAlarm weeklyAlarm; //main instance
+//then all alarm needed
+Alarm alarm1;
+
+void callbackPlain() {
+  Serial.println("################################");
+  Serial.println("alarm without any arguments");
+  weeklyAlarm.prettyPrintTime(now(), Serial);
+  Serial.println("################################");
+}
+//Weekly Alarm stuff ################## E N D #######################
+
+extern rws_ntp ntp;
+time_t getNtpTime()
+{
+    ntp.get_local_datetime_t();
+}
+
 controller::controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclient *mqtt, rws_webupdate *webUpd)
 : statemachine(N000_INIT_STEP)
 {
@@ -41,13 +62,25 @@ void controller::setup(void)
 
     _light->set_delay_ms(333);
 
-    print_stm_steps();
+    //print_stm_steps();
+
+//Weekly Alarm stuff ################ S T A R T #####################
+    alarm1.setCallback(callbackPlain);
+    alarm1.set(AlarmType::ALL_DAYS, ON, 12, 48);
+    weeklyAlarm.add(alarm1);
+//Weekly Alarm stuff ################## E N D #######################
 }
 
 void controller::loop(void)
 {
+
+//Weekly Alarm stuff ################ S T A R T #####################
+    weeklyAlarm.handler();//manage time callbacks of all alarms
+//Weekly Alarm stuff ################## E N D #######################
+
     //update time from NTP on demand, see NTP_UPDATE_INTERVAL_MS
-    _ntp->update();
+    _ntp->loop();
+    timeStatus();
 
     //check and renew WiFi connection
     _wifiMulti->check_connection();
@@ -104,8 +137,24 @@ void controller::setup_wifi(void)
 
 void controller::setup_ntp(void)
 {
+    Serial.println("We start getting time from NTP ...");
     // We start getting time from ntp
-    _ntp->begin();
+    _ntp->setup();
+    
+    // Wait until time retrieved
+    while (!_ntp->update())
+        Serial.printf(".");
+    
+    Serial.printf("\r\nNTP connected\r\n");
+
+    // Setup handler for syncing system time with local time 
+    Serial.println("Setup handler for syncing system time with local time");
+    setSyncProvider(getNtpTime);
+    setSyncInterval(60);
+
+    //Print actual local time with now():
+    Serial.printf("Actual local time with now() is: ");
+    weeklyAlarm.prettyPrintTime(now(), Serial);
 }
 
 void controller::setup_syslog(void)
