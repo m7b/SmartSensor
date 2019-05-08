@@ -38,3 +38,7 @@ https://github.com/SynoCommunity/spksrc/issues/2581
   - if no connection could be established, go to deep sleep for 5 min
 - [LOOP]
 - do same things as is SETUP
+
+# Schedule Libs
+
+https://platformio.org/lib/search?query=keyword%253A%2522schedule%2522&page=1
