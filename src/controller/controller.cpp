@@ -165,15 +165,15 @@ void controller::setup_webupdate(void)
 void controller::setup_weeklyAlarms(void)
 {
     _alarm1.setCallback(callbackPlain);
-    _alarm1.set(AlarmType::ALL_DAYS, ON, 13, 45);
+    _alarm1.set(AlarmType::ALL_DAYS, ON, 14, 13);
     _weeklyAlarm->add(_alarm1);
     
     _alarm2.setCallback(callbackPlain);
-    _alarm2.set(AlarmType::ALL_DAYS, ON, 13, 50);
+    _alarm2.set(AlarmType::ALL_DAYS, ON, 14, 17);
     _weeklyAlarm->add(_alarm2);
     
     _alarm3.setCallback(callbackPlain);
-    _alarm3.set(AlarmType::ALL_DAYS, ON, 14, 00);
+    _alarm3.set(AlarmType::ALL_DAYS, ON, 14, 23);
     _weeklyAlarm->add(_alarm3);
     
 }
@@ -284,7 +284,6 @@ void controller::operating(void)
         case N000_INIT_STEP:
             if (_alarm_occurred)
             {
-                _alarm_occurred = false;
                 set_next_step(N001_START_TIMEOUT_FOR_ACTIVATION);
             }
             break;
@@ -442,6 +441,7 @@ void controller::operating(void)
             break;
             
         case N999_END:
+            _alarm_occurred = false;
             set_next_step(N000_INIT_STEP);
             break;
     }
