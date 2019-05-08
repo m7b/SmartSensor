@@ -7,6 +7,7 @@
 #include <rws_pubsubclient.h>
 #include <rws_webupdate.h>
 #include <statemachine.h>
+#include <WeeklyAlarm.h>
 
 #include "controller/settings/settings.h"
 #include "controller/topics.h"
@@ -24,11 +25,13 @@
 class controller : public statemachine
 {
     public:
-        controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclient *mqtt, rws_webupdate *webUpd);
+        controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclient *mqtt, rws_webupdate *webUpd, WeeklyAlarm *weekAlarm);
         ~controller();
 
         void setup(void);
         void loop(void);
+
+        bool _alarm_occurred;
 
     private:
         rws_wifi *_wifiMulti;
@@ -36,6 +39,7 @@ class controller : public statemachine
         rws_syslog *_syslog;
         rws_webupdate *_webUpdate;
         rws_pubsubclient *_mqtt;
+        WeeklyAlarm *_weeklyAlarm;
         
         bool _src_barrel_present;
         bool _dst_barrel_present;
@@ -57,6 +61,7 @@ class controller : public statemachine
         void setup_syslog(void);
         void setup_mqtt(void);
         void setup_webupdate(void);
+        void setup_weeklyAlarms(void);
 
         bool check_all_conditions(void);
 
@@ -70,6 +75,10 @@ class controller : public statemachine
         void set_sens_mode(FunctionModes m);
         bool check_sens_mode(FunctionModes m);
         void print_stm_steps(void);
+
+        Alarm _alarm1;
+        Alarm _alarm2;
+        Alarm _alarm3;
 };
 
 

@@ -16,7 +16,10 @@ ESP8266HTTPUpdateServer httpUpdater;
 rws_webupdate webUpdate(MQTT_CLIENT_ID, &httpServer, &httpUpdater);
 //Web-Updater things---------------------
 
-controller ctrl(&wifiMulti, &ntp, &syslog, &mqtt, &webUpdate);
+//Weekly Alarm
+WeeklyAlarm weeklyAlarm;
+
+controller ctrl(&wifiMulti, &ntp, &syslog, &mqtt, &webUpdate, &weeklyAlarm);
 
 /**
  * @brief setup section of board
@@ -37,4 +40,20 @@ void setup(void) {
 void loop(void) {
     //Perform the controller
     ctrl.loop();
+}
+
+/* #################################################### */
+
+time_t getNtpTime(void)
+{
+    return ntp.get_local_datetime_t();
+}
+
+
+void callbackPlain(void)
+{
+    Serial.println("################################");
+    weeklyAlarm.prettyPrintTime(now(), Serial);
+    Serial.println("################################");
+    ctrl._alarm_occurred = true;
 }

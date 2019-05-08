@@ -1,34 +1,20 @@
 #include "controller/controller.h"
 
-//Weekly Alarm stuff ################ S T A R T #####################
-#include <WeeklyAlarm.h>
-//create instance
-WeeklyAlarm weeklyAlarm; //main instance
-//then all alarm needed
-Alarm alarm1;
+//Weekly Alarm stuff
+extern void callbackPlain(void);
 
-void callbackPlain() {
-  Serial.println("################################");
-  Serial.println("alarm without any arguments");
-  weeklyAlarm.prettyPrintTime(now(), Serial);
-  Serial.println("################################");
-}
-//Weekly Alarm stuff ################## E N D #######################
+//NTP stuff; Called by time.h handler
+extern time_t getNtpTime(void);
 
-extern rws_ntp ntp;
-time_t getNtpTime()
-{
-    ntp.get_local_datetime_t();
-}
-
-controller::controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclient *mqtt, rws_webupdate *webUpd)
+controller::controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclient *mqtt, rws_webupdate *webUpd, WeeklyAlarm *weekAlarm)
 : statemachine(N000_INIT_STEP)
 {
-    _wifiMulti = wifi;
-    _ntp       = ntp;
-    _syslog    = syslog;
-    _webUpdate = webUpd;
-    _mqtt      = mqtt;
+    _wifiMulti   = wifi;
+    _ntp         = ntp;
+    _syslog      = syslog;
+    _webUpdate   = webUpd;
+    _mqtt        = mqtt;
+    _weeklyAlarm = weekAlarm;
     
     _sens_src_online = false;
     _sens_dst_online = false;
@@ -43,6 +29,8 @@ controller::controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pub
 
     _src_barrel_present = true;
     _dst_barrel_present = true;
+
+    _alarm_occurred = false;
 }
 
 controller::~controller()
@@ -59,25 +47,15 @@ void controller::setup(void)
     setup_syslog();
     setup_mqtt();
     setup_webupdate();
+    setup_weeklyAlarms();
 
     _light->set_delay_ms(333);
 
-    //print_stm_steps();
-
-//Weekly Alarm stuff ################ S T A R T #####################
-    alarm1.setCallback(callbackPlain);
-    alarm1.set(AlarmType::ALL_DAYS, ON, 12, 48);
-    weeklyAlarm.add(alarm1);
-//Weekly Alarm stuff ################## E N D #######################
+    print_stm_steps();
 }
 
 void controller::loop(void)
 {
-
-//Weekly Alarm stuff ################ S T A R T #####################
-    weeklyAlarm.handler();//manage time callbacks of all alarms
-//Weekly Alarm stuff ################## E N D #######################
-
     //update time from NTP on demand, see NTP_UPDATE_INTERVAL_MS
     _ntp->loop();
     timeStatus();
@@ -103,6 +81,9 @@ void controller::loop(void)
 
     //control rgb led
     _light->loop();
+
+    //Weekly Alarm stuff
+    _weeklyAlarm->handler(); //manage time callbacks of all alarms
 
     //operation
     operating();
@@ -154,7 +135,7 @@ void controller::setup_ntp(void)
 
     //Print actual local time with now():
     Serial.printf("Actual local time with now() is: ");
-    weeklyAlarm.prettyPrintTime(now(), Serial);
+    _weeklyAlarm->prettyPrintTime(now(), Serial);
 }
 
 void controller::setup_syslog(void)
@@ -177,29 +158,24 @@ void controller::setup_mqtt(void)
 
 void controller::setup_webupdate(void)
 {
-
-/*
-    _webUpdate->_web_server->on("/", [this]() {
-        _web_server->send(200, "text/plain", "Hi! I am a Sensor.");
-    });
-*/
-
-/*
-    std::vector<std::pair<char*, ESP8266WebServer::THandlerFunction>> _test;
-
-    std::pair<char*, ESP8266WebServer::THandlerFunction> my_pair;
-    my_pair.first = "/";
-    my_pair.second = [_webUpdate->_web_server](){send(200, "text/plain", "Hi!")};
-    _test.push_back(my_pair);
-*/
-
-/*
-    _web_server->on("/", [this]() {
-        _web_server->send(200, "text/plain", "Hi! I am a Sensor.");
-*/
-
-
     _webUpdate->setup();
+}
+
+
+void controller::setup_weeklyAlarms(void)
+{
+    _alarm1.setCallback(callbackPlain);
+    _alarm1.set(AlarmType::ALL_DAYS, ON, 13, 45);
+    _weeklyAlarm->add(_alarm1);
+    
+    _alarm2.setCallback(callbackPlain);
+    _alarm2.set(AlarmType::ALL_DAYS, ON, 13, 50);
+    _weeklyAlarm->add(_alarm2);
+    
+    _alarm3.setCallback(callbackPlain);
+    _alarm3.set(AlarmType::ALL_DAYS, ON, 14, 00);
+    _weeklyAlarm->add(_alarm3);
+    
 }
 
 
@@ -306,7 +282,11 @@ void controller::operating(void)
     switch (get_step())
     {
         case N000_INIT_STEP:
-            set_next_step(N001_START_TIMEOUT_FOR_ACTIVATION);
+            if (_alarm_occurred)
+            {
+                _alarm_occurred = false;
+                set_next_step(N001_START_TIMEOUT_FOR_ACTIVATION);
+            }
             break;
 
         case N001_START_TIMEOUT_FOR_ACTIVATION:
