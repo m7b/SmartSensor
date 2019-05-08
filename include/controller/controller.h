@@ -7,7 +7,7 @@
 #include <rws_pubsubclient.h>
 #include <rws_webupdate.h>
 #include <statemachine.h>
-#include <WeeklyAlarm.h>
+#include <weeklyAlarm.h>
 
 #include "controller/settings/settings.h"
 #include "controller/topics.h"
