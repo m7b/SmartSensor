@@ -42,3 +42,7 @@ https://github.com/SynoCommunity/spksrc/issues/2581
 # Schedule Libs
 
 https://platformio.org/lib/search?query=keyword%253A%2522schedule%2522&page=1
+
+# Get weather information
+
+https://github.com/bbx10/esp-pcd-weather
