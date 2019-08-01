@@ -53,7 +53,8 @@ time_t getNtpTime(void)
 void callbackPlain(void)
 {
     Serial.println("################################");
-    //weeklyAlarm.prettyPrintTime(now(), Serial);
+    Serial.println("TimeAlarms triggered at ...");
+    ntp.test(); // print utc and local time
     Serial.println("################################");
     ctrl._alarm_occurred = true;
 }

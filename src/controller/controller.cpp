@@ -161,9 +161,9 @@ void controller::setup_webupdate(void)
 void controller::setup_timealarms(void)
 {
 //  _alarm->alarmRepeat(8,30,0, MorningAlarm);  // 8:30am every day
-    _alarm->alarmRepeat(8,30,0, callbackPlain);  // 8:30am every day
-    _alarm->alarmRepeat(8,32,0, callbackPlain);  // 8:32am every day
-    _alarm->alarmRepeat(8,34,0, callbackPlain);  // 8:34am every day
+    _alarm->alarmRepeat(14,00,0, callbackPlain);  // 8:30am every day
+    _alarm->alarmRepeat(14,02,0, callbackPlain);  // 8:32am every day
+    _alarm->alarmRepeat(14,04,0, callbackPlain);  // 8:34am every day
 }
 
 
