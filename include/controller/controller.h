@@ -7,7 +7,7 @@
 #include <rws_pubsubclient.h>
 #include <rws_webupdate.h>
 #include <statemachine.h>
-#include <weeklyAlarm.h>
+#include <TimeAlarms.h>
 
 #include "controller/settings/settings.h"
 #include "controller/topics.h"
@@ -25,7 +25,7 @@
 class controller : public statemachine
 {
     public:
-        controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclient *mqtt, rws_webupdate *webUpd, WeeklyAlarm *weekAlarm);
+        controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclient *mqtt, rws_webupdate *webUpd, TimeAlarmsClass *timealarms);
         ~controller();
 
         void setup(void);
@@ -39,7 +39,7 @@ class controller : public statemachine
         rws_syslog *_syslog;
         rws_webupdate *_webUpdate;
         rws_pubsubclient *_mqtt;
-        WeeklyAlarm *_weeklyAlarm;
+        TimeAlarmsClass *_alarm;
         
         bool _src_barrel_present;
         bool _dst_barrel_present;
@@ -75,10 +75,6 @@ class controller : public statemachine
         void set_sens_mode(FunctionModes m);
         bool check_sens_mode(FunctionModes m);
         void print_stm_steps(void);
-
-        Alarm _alarm1;
-        Alarm _alarm2;
-        Alarm _alarm3;
 };
 
 

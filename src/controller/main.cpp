@@ -16,10 +16,10 @@ ESP8266HTTPUpdateServer httpUpdater;
 rws_webupdate webUpdate(MQTT_CLIENT_ID, &httpServer, &httpUpdater);
 //Web-Updater things---------------------
 
-//Weekly Alarm
-WeeklyAlarm weeklyAlarm;
+//Alarm
+//Global instance of Alarm is made by its library "TimeAlarms" (TimeAlarmsClass Alarm)
 
-controller ctrl(&wifiMulti, &ntp, &syslog, &mqtt, &webUpdate, &weeklyAlarm);
+controller ctrl(&wifiMulti, &ntp, &syslog, &mqtt, &webUpdate, &Alarm);
 
 /**
  * @brief setup section of board
@@ -53,7 +53,7 @@ time_t getNtpTime(void)
 void callbackPlain(void)
 {
     Serial.println("################################");
-    weeklyAlarm.prettyPrintTime(now(), Serial);
+    //weeklyAlarm.prettyPrintTime(now(), Serial);
     Serial.println("################################");
     ctrl._alarm_occurred = true;
 }

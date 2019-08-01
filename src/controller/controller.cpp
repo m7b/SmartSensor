@@ -6,7 +6,7 @@ extern void callbackPlain(void);
 //NTP stuff; Called by time.h handler
 extern time_t getNtpTime(void);
 
-controller::controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclient *mqtt, rws_webupdate *webUpd, WeeklyAlarm *weekAlarm)
+controller::controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclient *mqtt, rws_webupdate *webUpd, TimeAlarmsClass *timealarms)
 : statemachine(N000_INIT_STEP)
 {
     _wifiMulti   = wifi;
@@ -14,7 +14,7 @@ controller::controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pub
     _syslog      = syslog;
     _webUpdate   = webUpd;
     _mqtt        = mqtt;
-    _weeklyAlarm = weekAlarm;
+    _alarm       = timealarms;
     
     _sens_src_online = false;
     _sens_dst_online = false;
@@ -82,8 +82,8 @@ void controller::loop(void)
     //control rgb led
     _light->loop();
 
-    //Weekly Alarm stuff
-    _weeklyAlarm->handler(); //manage time callbacks of all alarms
+    //Time Alarms stuff
+    _alarm->delay(0);  //manage time callbacks of all alarms
 
     //operation
     operating();
@@ -132,10 +132,6 @@ void controller::setup_ntp(void)
     Serial.println("Setup handler for syncing system time with local time");
     setSyncProvider(getNtpTime);
     setSyncInterval(60);
-
-    //Print actual local time with now():
-    Serial.printf("Actual local time with now() is: ");
-    _weeklyAlarm->prettyPrintTime(now(), Serial);
 }
 
 void controller::setup_syslog(void)
@@ -164,18 +160,10 @@ void controller::setup_webupdate(void)
 
 void controller::setup_weeklyAlarms(void)
 {
-    _alarm1.setCallback(callbackPlain);
-    _alarm1.set(AlarmType::ALL_DAYS, ON, 14, 13);
-    _weeklyAlarm->add(_alarm1);
-    
-    _alarm2.setCallback(callbackPlain);
-    _alarm2.set(AlarmType::ALL_DAYS, ON, 14, 17);
-    _weeklyAlarm->add(_alarm2);
-    
-    _alarm3.setCallback(callbackPlain);
-    _alarm3.set(AlarmType::ALL_DAYS, ON, 14, 23);
-    _weeklyAlarm->add(_alarm3);
-    
+//  _alarm->alarmRepeat(8,30,0, MorningAlarm);  // 8:30am every day
+    _alarm->alarmRepeat(8,30,0, callbackPlain);  // 8:30am every day
+    _alarm->alarmRepeat(8,32,0, callbackPlain);  // 8:32am every day
+    _alarm->alarmRepeat(8,34,0, callbackPlain);  // 8:34am every day
 }
 
 
