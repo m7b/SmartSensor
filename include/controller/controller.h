@@ -61,7 +61,7 @@ class controller : public statemachine
         void setup_syslog(void);
         void setup_mqtt(void);
         void setup_webupdate(void);
-        void setup_weeklyAlarms(void);
+        void setup_timealarms(void);
 
         bool check_all_conditions(void);
 

@@ -47,7 +47,7 @@ void controller::setup(void)
     setup_syslog();
     setup_mqtt();
     setup_webupdate();
-    setup_weeklyAlarms();
+    setup_timealarms();
 
     _light->set_delay_ms(333);
 
@@ -158,7 +158,7 @@ void controller::setup_webupdate(void)
 }
 
 
-void controller::setup_weeklyAlarms(void)
+void controller::setup_timealarms(void)
 {
 //  _alarm->alarmRepeat(8,30,0, MorningAlarm);  // 8:30am every day
     _alarm->alarmRepeat(8,30,0, callbackPlain);  // 8:30am every day
