@@ -58,7 +58,7 @@ function onMessageArrived(message) {
     var payload = message.payloadString;
     //console.log("Topic: " + topic + ", Message payload: " + payload);
     $('#message').html(topic + ', ' + payload);
-    var timestamp = Math.round((new Date()).getTime() / 1000);
+    //var timestamp = Math.round((new Date()).getTime() / 1000);
     switch (topic) {
 
         case 'WS/RWS/DG/Controller/Status': 
@@ -71,7 +71,7 @@ function onMessageArrived(message) {
             $('#CtrlAmbBrightLabel').text(payload + '?');
             ctrlAmbBright.push(parseInt(payload));
             if (ctrlAmbBright.length >= 200) {
-                ctrlAmbBright.shift()
+                ctrlAmbBright.shift();
             }
             $('.CtrlAmbBrightSparkline').sparkline(ctrlAmbBright, {
                 type: 'line',
@@ -104,7 +104,7 @@ function onMessageArrived(message) {
             $('#barSrc').text(payload + '%');
             srcLevel.push(parseFloat(payload));
             if (srcLevel.length >= 50) {
-                srcLevel.shift()
+                srcLevel.shift();
             }
             $('.srcLevelSparkline').sparkline(srcLevel, {
                 type: 'line',
@@ -153,7 +153,7 @@ function onMessageArrived(message) {
             $('#barDst').text(payload + '%');
             dstLevel.push(parseFloat(payload));
             if (dstLevel.length >= 50) {
-                dstLevel.shift()
+                dstLevel.shift();
             }
             $('.dstLevelSparkline').sparkline(dstLevel, {
                 type: 'line',
@@ -230,7 +230,7 @@ function ToggleDebug() {
 
 
 function ManualSensMeasMode(fct_mode) {
-    message = new Paho.Message(fct_mode);
+    var message = new Paho.Message(fct_mode);
     message.retained = true;
     message.qos = 1;
     message.destinationName = "WS/RWS/EG/BarrelSrc/FunctionModeReq";
@@ -241,7 +241,7 @@ function ManualSensMeasMode(fct_mode) {
 
 
 function ManualFctPump(fct_mode) {
-    message = new Paho.Message(fct_mode);
+    var message = new Paho.Message(fct_mode);
     message.retained = true;
     message.qos = 1;
     message.destinationName = "WS/RWS/Dashboard/ManualPumpReq";
@@ -250,7 +250,7 @@ function ManualFctPump(fct_mode) {
 
 
 function ManualFctValve(fct_mode) {
-    message = new Paho.Message(fct_mode);
+    var message = new Paho.Message(fct_mode);
     message.retained = true;
     message.qos = 1;
     message.destinationName = "WS/RWS/Dashboard/ManualValveReq";
