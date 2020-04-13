@@ -1,21 +1,14 @@
 #include "rws_webupdate.h"
 
-#if defined(SRC_BARREL)
-    #define CLIENT_ID           "SrcBar"
-#elif defined(DST_BARREL)
-    #define CLIENT_ID           "DstBar"
-#else
-    #define CLIENT_ID           "Contro"
-#endif
 
-
-rws_webupdate::rws_webupdate(const char* dns_host, ESP8266WebServer *websrv, ESP8266HTTPUpdateServer *httpupdsrv)
+rws_webupdate::rws_webupdate(const char* dns_host, ESP8266WebServer *websrv, ESP8266HTTPUpdateServer *httpupdsrv, const char *clientId)
 {
     _dns_host = dns_host;
     std::transform(_dns_host.begin(), _dns_host.end(),_dns_host.begin(), ::tolower);
 
-    _web_server = websrv;
+    _web_server   = websrv;
     _http_updater = httpupdsrv;
+    _clientId     = clientId;
 }
 
 
@@ -29,7 +22,7 @@ void rws_webupdate::setup(void)
     MDNS.begin(_dns_host.c_str());
 
     _web_server->on("/", [this]() {
-        std::string text = "Hi! I am " + std::string(CLIENT_ID) + std::string(".");
+        std::string text = "Hi! I am " + std::string(_clientId) + std::string(".");
         _web_server->send(200, "text/plain", text.c_str());
     });
 

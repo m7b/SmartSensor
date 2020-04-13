@@ -5,7 +5,7 @@ rws_pubsubclient::rws_pubsubclient(const char *server, uint16_t port, const char
 {
     _server = server;
     _port   = port;
-    _clientId    = clientId;
+    _clientId = clientId;
     _user = user;
     _pass = pass;
     setServer(server, port);

@@ -9,7 +9,7 @@
 class rws_webupdate
 {
     public:
-        rws_webupdate(const char* dns_host, ESP8266WebServer *websrv, ESP8266HTTPUpdateServer *httpupdsrv);
+        rws_webupdate(const char* dns_host, ESP8266WebServer *websrv, ESP8266HTTPUpdateServer *httpupdsrv, const char *clientId);
         ~rws_webupdate();
 
         void setup(void);
@@ -19,6 +19,7 @@ class rws_webupdate
         std::string _dns_host;
         ESP8266WebServer *_web_server;
         ESP8266HTTPUpdateServer *_http_updater;
+        const char *_clientId;
 };
 
 #endif // RWS_WEBUPDATE_H
