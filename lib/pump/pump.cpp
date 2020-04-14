@@ -22,7 +22,7 @@ void pump::setup(void)
     pinMode(_output_pin, OUTPUT);
     pinMode(_input_pin, INPUT);
     
-    //switch pump off
+    //initially switch pump off
     off();
 
     _setup = true;
@@ -65,7 +65,6 @@ bool pump::conditions_ok(void)
 
     return true;
 }
-
 
 void pump::on(void)
 {
