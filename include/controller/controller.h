@@ -20,7 +20,10 @@
 #define ONBOARD_LED_BLUE  13
 
 #include <pump.h>
-#define PUMP_OUTPUT       13
+#define PUMP_1_INPUT       0
+#define PUMP_1_OUTPUT       14
+#define PUMP_2_INPUT       4
+#define PUMP_2_OUTPUT       16
 
 class controller : public statemachine
 {
@@ -68,7 +71,8 @@ class controller : public statemachine
         void mqtt_callback(char* topic, uint8_t* payload, unsigned int length);
 
         rgbled *_light;
-        pump   *_pump;
+        pump   *_pump_1;
+        pump   *_pump_2;
 
         void operating(void);
 

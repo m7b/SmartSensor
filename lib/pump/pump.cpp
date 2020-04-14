@@ -1,8 +1,9 @@
 #include "pump.h"
 
-pump::pump(uint8_t output_pin)
+pump::pump(uint8_t output_pin, uint8_t input_pin)
 {
     _output_pin = output_pin;
+    _input_pin  = input_pin;
     _setup      = false;
     _step       = 0;
 }
@@ -17,6 +18,7 @@ void pump::setup(void)
         return;
 
     pinMode(_output_pin, OUTPUT);
+    pinMode(_input_pin, INPUT);
     _setup = true;
 }
 

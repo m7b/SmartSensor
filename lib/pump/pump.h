@@ -6,7 +6,7 @@
 class pump
 {
     public:
-        pump(uint8_t output_pin);
+        pump(uint8_t output_pin, uint8_t input_pin);
         ~pump();
 
         void setup(void);
@@ -14,6 +14,7 @@ class pump
 
     private:
         uint8_t _output_pin;
+        uint8_t _input_pin;
 
         bool _setup;
         uint16_t _step;
