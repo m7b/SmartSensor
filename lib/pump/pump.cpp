@@ -69,10 +69,16 @@ bool pump::conditions_ok(void)
 
 void pump::on(void)
 {
-    digitalWrite(_output_pin, _on_state);
+    if (_on_state)
+        digitalWrite(_output_pin, HIGH);
+    else
+        digitalWrite(_output_pin, LOW); 
 }
 
 void pump::off(void)
 {
-    digitalWrite(_output_pin, !_on_state);
+    if (_on_state)
+        digitalWrite(_output_pin, LOW);
+    else
+        digitalWrite(_output_pin, HIGH); 
 }
