@@ -1,11 +1,13 @@
 #include "pump.h"
 
-pump::pump(uint8_t output_pin, uint8_t input_pin)
+pump::pump(uint8_t output_pin, uint8_t input_pin, bool on_state)
 {
     _output_pin = output_pin;
     _input_pin  = input_pin;
+    _on_state   = on_state;
     _setup      = false;
     _step       = 0;
+    _delay_ms   = 1500;
 }
 
 pump::~pump()
@@ -19,6 +21,10 @@ void pump::setup(void)
 
     pinMode(_output_pin, OUTPUT);
     pinMode(_input_pin, INPUT);
+    
+    //switch pump off
+    off();
+
     _setup = true;
 }
 
@@ -34,7 +40,7 @@ void pump::loop(void)
             break;
 
         case 1:
-            digitalWrite(_output_pin, HIGH);
+            on();
             _start = millis();
             _step++;
             break;
@@ -45,7 +51,7 @@ void pump::loop(void)
             break;
 
         case 3:
-            digitalWrite(_output_pin, LOW);
+            off();
             _step = 0;
             break;
     }
@@ -58,4 +64,15 @@ bool pump::conditions_ok(void)
         return false;
 
     return true;
+}
+
+
+void pump::on(void)
+{
+    digitalWrite(_output_pin, _on_state);
+}
+
+void pump::off(void)
+{
+    digitalWrite(_output_pin, !_on_state);
 }

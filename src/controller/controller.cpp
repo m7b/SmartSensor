@@ -25,8 +25,8 @@ controller::controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pub
     _function_mode_dst_ack = 0;
 
     _light = new rgbled(ONBOARD_LED_RED, ONBOARD_LED_GREEN, ONBOARD_LED_BLUE);
-    _pump_1  = new pump(PUMP_1_OUTPUT, PUMP_1_INPUT);
-    _pump_2  = new pump(PUMP_2_OUTPUT, PUMP_2_INPUT);
+    _pump_1  = new pump(PUMP_1_OUTPUT, PUMP_1_INPUT, false);
+    _pump_2  = new pump(PUMP_2_OUTPUT, PUMP_2_INPUT, false);
 
     _src_barrel_present = true;
     _dst_barrel_present = true;
@@ -50,6 +50,8 @@ void controller::setup(void)
     setup_mqtt();
     setup_webupdate();
     setup_timealarms();
+    _pump_1->setup();
+    _pump_2->setup();
 
     _light->set_delay_ms(333);
 
@@ -89,6 +91,10 @@ void controller::loop(void)
 
     //operation
     operating();
+
+    
+    _pump_1->loop();
+    _pump_2->loop();
 }
 
 
