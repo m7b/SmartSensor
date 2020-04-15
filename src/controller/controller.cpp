@@ -73,6 +73,10 @@ void controller::loop(void)
     //Web-Update functionality
     _webUpdate->loop();
 
+    
+    _pump_1->loop();
+    _pump_2->loop();
+
     //check all conditions are ok
     if (!check_all_conditions())
         return;
@@ -91,10 +95,6 @@ void controller::loop(void)
 
     //operation
     operating();
-
-    
-    _pump_1->loop();
-    _pump_2->loop();
 }
 
 
