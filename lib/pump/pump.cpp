@@ -16,8 +16,8 @@ pump::~pump()
 
 void pump::setup(void)
 {
-    if (_output_pin == 0)
-        return;
+    //if (_output_pin == 0)
+    //    return;
 
     pinMode(_output_pin, OUTPUT);
     pinMode(_input_pin, INPUT);
@@ -52,7 +52,13 @@ void pump::loop(void)
 
         case 3:
             off();
-            _step = 0;
+            _start = millis();
+            _step++;
+            break;
+
+        case 4:
+            if (get_duration_ms(_start) >= _delay_ms)
+                _step = 0;
             break;
     }
 }
