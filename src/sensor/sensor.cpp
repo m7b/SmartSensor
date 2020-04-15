@@ -14,9 +14,9 @@ sensor::sensor(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclien
     _mqtt_online = true;
 
     //Initial operation mode
-    _FunctionModeRequest = FUNCTION_MODE_DEEP_SLEEP__5_MIN; // FUNCTION_MODE_INTERVAL_MEASURE__5_SEK;
-    _FunctionModeAck     = FUNCTION_MODE_DEEP_SLEEP__5_MIN; // FUNCTION_MODE_INTERVAL_MEASURE__5_SEK;
-    _FunctionMode        = FUNCTION_MODE_DEEP_SLEEP__5_MIN; // FUNCTION_MODE_INTERVAL_MEASURE__5_SEK;
+    _FunctionModeRequest = FUNCTION_MODE_INTERVAL_MEASURE__5_MIN; //FUNCTION_MODE_DEEP_SLEEP__5_MIN;
+    _FunctionModeAck     = FUNCTION_MODE_INTERVAL_MEASURE__5_MIN; //FUNCTION_MODE_DEEP_SLEEP__5_MIN;
+    _FunctionMode        = FUNCTION_MODE_INTERVAL_MEASURE__5_MIN; //FUNCTION_MODE_DEEP_SLEEP__5_MIN;
 }
 
 sensor::~sensor()
