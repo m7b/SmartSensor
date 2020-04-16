@@ -7,7 +7,7 @@ pump::pump(uint8_t output_pin, uint8_t input_pin, bool on_state)
     _on_state   = on_state;
     _setup      = false;
     _step       = 0;
-    _delay_ms   = 1500;
+    _delay_ms   = 5000;
 }
 
 pump::~pump()
@@ -30,6 +30,7 @@ void pump::setup(void)
 
 void pump::loop(void)
 {
+    bool ret_val;
     if (!conditions_ok())
         return;
 
@@ -39,24 +40,30 @@ void pump::loop(void)
             _step++;
             break;
 
-        case 1:
+        case 1: //init
+            ret_val = !digitalRead(_input_pin);
+            if (ret_val)
+                _step++;
+            break;
+
+        case 2:
             on();
             _start = millis();
             _step++;
             break;
 
-        case 2:
+        case 3:
             if (get_duration_ms(_start) >= _delay_ms)
                 _step++;
             break;
 
-        case 3:
+        case 4:
             off();
             _start = millis();
             _step++;
             break;
 
-        case 4:
+        case 5:
             if (get_duration_ms(_start) >= _delay_ms)
                 _step = 0;
             break;
