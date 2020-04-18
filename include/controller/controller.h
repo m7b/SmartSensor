@@ -20,7 +20,7 @@
 #define ONBOARD_LED_BLUE  13
 
 #include <pump.h>
-#define PUMP_1_INPUT       0
+#define PUMP_1_INPUT       5
 #define PUMP_1_OUTPUT       14
 #define PUMP_2_INPUT       4
 #define PUMP_2_OUTPUT       16

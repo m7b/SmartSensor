@@ -20,7 +20,7 @@ void pump::setup(void)
     //    return;
 
     pinMode(_output_pin, OUTPUT);
-    pinMode(_input_pin, INPUT);
+    pinMode(_input_pin, INPUT_PULLUP);
     
     //initially switch pump off
     off();
@@ -40,30 +40,41 @@ void pump::loop(void)
             _step++;
             break;
 
-        case 1: //init
+        case 1: //wait button
             ret_val = !digitalRead(_input_pin);
             if (ret_val)
+                _start = millis();
                 _step++;
             break;
 
-        case 2:
+        case 2: //entprell
+            ret_val = !digitalRead(_input_pin);
+            if (!ret_val)
+                _step = 0;
+
+            if (get_duration_ms(_start) >= 200)
+                _step++;
+
+            break;
+
+        case 3:
             on();
             _start = millis();
             _step++;
             break;
 
-        case 3:
+        case 4:
             if (get_duration_ms(_start) >= _delay_ms)
                 _step++;
             break;
 
-        case 4:
+        case 5:
             off();
             _start = millis();
             _step++;
             break;
 
-        case 5:
+        case 6:
             if (get_duration_ms(_start) >= _delay_ms)
                 _step = 0;
             break;
