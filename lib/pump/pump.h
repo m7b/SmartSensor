@@ -22,6 +22,7 @@ class pump
 
         uint32_t _delay_ms;
         uint32_t _start;
+        uint32_t _start_entprell;
 
         bool conditions_ok(void);
         void on(void);

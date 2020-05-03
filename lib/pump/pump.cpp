@@ -7,7 +7,7 @@ pump::pump(uint8_t output_pin, uint8_t input_pin, bool on_state)
     _on_state   = on_state;
     _setup      = false;
     _step       = 0;
-    _delay_ms   = 5000;
+    _delay_ms   = 30000; //300000; //300000ms => 5min
 }
 
 pump::~pump()
@@ -37,46 +37,61 @@ void pump::loop(void)
     switch (_step)
     {
         case 0: //init
-            _step++;
+            _step += 10;
             break;
 
-        case 1: //wait button
+        case 10: //wait button
             ret_val = !digitalRead(_input_pin);
             if (ret_val)
-                _start = millis();
-                _step++;
+            {
+                _start_entprell = millis();
+                _step += 10;
+            }
             break;
 
-        case 2: //entprell
+        case 20: //entprell
             ret_val = !digitalRead(_input_pin);
             if (!ret_val)
                 _step = 0;
 
-            if (get_duration_ms(_start) >= 200)
-                _step++;
-
+            if (get_duration_ms(_start_entprell) >= 200)
+                _step += 10;
+            
             break;
 
-        case 3:
+        case 30:
             on();
             _start = millis();
-            _step++;
+            _step += 10;
             break;
 
-        case 4:
+        case 40:
+            //wait button
+            ret_val = !digitalRead(_input_pin);
+            if (ret_val)
+            {
+                _start_entprell = millis();
+                _step += 10;
+            }
+
             if (get_duration_ms(_start) >= _delay_ms)
-                _step++;
+                _step = 60;
+            
             break;
 
-        case 5:
+        case 50: //entprell
+            ret_val = !digitalRead(_input_pin);
+            if (!ret_val)
+                _step = 40;
+
+            if (get_duration_ms(_start_entprell) >= 200)
+                _step += 10;
+
+            break;
+
+        case 60:
             off();
-            _start = millis();
-            _step++;
-            break;
-
-        case 6:
-            if (get_duration_ms(_start) >= _delay_ms)
-                _step = 0;
+            _step = 0;
             break;
     }
 }
