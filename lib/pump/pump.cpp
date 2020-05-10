@@ -1,13 +1,17 @@
 #include "pump.h"
 
-pump::pump(uint8_t output_pin, uint8_t input_pin, bool on_state)
+pump::pump(uint8_t output_pin, uint8_t input_pin, bool on_state, uint32_t delay_ms)
 {
     _output_pin = output_pin;
     _input_pin  = input_pin;
     _on_state   = on_state;
     _setup      = false;
+
+    _on_demand  = false;
+    _off_demand = false;
+  
     _step       = 0;
-    _delay_ms   = 30000; //300000; //300000ms => 5min
+    _delay_ms   = delay_ms; //30000; //300000; //300000ms => 5min
 }
 
 pump::~pump()
@@ -37,16 +41,27 @@ void pump::loop(void)
     switch (_step)
     {
         case 0: //init
+
+            _on_demand = false;
+            _off_demand = false;
+
             _step += 10;
             break;
 
-        case 10: //wait button
+        case 10: //wait button OR mqtt
             ret_val = !digitalRead(_input_pin);
             if (ret_val)
             {
                 _start_entprell = millis();
                 _step += 10;
             }
+
+            if (_on_demand)
+            {
+                _on_demand = false;
+                _step = 30;
+            }
+
             break;
 
         case 20: //entprell
@@ -59,14 +74,15 @@ void pump::loop(void)
             
             break;
 
-        case 30:
+        case 30: //on via button OR mqtt
             on();
+            _off_demand = false; // if on_demand and off_demand where set
             _start = millis();
             _step += 10;
             break;
 
         case 40:
-            //wait button
+            //wait button OR mqtt
             ret_val = !digitalRead(_input_pin);
             if (ret_val)
             {
@@ -75,7 +91,16 @@ void pump::loop(void)
             }
 
             if (get_duration_ms(_start) >= _delay_ms)
+            {
                 _step = 60;
+            }
+
+            if (_off_demand)
+            {
+                _off_demand = false;
+                _step = 60;
+            }
+
             
             break;
 
@@ -119,4 +144,16 @@ void pump::off(void)
         digitalWrite(_output_pin, LOW);
     else
         digitalWrite(_output_pin, HIGH); 
+}
+
+
+void pump::set_on_demand(void)
+{
+    _on_demand = true;
+}
+
+
+void pump::set_off_demand(void)
+{
+    _off_demand = true;
 }

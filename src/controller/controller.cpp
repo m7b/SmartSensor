@@ -25,8 +25,8 @@ controller::controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pub
     _function_mode_dst_ack = 0;
 
     _light = new rgbled(ONBOARD_LED_RED, ONBOARD_LED_GREEN, ONBOARD_LED_BLUE);
-    _pump_1  = new pump(PUMP_1_OUTPUT, PUMP_1_INPUT, false);
-    _pump_2  = new pump(PUMP_2_OUTPUT, PUMP_2_INPUT, false);
+    _pump_1  = new pump(PUMP_1_OUTPUT, PUMP_1_INPUT, false, 30000);  //gießen 30sek
+    _pump_2  = new pump(PUMP_2_OUTPUT, PUMP_2_INPUT, false, 300000); //hoch pumpen 5min
 
     _src_barrel_present = true;
     _dst_barrel_present = true;
@@ -261,11 +261,20 @@ void controller::mqtt_callback(char* topic, uint8_t* payload, unsigned int lengt
                 case 500:
                     Serial.printf("  - MANUAL_PUMP_REQ from dashboard: %s\r\n", payload_to_string(payload, length).c_str());
                     _light->set_enable(payload[0] == '1');
+                    if (payload[0] == '1')
+                        _pump_1->set_on_demand();
+                    else
+                        _pump_1->set_off_demand();
+                        
                     _mqtt->publish(MANUAL_PUMP_ACKNOWLEDGE, payload_to_string(payload, length));
                     break;
 
                 case 501:
                     Serial.printf("  - MANUAL_VALVE_REQ from dashboard: %s\r\n", payload_to_string(payload, length).c_str());
+                    if (payload[0] == '1')
+                        _pump_2->set_on_demand();
+                    else
+                        _pump_2->set_off_demand();
                     _mqtt->publish(MANUAL_VALVE_ACKNOWLEDGE, payload_to_string(payload, length));
                     break;
             }
