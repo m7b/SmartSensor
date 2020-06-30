@@ -7,6 +7,8 @@
 #include <rws_pubsubclient.h>
 #include <rws_webupdate.h>
 #include <statemachine.h>
+
+#include <SPI.h>
 #include <TimeAlarms.h>
 
 #include "controller/settings/settings.h"
