@@ -9,6 +9,9 @@ pump::pump(uint8_t output_pin, uint8_t input_pin, bool on_state, uint32_t delay_
 
     _on_demand  = false;
     _off_demand = false;
+
+    _is_on      = false;
+    _is_off     = false;
   
     _step       = 0;
     _delay_ms   = delay_ms; //30000; //300000; //300000ms => 5min
@@ -135,7 +138,10 @@ void pump::on(void)
     if (_on_state)
         digitalWrite(_output_pin, HIGH);
     else
-        digitalWrite(_output_pin, LOW); 
+        digitalWrite(_output_pin, LOW);
+
+    _is_on  = true;
+    _is_off = false;
 }
 
 void pump::off(void)
@@ -144,6 +150,9 @@ void pump::off(void)
         digitalWrite(_output_pin, LOW);
     else
         digitalWrite(_output_pin, HIGH); 
+
+    _is_on  = false;
+    _is_off = true;
 }
 
 
@@ -156,4 +165,16 @@ void pump::set_on_demand(void)
 void pump::set_off_demand(void)
 {
     _off_demand = true;
+}
+
+
+bool pump::is_on(void)
+{
+    return _is_on;
+}
+
+
+bool pump::is_off(void)
+{
+    return _is_off;
 }

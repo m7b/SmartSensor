@@ -15,6 +15,9 @@ class pump
         void set_on_demand(void);
         void set_off_demand(void);
 
+        bool is_on(void);
+        bool is_off(void);
+
     private:
         uint8_t _output_pin;
         uint8_t _input_pin;
@@ -24,6 +27,9 @@ class pump
 
         bool _on_demand;
         bool _off_demand;
+
+        bool _is_on;
+        bool _is_off;
 
         uint16_t _step;
 
