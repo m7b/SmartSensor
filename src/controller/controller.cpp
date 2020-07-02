@@ -289,162 +289,60 @@ void controller::operating(void)
         case N000_INIT_STEP:
             if (_alarm_occurred)
             {
-                set_next_step(N001_START_TIMEOUT_FOR_ACTIVATION);
+                set_next_step(N010_START_TIMEOUT_FOR_ACTIVATION);
             }
             break;
 
-        case N001_START_TIMEOUT_FOR_ACTIVATION:
+        case N010_START_TIMEOUT_FOR_ACTIVATION:
             _start_time = millis();
-            set_next_step(N002_WAIT_TIMEOUT_FOR_ACTIVATION);
+            set_next_step(N020_WAIT_TIMEOUT_FOR_ACTIVATION);
             break;
 
-        case N002_WAIT_TIMEOUT_FOR_ACTIVATION:
-            //wait timeout depending on operation mode
+        case N020_WAIT_TIMEOUT_FOR_ACTIVATION:
             if (get_duration_ms(_start_time) >= 2500)
             {
                 //Test analog input
                 _mqtt->publish(VAL_AMBIENT_BRIGHTNESS, analogRead(A0));
 
-                set_next_step(N010_CHECK_PUMP_NOT_ACTIVE);
+                set_next_step(N050_CHECK_START_PUMP);
             }
             break;
 
-        case N010_CHECK_PUMP_NOT_ACTIVE:
-            if (true)
-                set_next_step(N020_CHECK_DST_LEVEL_BELOW_MAX);
-            else
-                set_next_step(N080_CHECK_ONLY_START_PUMP);
-            break;
-            
-        case N020_CHECK_DST_LEVEL_BELOW_MAX:
-            if (true)
-                set_next_step(N030_CHECK_SRC_LEVEL_OVER_MIN);
-            else
-                set_next_step(N999_END);
-            break;
-            
-        case N030_CHECK_SRC_LEVEL_OVER_MIN:
-            if (true)
-                set_next_step(N035_CHANGE_MEAS_MODE_SENSORS);
-            else
-                set_next_step(N999_END);
-            break;
-            
-        case N035_CHANGE_MEAS_MODE_SENSORS:
-            set_sens_mode(FunctionModes::FUNCTION_MODE_INTERVAL_MEASURE__5_SEK);
-            _start_time = millis();
-            set_next_step(N036_WAIT_MEAS_MODE_SENSORS_CHANGED);
-    
-            break;
-            
-        case N036_WAIT_MEAS_MODE_SENSORS_CHANGED:
-            if (check_sens_mode(FunctionModes::FUNCTION_MODE_INTERVAL_MEASURE__5_SEK))
-                set_next_step(N040_CHECK_PUMP_READY);
-
-            //Retry request to change mode after timeout
-            if (get_duration_ms(_start_time) >= 5000)
-                set_next_step(N035_CHANGE_MEAS_MODE_SENSORS);
-          
-            break;
-            
-        case N040_CHECK_PUMP_READY:
-            if (true)
-                set_next_step(N050_CHECK_START_PUMP);
-            else
-                set_next_step(N999_END);
-            break;
-            
         case N050_CHECK_START_PUMP:
-            set_next_step(N060_WAIT_PUMP_STARTED);
+            if (true)
+                set_next_step(N060_WAIT_PUMP_STARTED);
             break;
             
         case N060_WAIT_PUMP_STARTED:
-            set_next_step(N070_STORE_START_TIME);
-            break;
-            
-        case N070_STORE_START_TIME:
-            set_next_step(N080_CHECK_ONLY_START_PUMP);
-            break;
-            
-        case N080_CHECK_ONLY_START_PUMP:
-            set_next_step(N090_CHECK_SRC_LEVEL_DECREASING);
-            break;
-            
-        case N090_CHECK_SRC_LEVEL_DECREASING:
             if (true)
-                set_next_step(N100_CHECK_DST_LEVEL_INCREASING);
-            else
-                set_next_step(N200_REPORT_ERROR);
+                set_next_step(N100_START_TIMEOUT_FOR_PUMPING);
             break;
             
-        case N100_CHECK_DST_LEVEL_INCREASING:
-            if (true)
-                set_next_step(N110_CHECK_SRC_LEVEL_OVER_MIN);
-            else
-                set_next_step(N200_REPORT_ERROR);
+        case N100_START_TIMEOUT_FOR_PUMPING:
+            _start_time = millis();
+            set_next_step(N110_WAIT_TIMEOUT_FOR_PUMPING);
             break;
             
-        case N110_CHECK_SRC_LEVEL_OVER_MIN:
-            if (true)
-                set_next_step(N120_CHECK_DST_LEVEL_BELOW_MAX);
-            else
+        case N110_WAIT_TIMEOUT_FOR_PUMPING:
+            if (get_duration_ms(_start_time) >= 2500)
+            {
+                //Test analog input
+                _mqtt->publish(VAL_AMBIENT_BRIGHTNESS, analogRead(A0));
+
                 set_next_step(N300_CHECK_STOP_PUMP);
-            break;
-            
-        case N120_CHECK_DST_LEVEL_BELOW_MAX:
-            if (true)
-                set_next_step(N130_CHECK_NO_STOP_DEMAND_FROM_USER);
-            else
-                set_next_step(N300_CHECK_STOP_PUMP);
-            break;
-            
-        case N130_CHECK_NO_STOP_DEMAND_FROM_USER:
-            if (true)
-                set_next_step(N140_CHECK_PUMP_DURATION_BELOW_MAX);
-            else
-                set_next_step(N300_CHECK_STOP_PUMP);
-            break;
-            
-        case N140_CHECK_PUMP_DURATION_BELOW_MAX:
-            if (true)
-                set_next_step(N200_REPORT_ERROR);
-            else
-                set_next_step(N300_CHECK_STOP_PUMP);
-            break;
-            
-        case N200_REPORT_ERROR:
-            set_next_step(N300_CHECK_STOP_PUMP);
+            }
             break;
             
         case N300_CHECK_STOP_PUMP:
-            set_next_step(N310_CHECK_PUMP_STOPPED);
+            if (true)
+                set_next_step(N310_WAIT_PUMP_STOPPED);
             break;
             
-        case N310_CHECK_PUMP_STOPPED:
-            set_next_step(N320_STORE_PUMP_DATA);
-            break;
-            
-        case N320_STORE_PUMP_DATA:
-            set_next_step(N400_CHANGE_MEAS_MODE_SENSORS);
-            break;
-            
-        case N400_CHANGE_MEAS_MODE_SENSORS:
-            set_sens_mode(FunctionModes::FUNCTION_MODE_DEEP_SLEEP_20_SEK);
-            _start_time = millis();
-            set_next_step(N410_WAIT_MEAS_MODE_SENSORS_CHANGED);
-    
-            break;
-            
-        case N410_WAIT_MEAS_MODE_SENSORS_CHANGED:
-            if (check_sens_mode(FunctionModes::FUNCTION_MODE_DEEP_SLEEP_20_SEK))
+        case N310_WAIT_PUMP_STOPPED:
+            if (true)
                 set_next_step(N999_END);
-                
-            //Retry request to change mode after timeout
-            if (get_duration_ms(_start_time) >= 5000)
-                set_next_step(N400_CHANGE_MEAS_MODE_SENSORS);
-            
             break;
-            
+
         case N999_END:
             _alarm_occurred = false;
             set_next_step(N000_INIT_STEP);
@@ -488,30 +386,14 @@ void controller::print_stm_steps(void)
 {
     Serial.println("");
     print_step_info(N000_INIT_STEP);
-    print_step_info(N001_START_TIMEOUT_FOR_ACTIVATION);
-    print_step_info(N002_WAIT_TIMEOUT_FOR_ACTIVATION);
-    print_step_info(N010_CHECK_PUMP_NOT_ACTIVE);
-    print_step_info(N020_CHECK_DST_LEVEL_BELOW_MAX);
-    print_step_info(N030_CHECK_SRC_LEVEL_OVER_MIN);
-    print_step_info(N035_CHANGE_MEAS_MODE_SENSORS);
-    print_step_info(N036_WAIT_MEAS_MODE_SENSORS_CHANGED);
-    print_step_info(N040_CHECK_PUMP_READY);
+    print_step_info(N010_START_TIMEOUT_FOR_ACTIVATION);
+    print_step_info(N020_WAIT_TIMEOUT_FOR_ACTIVATION);
     print_step_info(N050_CHECK_START_PUMP);
     print_step_info(N060_WAIT_PUMP_STARTED);
-    print_step_info(N070_STORE_START_TIME);
-    print_step_info(N080_CHECK_ONLY_START_PUMP);
-    print_step_info(N090_CHECK_SRC_LEVEL_DECREASING);
-    print_step_info(N100_CHECK_DST_LEVEL_INCREASING);
-    print_step_info(N110_CHECK_SRC_LEVEL_OVER_MIN);
-    print_step_info(N120_CHECK_DST_LEVEL_BELOW_MAX);
-    print_step_info(N130_CHECK_NO_STOP_DEMAND_FROM_USER);
-    print_step_info(N140_CHECK_PUMP_DURATION_BELOW_MAX);
-    print_step_info(N200_REPORT_ERROR);
+    print_step_info(N100_START_TIMEOUT_FOR_PUMPING);
+    print_step_info(N110_WAIT_TIMEOUT_FOR_PUMPING);
     print_step_info(N300_CHECK_STOP_PUMP);
-    print_step_info(N310_CHECK_PUMP_STOPPED);
-    print_step_info(N320_STORE_PUMP_DATA);
-    print_step_info(N400_CHANGE_MEAS_MODE_SENSORS);
-    print_step_info(N410_WAIT_MEAS_MODE_SENSORS_CHANGED);
+    print_step_info(N310_WAIT_PUMP_STOPPED);
     print_step_info(N999_END);
     Serial.println("");
 }
