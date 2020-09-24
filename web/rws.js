@@ -1,7 +1,7 @@
 var debug = false;
-var host = 'iot.eclipse.org'; //'iot.eclipse.org'; //'bierfass'; //'broker.hivemq.com'; //'mqtt.flespi.io'
-var port = 80; //80; //9001;
-var path = '/ws';
+var host = 'test.mosquitto.org'; //'iot.eclipse.org'; //'bierfass'; //'broker.hivemq.com'; //'mqtt.flespi.io'
+var port = 8080; //80; //9001;
+var path = '';//'/ws';
 var topic = 'WS/RWS/#';
 var useTLS = false;
 var clientId = 'Panel' + parseInt(Math.random() * 100, 10);
@@ -259,7 +259,7 @@ function ManualFctValve(fct_mode) {
 
 
 function AddEventHandlers() {
-
+	
     $('#ToggleMoreInfos').click(function(){ToggleDebug()});
     
     $('#ManFctPumpOn').click(function(){ManualFctPump('1')});
@@ -267,7 +267,7 @@ function AddEventHandlers() {
     
     $('#ManFctValveOn').click(function(){ManualFctValve('1')});
     $('#ManFctValveOff').click(function(){ManualFctValve('0')});
-    
+
     $('#ManFctSensMeasMode_200ms').click(function(){ManualSensMeasMode('0')});
     $('#ManFctSensMeasMode__5sec').click(function(){ManualSensMeasMode('1')});
     $('#ManFctSensMeasMode_10sec').click(function(){ManualSensMeasMode('2')});
@@ -279,6 +279,9 @@ function AddEventHandlers() {
     $('#ManFctSensMeasModeDS_10min').click(function(){ManualSensMeasMode('8')});
     $('#ManFctSensMeasModeDS_30min').click(function(){ManualSensMeasMode('9')});
     $('#ManFctSensMeasModeDS__1std').click(function(){ManualSensMeasMode(':')});
+	
+    //Change drop-down label
+	$(".dropdown-menu .dropdown-item").click(function(){$("#dropdownMenu2").html($(this).text()+' <span class="caret"></span>');});
 }
 
 function getModeStr(mode)
