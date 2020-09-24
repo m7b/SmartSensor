@@ -103,9 +103,9 @@
                     <tr>
                         <td width="25%" style="vertical-align:top;"><ion-icon name="people" size="large"></ion-icon></td>
                         <td style="vertical-align:middle;"></td>
-                        <td align="center" style="vertical-align:middle;"><h4>Request</h4></td>
-                        <td align="center" style="vertical-align:middle;"><h4>Acknowledge</h4></td>
-                        <td colspan="2" align="center" style="vertical-align:middle;"><h4>Current Graph</h4></td>
+                        <td align="center" style="vertical-align:middle;"><h4>Req</h4></td>
+                        <td align="center" style="vertical-align:middle;"><h4>Ack</h4></td>
+                        <td align="center" style="vertical-align:middle;"><h4>Current</h4></td>
                     </tr>
                     <!-- Pumpe Bewässerung -->
                     <tr>
@@ -119,7 +119,6 @@
                         <td align="center" style="vertical-align:middle;"><h5>&nbsp;<span id="ManualPumpReqLabel" class="label">Unknown</span></h5><small id="ManualPumpReqValue">(no value recieved)</small></td>
                         <td align="center" style="vertical-align:middle;"><h5>&nbsp;<span id="ManualPumpAckLabel" class="label">Unknown</span></h5><small id="ManualPumpAckValue">(no value recieved)</small></td>
                         <td align="right" style="vertical-align:middle;">3245 mA</td>
-                        <td align="center" style="vertical-align:middle;">----------</td>
                     </tr>
                     <!-- Pumpe Füllung -->
                     <tr>
@@ -133,12 +132,11 @@
                         <td align="center" style="vertical-align:middle;"><h5>&nbsp;<span id="ManualValveReqLabel" class="label">Unknown</span></h5><small id="ManualValveReqValue">(no value recieved)</small></td>
                         <td align="center" style="vertical-align:middle;"><h5>&nbsp;<span id="ManualValveAckLabel" class="label">Unknown</span></h5><small id="ManualValveAckValue">(no value recieved)</small></td>
                         <td align="right" style="vertical-align:middle;">412 mA</td>
-                        <td align="center" style="vertical-align:middle;">----------</td>
                     </tr>
                     <!-- Sensor Meassurement Mode-->
                     <tr>
                         <td style="vertical-align:middle;"><h5>Sensor Meassure Mode</h5></td>
-                        <td colspan="5" style="vertical-align:middle;">
+                        <td colspan="4" style="vertical-align:middle;">
                             <button id="ManFctSensMeasMode_200ms" type="button" class="btn btn-sm btn-primary"   >Permanent Meassure</button>
                             <button id="ManFctSensMeasMode__5sec" type="button" class="btn btn-sm btn-secondary" >Interval 5 sec</button>
                             <button id="ManFctSensMeasMode_10sec" type="button" class="btn btn-sm btn-success"   >Interval 10 sec</button>
@@ -181,8 +179,8 @@
                 <!-- Barrels -->
                 <tr>
                     <td width="25%" style="vertical-align:top;"><ion-icon name="analytics" size="large"></ion-icon></td>
-                    <td align="center" style="vertical-align:middle;"><h4>Barrel Source</h4><div class="progress"><div id="barSrc" class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width:75%">75%</div></div></td>
-                    <td align="center" style="vertical-align:middle;"><h4>Barrel Destination</h4><div class="progress"><div id="barDst" class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width:75%">75%</div></div></td>
+                    <td align="center" style="vertical-align:middle;"><h4>Barrel Src</h4><div class="progress"><div id="barSrc" class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width:75%">75%</div></div></td>
+                    <td align="center" style="vertical-align:middle;"><h4>Barrel Dst</h4><div class="progress"><div id="barDst" class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width:75%">75%</div></div></td>
                 </tr>
                 <!-- Status -->
                 <tr>
