@@ -1,19 +1,62 @@
 var debug = false;
-var host = 'test.mosquitto.org'; //'iot.eclipse.org'; //'bierfass'; //'broker.hivemq.com'; //'mqtt.flespi.io'
-var port = 8080; //80; //9001;
-var path = '';//'/ws';
+
+var host = 'iot.eclipse.org';
+var port = 80;
+var path = '/ws';
 var topic = 'WS/RWS/#';
 var useTLS = false;
 var clientId = 'Panel' + parseInt(Math.random() * 100, 10);
 var cleansession = true;
-var mqtt;
 var reconnectTimeout = 2000;
+
+var mqtt;
 var ctrlAmbBright = new Array;
 var srcLevelChart = new Array;
 var srcLevel = new Array;
 var dstLevelChart = new Array;
 var dstLevel = new Array;
 
+
+function loadConfigFile() {
+	
+    var response = $.ajax({
+        url: 'settings.json',
+        type: 'HEAD',
+        async: false
+    }).status;
+	
+	if (response == 404)
+	{
+		alert("No configuration file found! Using default values. Response: " + response)
+		
+		//In this case, there shoud be a settings.json file with the following content:
+		//{
+		//"host": "iot.eclipse.org",
+		//"port": "80",
+		//"path": "/ws",
+		//"topic": "WS/RWS/#",
+		//"useTLS": false,
+		//"cleansession": true,
+		//"reconnectTimeout": 2000
+		//}
+	}
+	else if (response == 200)
+	{
+		$.getJSON('settings.json', function(data) {
+			host             = data.host
+			port             = data.port
+			path             = data.paht
+			topic            = data.topic
+			useTLS           = data.useTLS
+			cleansession     = data.cleansession,
+			reconnectTimeout = data.reconnectTimeout
+		});
+	}
+	else
+	{
+		alert("Response: " + response)
+	}
+};
 
 function MQTTconnect() {
 //console.log("myPort: " + my_port);
@@ -346,6 +389,7 @@ function ShowDebugInfos() {
 
 
 $(document).ready(function() {
+	loadConfigFile();
     MQTTconnect();
     AddEventHandlers();
     ShowDebugInfos();
