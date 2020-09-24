@@ -19,43 +19,39 @@ var dstLevel = new Array;
 
 function loadConfigFile() {
 	
-    var response = $.ajax({
+    $.ajax({
         url: 'settings.json',
         type: 'HEAD',
-        async: false
-    }).status;
-	
-	if (response == 404)
-	{
-		alert("No configuration file found! Using default values. Response: " + response)
-		
-		//In this case, there shoud be a settings.json file with the following content:
-		//{
-		//"host": "iot.eclipse.org",
-		//"port": "80",
-		//"path": "/ws",
-		//"topic": "WS/RWS/#",
-		//"useTLS": false,
-		//"cleansession": true,
-		//"reconnectTimeout": 2000
-		//}
-	}
-	else if (response == 200)
-	{
-		$.getJSON('settings.json', function(data) {
+        async: true,
+		success: function (dta) {
+			$.getJSON('settings.json', function(data) {
 			host             = data.host
 			port             = data.port
-			path             = data.paht
+			path             = data.path
 			topic            = data.topic
 			useTLS           = data.useTLS
 			cleansession     = data.cleansession,
 			reconnectTimeout = data.reconnectTimeout
+			
+			MQTTconnect();
 		});
-	}
-	else
-	{
-		alert("Response: " + response)
-	}
+		},
+		error: function (jqXHR, textStatus, errorThrown) {
+			alert("No configuration file found! Using default values.");
+			//In this case, there shoud be a settings.json file with the following content:
+			//{
+			//"host": "iot.eclipse.org",
+			//"port": "80",
+			//"path": "/ws",
+			//"topic": "WS/RWS/#",
+			//"useTLS": false,
+			//"cleansession": true,
+			//"reconnectTimeout": 2000
+			//}
+			
+			MQTTconnect();
+        }
+    });
 };
 
 function MQTTconnect() {
@@ -390,7 +386,6 @@ function ShowDebugInfos() {
 
 $(document).ready(function() {
 	loadConfigFile();
-    MQTTconnect();
     AddEventHandlers();
     ShowDebugInfos();
 });
