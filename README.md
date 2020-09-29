@@ -33,3 +33,7 @@ Developed with [Visual Studio Code](https://code.visualstudio.com) and [Platform
  RWS = RainWaterSystem
  
 Controller
+
+### Setup mosquitto hints
+https://www.youtube.com/watch?v=IenXQvOcj54
+https://www.youtube.com/watch?v=f3f4h7q6x5g

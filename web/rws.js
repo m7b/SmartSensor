@@ -30,11 +30,11 @@ function loadConfigFile() {
 			path             = data.path
 			topic            = data.topic
 			useTLS           = data.useTLS
-			cleansession     = data.cleansession,
+			cleansession     = data.cleansession
 			reconnectTimeout = data.reconnectTimeout
-			
-			MQTTconnect();
-		});
+			})
+			.done(function() { MQTTconnect(); })
+			.fail(function() { alert("fail"); });
 		},
 		error: function (jqXHR, textStatus, errorThrown) {
 			alert("No configuration file found! Using default values.");
