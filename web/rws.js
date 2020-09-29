@@ -320,7 +320,7 @@ function AddEventHandlers() {
     $('#ManFctSensMeasModeDS__1std').click(function(){ManualSensMeasMode(':')});
 	
     //Change drop-down label
-	$(".dropdown-menu .dropdown-item").click(function(){$("#dropdownMenu2").html($(this).text()+' <span class="caret"></span>');});
+	$(".dropdown-menu .dropdown-item").click(function(){$("#dropdownMenu2").html($(this).text()+' <span class=\"caret\"></span>');});
 }
 
 function getModeStr(mode)
