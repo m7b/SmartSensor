@@ -35,5 +35,10 @@ Developed with [Visual Studio Code](https://code.visualstudio.com) and [Platform
 Controller
 
 ### Setup mosquitto hints
-https://www.youtube.com/watch?v=IenXQvOcj54
-https://www.youtube.com/watch?v=f3f4h7q6x5g
+
+- finding mosquitto executables: `sudo find / -name "mosquitto*"`
+- finding running instance with path and config file: `sudo ps -aux | grep mosquitto`
+- [Configuring Username and Password Authentication on Mosquitto MQTT Broker](https://www.youtube.com/watch?v=IenXQvOcj54).
+- [How to Configure SSL on the Mosquitto MQTT Broker](https://www.youtube.com/watch?v=f3f4h7q6x5g).
+
+
