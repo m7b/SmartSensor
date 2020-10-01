@@ -5,7 +5,7 @@ var port = 80;
 var path = '/ws';
 var topic = 'WS/RWS/#';
 var useTLS = false;
-var clientId = 'Panel' + parseInt(Math.random() * 100, 10);
+var clientId = 'RwsPanel' + parseInt(Math.random() * 100, 10);
 var cleansession = true;
 var reconnectTimeout = 2000;
 
