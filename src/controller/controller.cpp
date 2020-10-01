@@ -118,6 +118,7 @@ void controller::setup_wifi(void)
     for(auto entry : wifi_access_credentials) 
         _wifiMulti->addAP(entry.first, entry.second);
 
+    WiFi.hostname(DEVICE_HOSTNAME);
     WiFi.mode(WIFI_STA);
 
     // We start by connecting to a WiFi network
