@@ -144,7 +144,7 @@ bool barrel::do_publish_mqtt(void)
     rc = rc & mqtt->publish(LEVEL_CM_TOPIC,              fill_level.cm);
     rc = rc & mqtt->publish(LEVEL_PERCENT_TOPIC,         fill_level.percent);
     rc = rc & mqtt->publish(LEVEL_LITRES_TOPIC,          fill_level.litres);
-    rc = rc & mqtt->publish(LEVEL_TIMESTAMP_TOPIC,       fill_level.utc);
+    //rc = rc & mqtt->publish(LEVEL_TIMESTAMP_TOPIC,       fill_level.utc);
     rc = rc & mqtt->publish(LEVEL_LOCAL_TIMESTAMP_TOPIC, get_local_datetime());
 
     return rc;
