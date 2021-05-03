@@ -4,10 +4,11 @@ environment:
 
   matrix:
     - PYTHON: "C:\\Python36"
+      DISTUTILS_USE_SDK: "1"
 
 install:
     - cmd: git submodule update --init --recursive
-    - cmd: SET PATH=%PATH%;%PYTHON%;%PYTHON%\Scripts
+#    - cmd: SET PATH=%PATH%;%PYTHON%;%PYTHON%\Scripts
     - cmd: python -m pip install --upgrade pip
     - cmd: python --version
     - cmd: pip install -U platformio
