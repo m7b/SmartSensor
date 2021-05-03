@@ -9,7 +9,7 @@ build: off
 
 install:
     - cmd: git submodule update --init --recursive
-    - cmd: SET PATH=%PATH%;C:\Python27\Scripts
+    - cmd: SET PATH=%PATH%;C:\Python36\Scripts
     - cmd: python -m pip install --upgrade pip
     - cmd: pip install -U platformio
     - cmd: platformio update
