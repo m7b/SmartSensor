@@ -12,6 +12,7 @@ install:
     - cmd: python --version
     - cmd: pip install -U platformio
     - cmd: platformio update
+    - cmd: platformio --version
 
 test_script:
     - cmd: platformio run
