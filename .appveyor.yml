@@ -7,7 +7,7 @@ environment:
 
 install:
     - cmd: git submodule update --init --recursive
-#    - cmd: SET PATH=%PATH%;C:\Python36\Scripts
+    - cmd: SET PATH=%PATH%;%PYTHON%\Scripts
     - cmd: python -m pip install --upgrade pip
     - cmd: python --version
     - cmd: pip install -U platformio
