@@ -181,7 +181,9 @@ bool controller::check_all_conditions(void)
     bool rc = true;
     
     rc = rc & _wifiMulti->connected();
-    rc = rc & _mqtt->connected();
+//TODO    rc = rc & _mqtt->connected();
+//This prevents using hardware buttons
+//even no mqtt connetcion is available.
     rc = rc & _ntp->update();
 
     return rc;
