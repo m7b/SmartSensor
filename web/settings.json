@@ -1,0 +1,11 @@
+{
+"host": "iot.eclipse.org",
+"port": 80,
+"username": "",
+"password": "",
+"path": "/ws",
+"topic": "WS/RWS/#",
+"useTLS": true,
+"cleansession": true,
+"reconnectTimeout": 2000
+}

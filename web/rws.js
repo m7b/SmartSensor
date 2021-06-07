@@ -2,6 +2,8 @@ var debug = false;
 
 var host = 'iot.eclipse.org';
 var port = 80;
+var username = '';
+var password = '';
 var path = '/ws';
 var topic = 'WS/RWS/#';
 var useTLS = false;
@@ -27,6 +29,8 @@ function loadConfigFile() {
 			$.getJSON('settings.json', function(data) {
 			host             = data.host
 			port             = data.port
+            username         = data.username
+            password         = data.password
 			path             = data.path
 			topic            = data.topic
 			useTLS           = data.useTLS
@@ -61,8 +65,8 @@ function MQTTconnect() {
     }
     mqtt = new Paho.Client(host, port, path, clientId);
     var options = {
-        userName: "",
-        password: "",
+        userName: username,
+        password: password,
         timeout: 3,
         useSSL: useTLS,
         cleanSession: cleansession,
