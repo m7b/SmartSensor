@@ -2,6 +2,7 @@
 #define COMMON_H
 
 #include <Arduino.h>
+#include <string>
 
 unsigned long get_duration_ms(unsigned long start);
 unsigned long get_duration_us(unsigned long start);

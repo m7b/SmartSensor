@@ -1,6 +1,8 @@
 #ifndef RWS_PUBSUBCLIENT_H
 #define RWS_PUBSUBCLIENT_H
 
+#include "rws_common.h"
+
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 

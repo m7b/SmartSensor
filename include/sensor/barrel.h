@@ -2,6 +2,7 @@
 #define BARREL_H
 
 #include <NewPing.h>
+#include "rws_common.h"
 #include "rws_ntp.h"
 #include "rws_pubsubclient.h"
 #include "rws_syslog.h"

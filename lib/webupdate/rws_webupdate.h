@@ -1,6 +1,8 @@
 #ifndef RWS_WEBUPDATE_H
 #define RWS_WEBUPDATE_H
 
+#include "rws_common.h"
+
 #include <ESP8266WebServer.h>
 #include <ESP8266mDNS.h>
 #include <ESP8266HTTPUpdateServer.h>
