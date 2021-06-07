@@ -75,16 +75,16 @@ static const std::vector<std::pair<const char*, const char*>> wifi_access_creden
  */
 #if defined(SRC_BARREL)
     #define MQTT_CLIENT_ID           "RwsSrcBar"
-    #define MQTT_USER                ""
-    #define MQTT_PASS                ""
+    #define MQTT_USER                "jim"
+    #define MQTT_PASS                "topsecret"
 #elif defined(DST_BARREL)
     #define MQTT_CLIENT_ID           "RwsDstBar"
-    #define MQTT_USER                ""
-    #define MQTT_PASS                ""
+    #define MQTT_USER                "jim"
+    #define MQTT_PASS                "topsecret"
 #else
     #define MQTT_CLIENT_ID           "RwsContro"
-    #define MQTT_USER                ""
-    #define MQTT_PASS                ""
+    #define MQTT_USER                "jim"
+    #define MQTT_PASS                "topsecret"
 #endif
 
 

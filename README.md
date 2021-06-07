@@ -38,7 +38,10 @@ Controller
 
 - finding mosquitto executables: `sudo find / -name "mosquitto*"`
 - finding running instance with path and config file: `sudo ps -aux | grep mosquitto`
+- [General Command Line commands for handling DSM Services](https://tech.setepontos.com/2018/03/25/control-synology-dsm-services-via-terminal-ssh/)
 - [Configuring Username and Password Authentication on Mosquitto MQTT Broker](https://www.youtube.com/watch?v=IenXQvOcj54).
 - [How to Configure SSL on the Mosquitto MQTT Broker](https://www.youtube.com/watch?v=f3f4h7q6x5g).
+- [How to Install and Secure the Mosquitto MQTT Messaging Broker](https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-the-mosquitto-mqtt-messaging-broker-on-ubuntu-18-04-quickstart)
+- [username and password] (http://www.steves-internet-guide.com/mqtt-username-password-example/)
 
 
