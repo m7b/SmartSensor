@@ -1,6 +1,8 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
+#include <ArduinoOTA.h>
+
 #include <rws_wifi.h>
 #include <rws_ntp.h>
 #include <rws_syslog.h>
@@ -30,7 +32,7 @@
 class controller : public statemachine
 {
     public:
-        controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclient *mqtt, rws_webupdate *webUpd, TimeAlarmsClass *timealarms);
+        controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclient *mqtt, rws_webupdate *webUpd, ArduinoOTAClass *ota, TimeAlarmsClass *timealarms);
         ~controller();
 
         void setup(void);
@@ -45,6 +47,7 @@ class controller : public statemachine
         rws_webupdate *_webUpdate;
         rws_pubsubclient *_mqtt;
         TimeAlarmsClass *_alarm;
+        ArduinoOTAClass *_ota;
         
         bool _src_barrel_present;
         bool _dst_barrel_present;
@@ -66,6 +69,7 @@ class controller : public statemachine
         void setup_syslog(void);
         void setup_mqtt(void);
         void setup_webupdate(void);
+        void setup_otaupdate(void);
         void setup_timealarms(void);
 
         bool check_all_conditions(void);

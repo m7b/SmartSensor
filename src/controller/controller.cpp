@@ -6,7 +6,7 @@ extern void callbackPlain(void);
 //NTP stuff; Called by time.h handler
 extern time_t getNtpTime(void);
 
-controller::controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclient *mqtt, rws_webupdate *webUpd, TimeAlarmsClass *timealarms)
+controller::controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclient *mqtt, rws_webupdate *webUpd, ArduinoOTAClass *ota, TimeAlarmsClass *timealarms)
 : statemachine(N000_INIT_STEP)
 {
     _wifiMulti   = wifi;
@@ -14,6 +14,7 @@ controller::controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pub
     _syslog      = syslog;
     _webUpdate   = webUpd;
     _mqtt        = mqtt;
+    _ota         = ota;
     _alarm       = timealarms;
     
     _sens_src_online = false;
@@ -49,6 +50,8 @@ void controller::setup(void)
     setup_syslog();
     setup_mqtt();
     setup_webupdate();
+    setup_otaupdate();
+
     setup_timealarms();
     _pump_1->setup();
     _pump_2->setup();
@@ -66,6 +69,7 @@ void controller::loop(void)
 
     //check and renew WiFi connection
     _wifiMulti->check_connection();
+    //MDNS.update();
 
     //check and renew MQTT connection
     _mqtt->check_connection();
@@ -73,6 +77,8 @@ void controller::loop(void)
     //Web-Update functionality
     _webUpdate->loop();
 
+    //OTA update functionality
+    _ota->handle();
     
     _pump_1->loop();
     _pump_2->loop();
@@ -121,6 +127,8 @@ void controller::setup_wifi(void)
     WiFi.hostname(DEVICE_HOSTNAME);
     WiFi.mode(WIFI_STA);
 
+    //MDNS.begin(DEVICE_HOSTNAME);
+
     // We start by connecting to a WiFi network
     _wifiMulti->check_connection();
 }
@@ -164,6 +172,47 @@ void controller::setup_mqtt(void)
 void controller::setup_webupdate(void)
 {
     _webUpdate->setup();
+}
+
+
+void controller::setup_otaupdate(void)
+{
+    _ota->onStart([&]() {
+        String type;
+        if (_ota->getCommand() == U_FLASH) {
+            type = "sketch";
+        } else { // U_FS
+            type = "filesystem";
+        }
+
+        // NOTE: if updating FS this would be the place to unmount FS using FS.end()
+        Serial.println("Start updating " + type);
+    });
+
+    _ota->onEnd([]() {
+        Serial.println("\nEnd");
+    });
+
+    _ota->onProgress([](unsigned int progress, unsigned int total) {
+        Serial.printf("Progress: %u%%\r", (progress / (total / 100)));
+    });
+
+    _ota->onError([](ota_error_t error) {
+        Serial.printf("Error[%u]: ", error);
+        if (error == OTA_AUTH_ERROR) {
+            Serial.println("Auth Failed");
+        } else if (error == OTA_BEGIN_ERROR) {
+            Serial.println("Begin Failed");
+        } else if (error == OTA_CONNECT_ERROR) {
+            Serial.println("Connect Failed");
+        } else if (error == OTA_RECEIVE_ERROR) {
+            Serial.println("Receive Failed");
+        } else if (error == OTA_END_ERROR) {
+            Serial.println("End Failed");
+        }
+    });
+
+    _ota->begin();
 }
 
 
