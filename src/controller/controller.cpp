@@ -6,7 +6,7 @@ extern void callbackPlain(void);
 //NTP stuff; Called by time.h handler
 extern time_t getNtpTime(void);
 
-controller::controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclient *mqtt, rws_webupdate *webUpd, ArduinoOTAClass *ota, TimeAlarmsClass *timealarms)
+controller::controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclient *mqtt, rws_webupdate *webUpd, TimeAlarmsClass *timealarms)
 : statemachine(N000_INIT_STEP)
 {
     _wifiMulti   = wifi;
@@ -14,7 +14,6 @@ controller::controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pub
     _syslog      = syslog;
     _webUpdate   = webUpd;
     _mqtt        = mqtt;
-    _ota         = ota;
     _alarm       = timealarms;
     
     _sens_src_online = false;
@@ -78,7 +77,7 @@ void controller::loop(void)
     _webUpdate->loop();
 
     //OTA update functionality
-    _ota->handle();
+    ArduinoOTA.handle();
     
     _pump_1->loop();
     _pump_2->loop();
@@ -177,9 +176,9 @@ void controller::setup_webupdate(void)
 
 void controller::setup_otaupdate(void)
 {
-    _ota->onStart([&]() {
+    ArduinoOTA.onStart([]() {
         String type;
-        if (_ota->getCommand() == U_FLASH) {
+        if (ArduinoOTA.getCommand() == U_FLASH) {
             type = "sketch";
         } else { // U_FS
             type = "filesystem";
@@ -189,15 +188,15 @@ void controller::setup_otaupdate(void)
         Serial.println("Start updating " + type);
     });
 
-    _ota->onEnd([]() {
+    ArduinoOTA.onEnd([]() {
         Serial.println("\nEnd");
     });
 
-    _ota->onProgress([](unsigned int progress, unsigned int total) {
+    ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
         Serial.printf("Progress: %u%%\r", (progress / (total / 100)));
     });
 
-    _ota->onError([](ota_error_t error) {
+    ArduinoOTA.onError([](ota_error_t error) {
         Serial.printf("Error[%u]: ", error);
         if (error == OTA_AUTH_ERROR) {
             Serial.println("Auth Failed");
@@ -212,7 +211,7 @@ void controller::setup_otaupdate(void)
         }
     });
 
-    _ota->begin();
+    ArduinoOTA.begin();
 }
 
 

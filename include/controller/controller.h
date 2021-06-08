@@ -32,7 +32,7 @@
 class controller : public statemachine
 {
     public:
-        controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclient *mqtt, rws_webupdate *webUpd, ArduinoOTAClass *ota, TimeAlarmsClass *timealarms);
+        controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclient *mqtt, rws_webupdate *webUpd, TimeAlarmsClass *timealarms);
         ~controller();
 
         void setup(void);
@@ -47,7 +47,6 @@ class controller : public statemachine
         rws_webupdate *_webUpdate;
         rws_pubsubclient *_mqtt;
         TimeAlarmsClass *_alarm;
-        ArduinoOTAClass *_ota;
         
         bool _src_barrel_present;
         bool _dst_barrel_present;

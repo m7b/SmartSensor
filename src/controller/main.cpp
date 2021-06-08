@@ -19,7 +19,7 @@ rws_webupdate webUpdate(MQTT_CLIENT_ID, &httpServer, &httpUpdater, MQTT_CLIENT_I
 //Alarm
 //Global instance of Alarm is made by its library "TimeAlarms" (TimeAlarmsClass Alarm)
 
-controller ctrl(&wifiMulti, &ntp, &syslog, &mqtt, &webUpdate, &ArduinoOTA, &Alarm);
+controller ctrl(&wifiMulti, &ntp, &syslog, &mqtt, &webUpdate, &Alarm);
 
 /**
  * @brief setup section of board
