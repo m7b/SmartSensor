@@ -58,6 +58,8 @@ void controller::setup(void)
     _light->set_delay_ms(333);
 
     print_stm_steps();
+    
+    _syslog->log(LOG_INFO, "Setup done. Begin loop() ...");
 }
 
 void controller::loop(void)
