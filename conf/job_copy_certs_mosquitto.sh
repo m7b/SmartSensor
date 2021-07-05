@@ -1,13 +1,13 @@
 #!/bin/bash
 
 CERT_SRC=/usr/local/etc/certificate/SynologyDrive/SynologyDrive/cert.pem
-CERT_DST=/volume1/@appstore/mosquitto/var/cert.pem
+CERT_DST=/volume1/@appdata/mosquitto/cert.pem
 
 CHAIN_SRC=/usr/local/etc/certificate/SynologyDrive/SynologyDrive/chain.pem
-CHAIN_DST=/volume1/@appstore/mosquitto/var/chain.pem
+CHAIN_DST=/volume1/@appdata/mosquitto/chain.pem
 
 PRIVKEY_SRC=/usr/local/etc/certificate/SynologyDrive/SynologyDrive/privkey.pem
-PRIVKEY_DST=/volume1/@appstore/mosquitto/var/privkey.pem
+PRIVKEY_DST=/volume1/@appdata/mosquitto/privkey.pem
 
 # Check certificates changed
 if ! cmp $CERT_SRC $CERT_DST > /dev/null 2>&1
@@ -29,4 +29,5 @@ then
     chmod 0644 $PRIVKEY_DST
 else
     # Certificates not changed
+    echo "Nothing to do!"
 fi
