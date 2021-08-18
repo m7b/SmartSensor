@@ -285,7 +285,7 @@ function ManualSensMeasMode(fct_mode) {
 
 function ManualFctPump(fct_mode) {
     var message = new Paho.Message(fct_mode);
-    message.retained = true;
+    message.retained = flase;
     message.qos = 1;
     message.destinationName = "WS/RWS/Dashboard/ManualPumpReq";
     mqtt.send(message);
@@ -294,7 +294,7 @@ function ManualFctPump(fct_mode) {
 
 function ManualFctValve(fct_mode) {
     var message = new Paho.Message(fct_mode);
-    message.retained = true;
+    message.retained = flase;
     message.qos = 1;
     message.destinationName = "WS/RWS/Dashboard/ManualValveReq";
     mqtt.send(message);
