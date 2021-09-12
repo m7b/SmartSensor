@@ -32,6 +32,8 @@ controller::controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pub
     _dst_barrel_present = true;
 
     _alarm_occurred = false;
+
+    _once = false;
 }
 
 controller::~controller()
@@ -86,7 +88,15 @@ void controller::loop(void)
 
     //check all conditions are ok
     if (!check_all_conditions())
+    {
+        if (!_once)
+        {
+            _once = true;
+            _syslog->log(LOG_INFO, "In loop(): check all conditions failed! Retry check ...");
+        }
         return;
+    }
+    _once = false;
 
     //keep mqtt alive
     _mqtt->loop();

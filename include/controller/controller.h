@@ -51,6 +51,7 @@ class controller : public statemachine
         bool _src_barrel_present;
         bool _dst_barrel_present;
         
+        bool _once;
         unsigned long _start_time;
 
         bool _sens_src_online;
