@@ -33,7 +33,8 @@ controller::controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pub
 
     _alarm_occurred = false;
 
-    _once = false;
+    _condition_lost = false;
+    _condition_lost_time = "";
 }
 
 controller::~controller()
@@ -89,14 +90,19 @@ void controller::loop(void)
     //check all conditions are ok
     if (!check_all_conditions())
     {
-        if (!_once)
+        if (!_condition_lost)
         {
-            _once = true;
-            _syslog->log(LOG_INFO, "In loop(): check all conditions failed! Retry check ...");
+            _condition_lost = true;
+            _condition_lost_time = _ntp->get_local_datetime();
         }
         return;
     }
-    _once = false;
+    if (_condition_lost)
+    {
+        _condition_lost = false;
+        std::string msg = "In loop(): check all conditions failed at " + _condition_lost_time;
+        _syslog->log(LOG_INFO, msg.c_str());
+    }
 
     //keep mqtt alive
     _mqtt->loop();
