@@ -94,13 +94,17 @@ void controller::loop(void)
         {
             _condition_lost = true;
             _condition_lost_time = _ntp->get_local_datetime();
+            
+            char buf[10];
+            snprintf(buf, 10, "%d", WiFi.status());
+            _wlan_status = std::string(buf);
         }
         return;
     }
     if (_condition_lost)
     {
         _condition_lost = false;
-        std::string msg = "In loop(): check all conditions failed at " + _condition_lost_time;
+        std::string msg = "In loop(): Check all conditions failed at " + _condition_lost_time + " (" + _wlan_status + ")";
         _syslog->log(LOG_INFO, msg.c_str());
     }
 

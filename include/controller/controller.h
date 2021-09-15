@@ -53,7 +53,8 @@ class controller : public statemachine
         
         bool _condition_lost;
         std::string _condition_lost_time;
-        
+        std::string _wlan_status;
+
         unsigned long _start_time;
 
         bool _sens_src_online;
