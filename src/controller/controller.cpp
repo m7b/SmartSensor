@@ -148,10 +148,10 @@ void controller::setup_wifi(void)
     WiFi.hostname(DEVICE_HOSTNAME);
     WiFi.mode(WIFI_STA);
 
-    //MDNS.begin(DEVICE_HOSTNAME);
-
     // We start by connecting to a WiFi network
     _wifiMulti->check_connection();
+    
+    //MDNS.begin(DEVICE_HOSTNAME);
 }
 
 void controller::setup_ntp(void)
@@ -198,6 +198,8 @@ void controller::setup_webupdate(void)
 
 void controller::setup_otaupdate(void)
 {
+    ArduinoOTA.setHostname(DEVICE_HOSTNAME);
+
     ArduinoOTA.onStart([]() {
         String type;
         if (ArduinoOTA.getCommand() == U_FLASH) {
