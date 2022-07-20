@@ -137,7 +137,7 @@ bool rws_pubsubclient::publish(const char *topic, const float f_value)
 bool rws_pubsubclient::publish(const char *topic, const time_t t_value)
 {
     char buffer [20];
-    int ret = snprintf(buffer, sizeof(buffer), "%ld", t_value);
+    int ret = snprintf(buffer, sizeof(buffer), "%lld", t_value);
     if (ret >= 0 && ret < (int)sizeof(buffer))
     {
         ret = publish(topic, buffer, true);
