@@ -1,12 +1,9 @@
 #include "controller/controller.h"
 
-//Weekly Alarm stuff
-extern void callbackPlain(void);
-
 //NTP stuff; Called by time.h handler
 extern time_t getNtpTime(void);
 
-controller::controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclient *mqtt, rws_webupdate *webUpd, TimeAlarmsClass *timealarms)
+controller::controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclient *mqtt, rws_webupdate *webUpd)
 : statemachine(N000_INIT_STEP)
 {
     _wifiMulti   = wifi;
@@ -14,7 +11,6 @@ controller::controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pub
     _syslog      = syslog;
     _webUpdate   = webUpd;
     _mqtt        = mqtt;
-    _alarm       = timealarms;
     
     _sens_src_online = false;
     _sens_dst_online = false;
@@ -54,7 +50,6 @@ void controller::setup(void)
     setup_webupdate();
     setup_otaupdate();
 
-    setup_timealarms();
     _pump_1->setup();
     _pump_2->setup();
 
@@ -116,9 +111,6 @@ void controller::loop(void)
 
     //control rgb led
     _light->loop();
-
-    //Time Alarms stuff
-    _alarm->delay(0);  //manage time callbacks of all alarms
 
     //operation
     operating();
@@ -237,16 +229,6 @@ void controller::setup_otaupdate(void)
 
     ArduinoOTA.begin();
 }
-
-
-void controller::setup_timealarms(void)
-{
-//  _alarm->alarmRepeat(8,30,0, MorningAlarm);  // 8:30am every day
-    _alarm->alarmRepeat(14,00,0, callbackPlain);  // 8:30am every day
-    _alarm->alarmRepeat(14,02,0, callbackPlain);  // 8:32am every day
-    _alarm->alarmRepeat(14,04,0, callbackPlain);  // 8:34am every day
-}
-
 
 bool controller::check_all_conditions(void)
 {

@@ -11,7 +11,6 @@
 #include <statemachine.h>
 
 #include <SPI.h>
-#include <TimeAlarms.h>
 
 #include "controller/settings/settings.h"
 #include "controller/topics.h"
@@ -32,7 +31,7 @@
 class controller : public statemachine
 {
     public:
-        controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclient *mqtt, rws_webupdate *webUpd, TimeAlarmsClass *timealarms);
+        controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclient *mqtt, rws_webupdate *webUpd);
         ~controller();
 
         void setup(void);
@@ -46,7 +45,6 @@ class controller : public statemachine
         rws_syslog *_syslog;
         rws_webupdate *_webUpdate;
         rws_pubsubclient *_mqtt;
-        TimeAlarmsClass *_alarm;
         
         bool _src_barrel_present;
         bool _dst_barrel_present;
@@ -73,7 +71,6 @@ class controller : public statemachine
         void setup_mqtt(void);
         void setup_webupdate(void);
         void setup_otaupdate(void);
-        void setup_timealarms(void);
 
         bool check_all_conditions(void);
 
