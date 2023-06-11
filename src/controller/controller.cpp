@@ -1,7 +1,7 @@
 #include "controller/controller.h"
 
 //NTP stuff; Called by time.h handler
-extern time_t getNtpTime(void);
+extern time_t _MJBgetNtpTime(void);
 
 controller::controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclient *mqtt, rws_webupdate *webUpd)
 : statemachine(N000_INIT_STEP)
@@ -54,13 +54,13 @@ void controller::setup(void)
 
 void controller::loop(void)
 {
-    //update time from NTP on demand, see NTP_UPDATE_INTERVAL_MS
-    _ntp->loop();
-    timeStatus();
-
     //check and renew WiFi connection
     _wifiMulti->check_connection();
     //MDNS.update();
+    
+    //update time from NTP on demand, see NTP_UPDATE_INTERVAL_MS
+    _ntp->loop();
+    timeStatus();
 
     //check and renew MQTT connection
     _mqtt->check_connection();
@@ -149,7 +149,7 @@ void controller::setup_ntp(void)
 
     // Setup handler for syncing system time with local time 
     Serial.println("Setup handler for syncing system time with local time");
-    setSyncProvider(getNtpTime);
+    setSyncProvider(_MJBgetNtpTime);
     setSyncInterval(60);
 }
 
@@ -224,7 +224,8 @@ bool controller::check_all_conditions(void)
     bool rc = true;
     
     rc = rc & _wifiMulti->connected();
-    rc = rc & _ntp->update();
+    /* Test if this is the cause of not working 
+    rc = rc & _ntp->update(); */
 
     return rc;
 }

@@ -41,7 +41,7 @@ void loop(void) {
 
 /* #################################################### */
 
-time_t getNtpTime(void)
+time_t _MJBgetNtpTime(void)
 {
     return ntp.get_local_datetime_t();
 }
