@@ -271,6 +271,17 @@ void controller::operating(void)
     switch (get_step())
     {
         case N000_INIT_STEP:
+            _start = millis();
+            _step = N010_WAIT_STEP;
+            break;
+
+        case N010_WAIT_STEP:
+
+            if (get_duration_ms(_start) >= 1000)
+            {
+                _mqtt->publish(VAL_LIFE_SIGN, "Life sign! " + _ntp->get_local_datetime());
+                _step = N000_INIT_STEP;
+            }
             break;
 
         case N999_END:

@@ -73,10 +73,14 @@ class controller : public statemachine
         void operating(void);
 
         void print_stm_steps(void);
+
+        unsigned long _start;
+        uint16_t _step;
 };
 
 
 STEP_DEF(N000_INIT_STEP, "N000: Init step");
+STEP_DEF(N010_WAIT_STEP, "N010: Wait timeout");
 STEP_DEF(N999_END,       "N999: End");
 
 #endif // CONTROLLER_H

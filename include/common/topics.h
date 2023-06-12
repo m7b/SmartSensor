@@ -38,6 +38,7 @@
 #define MANUAL_PUMP_ACK       "ManualPumpAck"
 #define MANUAL_VALVE_ACK      "ManualValveAck"
 #define AMBIENT_BRIGHTNESS    "AmbientBrightness"
+#define LIFE_SIGN             "LifeSign"
 #define CONTR_LAST_WILL_TOPIC "Status"
 
 
