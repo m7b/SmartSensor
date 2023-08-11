@@ -93,10 +93,15 @@ void controller::loop(void)
         _condition_lost = false;
         std::string msg = "In loop(): Check all conditions failed at " + _condition_lost_time + " (" + _wlan_status + ")";
         _syslog->log(LOG_INFO, msg.c_str());
+
+        // Reset statemachine
+        set_next_step(N000_INIT_STEP);
     }
 
     //keep mqtt alive
-    _mqtt->loop();
+    //_mqtt->loop();
+    //already done above in 
+    //  _mqtt->check_connection();
 
     //control rgb led
     _light->loop();
