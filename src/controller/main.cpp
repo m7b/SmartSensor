@@ -16,10 +16,7 @@ ESP8266HTTPUpdateServer httpUpdater;
 rws_webupdate webUpdate(MQTT_CLIENT_ID, &httpServer, &httpUpdater, MQTT_CLIENT_ID);
 //Web-Updater things---------------------
 
-//Alarm
-//Global instance of Alarm is made by its library "TimeAlarms" (TimeAlarmsClass Alarm)
-
-controller ctrl(&wifiMulti, &ntp, &syslog, &mqtt, &webUpdate, &Alarm);
+controller ctrl(&wifiMulti, &ntp, &syslog, &mqtt, &webUpdate);
 
 /**
  * @brief setup section of board
@@ -44,17 +41,7 @@ void loop(void) {
 
 /* #################################################### */
 
-time_t getNtpTime(void)
+time_t _MJBgetNtpTime(void)
 {
     return ntp.get_local_datetime_t();
-}
-
-
-void callbackPlain(void)
-{
-    Serial.println("################################");
-    Serial.println("TimeAlarms triggered at ...");
-    ntp.test(); // print utc and local time
-    Serial.println("################################");
-    ctrl._alarm_occurred = true;
 }

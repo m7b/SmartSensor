@@ -11,7 +11,6 @@
 #include <statemachine.h>
 
 #include <SPI.h>
-#include <TimeAlarms.h>
 
 #include "controller/settings/settings.h"
 #include "controller/topics.h"
@@ -32,13 +31,11 @@
 class controller : public statemachine
 {
     public:
-        controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclient *mqtt, rws_webupdate *webUpd, TimeAlarmsClass *timealarms);
+        controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclient *mqtt, rws_webupdate *webUpd);
         ~controller();
 
         void setup(void);
         void loop(void);
-
-        bool _alarm_occurred;
 
     private:
         rws_wifi *_wifiMulti;
@@ -46,19 +43,10 @@ class controller : public statemachine
         rws_syslog *_syslog;
         rws_webupdate *_webUpdate;
         rws_pubsubclient *_mqtt;
-        TimeAlarmsClass *_alarm;
-        
-        bool _src_barrel_present;
-        bool _dst_barrel_present;
         
         bool _condition_lost;
         std::string _condition_lost_time;
         std::string _wlan_status;
-
-        unsigned long _start_time;
-
-        bool _sens_src_online;
-        bool _sens_dst_online;
 
         uint8_t _function_mode_src_req;
         uint8_t _function_mode_src_ack;
@@ -73,7 +61,6 @@ class controller : public statemachine
         void setup_mqtt(void);
         void setup_webupdate(void);
         void setup_otaupdate(void);
-        void setup_timealarms(void);
 
         bool check_all_conditions(void);
 
@@ -85,21 +72,15 @@ class controller : public statemachine
 
         void operating(void);
 
-        void set_sens_mode(FunctionModes m);
-        bool check_sens_mode(FunctionModes m);
         void print_stm_steps(void);
+
+        unsigned long _start;
+        uint16_t _step;
 };
 
 
-STEP_DEF(N000_INIT_STEP,                      "N000: Init step");    
-STEP_DEF(N010_START_TIMEOUT_FOR_ACTIVATION,   "N010: Start timeout for activation");
-STEP_DEF(N020_WAIT_TIMEOUT_FOR_ACTIVATION,    "N020: Wait timeout for activation");
-STEP_DEF(N050_CHECK_START_PUMP,               "N050: Check start pump");
-STEP_DEF(N060_WAIT_PUMP_STARTED,              "N060: Wait pump started");
-STEP_DEF(N100_START_TIMEOUT_FOR_PUMPING,      "N100: Start timeout for pumping");
-STEP_DEF(N110_WAIT_TIMEOUT_FOR_PUMPING,       "N110: Wait timeout for pumping");
-STEP_DEF(N300_CHECK_STOP_PUMP,                "N300: Check pump stop");
-STEP_DEF(N310_WAIT_PUMP_STOPPED,              "N310: Wait pump stopped");
-STEP_DEF(N999_END,                            "N999: End");
+STEP_DEF(N000_INIT_STEP, "N000: Init step");
+STEP_DEF(N010_WAIT_STEP, "N010: Wait timeout");
+STEP_DEF(N999_END,       "N999: End");
 
 #endif // CONTROLLER_H

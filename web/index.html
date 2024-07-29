@@ -31,7 +31,6 @@
 
     <body>
 
-
             <div class="modal fade" id="modalLoginForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
             aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -69,11 +68,6 @@
           </div>
 
 
-
-
-
-
-
         <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
 
             <!-- Brand -->
@@ -101,68 +95,38 @@
 
             <div class="pt-3"></div>
 
-            <div id="ManualFct" class="collapse">
+            <div id="ManualFct" class="collapse show">
                 <table class="table table-striped">
                     <!-- Manual function header -->
                     <tr>
                         <td width="25%" style="vertical-align:top;"><ion-icon name="people" size="large"></ion-icon></td>
                         <td style="vertical-align:middle;"></td>
-                        <td align="center" style="vertical-align:middle;"><h4>Req</h4></td>
-                        <td align="center" style="vertical-align:middle;"><h4>Ack</h4></td>
-                        <td align="center" style="vertical-align:middle;"><h4>Current</h4></td>
+                        <td align="center" style="vertical-align:middle;"><h5>Req</h5></td>
+                        <td align="center" style="vertical-align:middle;"><h5>Ack</h5></td>
                     </tr>
                     <!-- Pumpe Bewässerung -->
                     <tr>
-                        <td style="vertical-align:middle;"><h5>Bewässerung</h5></td>
+                        <td style="vertical-align:middle;"><h6>Bewässerung</h6></td>
                         <td style="vertical-align:middle;">
                             <div class="btn-group" role="group" aria-label="Pump functions">
                                 <button id="ManFctPumpOn"  type="button" class="btn btn-sm btn-success active">An</button>
                                 <button id="ManFctPumpOff" type="button" class="btn btn-sm btn-danger active">Aus</button>
                             </div>
                         </td>
-                        <td align="center" style="vertical-align:middle;"><h5>&nbsp;<span id="ManualPumpReqLabel" class="label">Unknown</span></h5><small id="ManualPumpReqValue">(no value recieved)</small></td>
-                        <td align="center" style="vertical-align:middle;"><h5>&nbsp;<span id="ManualPumpAckLabel" class="label">Unknown</span></h5><small id="ManualPumpAckValue">(no value recieved)</small></td>
-                        <td align="right" style="vertical-align:middle;">3245 mA</td>
+                        <td align="center" style="vertical-align:middle;"><h6>&nbsp;<span id="ManualPumpReqLabel" class="label">Unk</span></h6><small id="ManualPumpReqValue">(no value recieved)</small></td>
+                        <td align="center" style="vertical-align:middle;"><h6>&nbsp;<span id="ManualPumpAckLabel" class="label">Unk</span></h6><small id="ManualPumpAckValue">(no value recieved)</small></td>
                     </tr>
                     <!-- Pumpe Füllung -->
                     <tr>
-                        <td style="vertical-align:middle;"><h5>Füllung</h5></td>
+                        <td style="vertical-align:middle;"><h6>Füllung</h6></td>
                         <td style="vertical-align:middle;">
                             <div class="btn-group" role="group" aria-label="Valve functions">
                                 <button id="ManFctValveOn"  type="button" class="btn btn-sm btn-success active">An</button>
                                 <button id="ManFctValveOff" type="button" class="btn btn-sm btn-danger active">Aus</button>
                             </div>
                         </td>
-                        <td align="center" style="vertical-align:middle;"><h5>&nbsp;<span id="ManualValveReqLabel" class="label">Unknown</span></h5><small id="ManualValveReqValue">(no value recieved)</small></td>
-                        <td align="center" style="vertical-align:middle;"><h5>&nbsp;<span id="ManualValveAckLabel" class="label">Unknown</span></h5><small id="ManualValveAckValue">(no value recieved)</small></td>
-                        <td align="right" style="vertical-align:middle;">412 mA</td>
-                    </tr>
-                    <!-- Sensor Meassurement Mode-->
-                    <tr>
-                        <td style="vertical-align:middle;"><h5>Sensor Meassure Mode</h5></td>
-                        <td colspan="4" style="vertical-align:middle;">
-						
-							<div class="dropdown">
-								<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-								Dropdown
-								</button>
-								<div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-									<button id="ManFctSensMeasMode_200ms" type="button" class="dropdown-item">Permanent Meassure</button>
-									<button id="ManFctSensMeasMode__5sec" type="button" class="dropdown-item">Interval 5 sec</button>
-									<button id="ManFctSensMeasMode_10sec" type="button" class="dropdown-item">Interval 10 sec</button>
-									<button id="ManFctSensMeasMode__1min" type="button" class="dropdown-item">Interval 1 min</button>
-									<button id="ManFctSensMeasMode__5min" type="button" class="dropdown-item">Interval 5 min</button>
-									<button id="ManFctSensMeasModeDS_20sec" type="button" class="dropdown-item">Deep Sleep 20 sec</button>
-									<button id="ManFctSensMeasModeDS__1min" type="button" class="dropdown-item">Deep Sleep 1 min</button>
-									<button id="ManFctSensMeasModeDS__5min" type="button" class="dropdown-item">Deep Sleep 5 min</button>
-									<button id="ManFctSensMeasModeDS_10min" type="button" class="dropdown-item">Deep Sleep 10 min</button>
-									<button id="ManFctSensMeasModeDS_30min" type="button" class="dropdown-item">Deep Sleep 30 min</button>
-									<button id="ManFctSensMeasModeDS__1std" type="button" class="dropdown-item">Deep Sleep 1 std</button>
-								</div>
-							</div>
-						
-						
-                        </td>
+                        <td align="center" style="vertical-align:middle;"><h6>&nbsp;<span id="ManualValveReqLabel" class="label">Unk</span></h6><small id="ManualValveReqValue">(no value recieved)</small></td>
+                        <td align="center" style="vertical-align:middle;"><h6>&nbsp;<span id="ManualValveAckLabel" class="label">Unk</span></h6><small id="ManualValveAckValue">(no value recieved)</small></td>
                     </tr>
                 </table>
                 <div class="border-top my-0"></div>
@@ -173,78 +137,20 @@
                 <!-- Controller -->
                 <tr>
                     <td width="25%" style="vertical-align:top;"><ion-icon name="play" size="large"></ion-icon></td>
-                    <td align="center" style="vertical-align:middle;"><h4>Controller<a href="http://rwscontro.local/" title="Controller website"target="_blank"><ion-icon name="log-in-outline"></ion-icon></a></h4></td>
+                    <td align="center" style="vertical-align:middle;"><h5>Controller<a href="http://rwscontro.local/" title="Controller website"target="_blank"><ion-icon name="log-in-outline"></ion-icon></a></h5></td>
                 </tr>
                 <!-- Status -->
                 <tr>
-                    <td style="vertical-align:middle;"><h5>Status</h5></td>
-                    <td style="vertical-align:middle;"><h5>&nbsp;<span id="CtrlStatusLabel" class="label">Unknown</span></h5><small id="CtrlStatusValue">(no value recieved)</small></td>
+                    <td style="vertical-align:middle;"><h6>Status</h6></td>
+                    <td style="vertical-align:middle;"><h6>&nbsp;<span id="CtrlStatusLabel" class="label">Unk</span></h6><small id="CtrlStatusValue">(no value recieved)</small></td>
                 </tr>
                 <!-- Ambient Brightness -->
                 <tr>
-                    <td style="vertical-align:middle;"><h5>Ambient Brightness</h5></td>
-                    <td style="vertical-align:middle;"><h5>&nbsp;<span id="CtrlAmbBrightLabel" class="label">Unknown</span>&nbsp;<span class="CtrlAmbBrightSparkline"></span></h5><small id="CtrlAmbBrightValue">(no value recieved)</small></td>
+                    <td style="vertical-align:middle;"><h6>Ambient Brightness</h6></td>
+                    <td style="vertical-align:middle;"><h6>&nbsp;<span id="CtrlAmbBrightLabel" class="label">Unk</span>&nbsp;<span class="CtrlAmbBrightSparkline"></span></h6><small id="CtrlAmbBrightValue">(no value recieved)</small></td>
                 </tr>
             </table>
             <div class="border-top my-0"></div>
-            <div class="pt-3"></div>
-
-            <table class="table table-striped">
-                <!-- Barrels -->
-                <tr>
-                    <td width="25%" style="vertical-align:top;"><ion-icon name="analytics" size="large"></ion-icon></td>
-                    <td align="center" style="vertical-align:middle;"><h4>Barrel Src<a href="http://rwssrcbar.local/" title="Barrel source website"target="_blank"><ion-icon name="log-in-outline"></ion-icon></a></h4><div class="progress"><div id="barSrc" class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width:75%">75%</div></div></td>
-                    <td align="center" style="vertical-align:middle;"><h4>Barrel Dst<a href="http://rwsdstbar.local/" title="Barrel destination website"target="_blank"><ion-icon name="log-in-outline"></ion-icon></a></h4><div class="progress"><div id="barDst" class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width:75%">75%</div></div></td>
-                </tr>
-                <!-- Status -->
-                <tr>
-                    <td style="vertical-align:middle;"><h5>Status</h5></td>
-                    <td style="vertical-align:middle;"><h5>&nbsp;<span id="SrcStatusLabel" class="label">Unknown</span></h5><small id="SrcStatusValue">(no value recieved)</small></td>
-                    <td style="vertical-align:middle;"><h5>&nbsp;<span id="DstStatusLabel" class="label">Unknown</span></h5><small id="DstStatusValue">(no value recieved)</small></td>
-                </tr>
-                <!-- Level Zeitstempel -->
-                <tr>
-                    <td style="vertical-align:middle;"><h5>Level Zeitstempel</h5></td>
-                    <td style="vertical-align:middle;"><h5>&nbsp;<span id="label0" class="label">Unknown</span></h5><small id="value0">(no value recieved)</small></td>
-                    <td style="vertical-align:middle;"><h5>&nbsp;<span id="DstLabel0" class="label">Unknown</span></h5><small id="DstValue0">(no value recieved)</small></td>
-                </tr>
-                <!-- Level cm (Rohwert)-->
-                <tr>
-                    <td style="vertical-align:middle;"><h5>Level cm (Rohwert)</h5></td>
-                    <td style="vertical-align:middle;"><h5>&nbsp;<span id="label1" class="label">Unknown</span></h5><small id="value1">(no value recieved)</small></td>
-                    <td style="vertical-align:middle;"><h5>&nbsp;<span id="DstLabel1" class="label">Unknown</span></h5><small id="DstValue1">(no value recieved)</small></td>
-                </tr>
-                <!-- Level cm -->
-                <tr>
-                    <td style="vertical-align:middle;"><h5>Level cm</h5></td>
-                    <td style="vertical-align:middle;"><h5>&nbsp;<span id="label2" class="label">Unknown</span></h5><small id="value2">(no value recieved)</small></td>
-                    <td style="vertical-align:middle;"><h5>&nbsp;<span id="DstLabel2" class="label">Unknown</span></h5><small id="DstValue2">(no value recieved)</small></td>
-                </tr>
-                <!-- Level % -->
-                <tr>
-                    <td style="vertical-align:middle;"><h5>Level %</h5></td>
-                    <td style="vertical-align:middle;"><h5>&nbsp;<span id="label3" class="label">Unknown</span>&nbsp;<span class="srcLevelSparkline"></span></h5><small id="value3">(no value recieved)</small></td>
-                    <td style="vertical-align:middle;"><h5>&nbsp;<span id="DstLabel3" class="label">Unknown</span>&nbsp;<span class="dstLevelSparkline"></span></h5><small id="DstValue3">(no value recieved)</small></td>
-                </tr>
-                <!-- Level l -->
-                <tr>
-                    <td style="vertical-align:middle;"><h5>Level l</h5></td>
-                    <td style="vertical-align:middle;"><h5>&nbsp;<span id="SrcLitres" class="label">Unknown</span></h5><small id="SrcLitresValue">(no value recieved)</small></td>
-                    <td style="vertical-align:middle;"><h5>&nbsp;<span id="DstLitres" class="label">Unknown</span></h5><small id="DstLitresValue">(no value recieved)</small></td>
-                </tr>
-                <!-- Function Mode Request -->
-                <tr>
-                    <td style="vertical-align:middle;"><h5>Function Mode Request</h5></td>
-                    <td style="vertical-align:middle;"><h5>&nbsp;<span id="FunctionModeRequestLabel" class="label">Unknown</span></h5><small id="FunctionModeRequest">(no value recieved)</small></td>
-                    <td style="vertical-align:middle;"><h5>&nbsp;<span id="DstFunctionModeRequestLabel" class="label">Unknown</span></h5><small id="DstFunctionModeRequest">(no value recieved)</small></td>
-                </tr>
-                <!-- Function Mode Acknowledge -->
-                <tr>
-                    <td style="vertical-align:middle;"><h5>Function Mode Acknowledge</h5></td>
-                    <td style="vertical-align:middle;"><h5>&nbsp;<span id="FunctionModeAcknowledgeLabel" class="label">Unknown</span></h5><small id="FunctionModeAcknowledge">(no value recieved)</small></td>
-                    <td style="vertical-align:middle;"><h5>&nbsp;<span id="DstFunctionModeAcknowledgeLabel" class="label">Unknown</span></h5><small id="DstFunctionModeAcknowledge">(no value recieved)</small></td>
-                </tr>
-            </table>
             <div class="pt-3"></div>
             
             <div class="row" style="background-color:lavender;">
