@@ -293,6 +293,7 @@ void controller::print_stm_steps(void)
 {
     Serial.println("");
     print_step_info(N000_INIT_STEP);
+    print_step_info(N010_WAIT_STEP);
     print_step_info(N999_END);
     Serial.println("");
 }
