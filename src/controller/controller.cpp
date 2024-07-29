@@ -272,7 +272,7 @@ void controller::operating(void)
     {
         case N000_INIT_STEP:
             _start = millis();
-            _step = N010_WAIT_STEP;
+            set_next_step(N010_WAIT_STEP);
             break;
 
         case N010_WAIT_STEP:
@@ -280,11 +280,12 @@ void controller::operating(void)
             if (get_duration_ms(_start) >= 1000)
             {
                 _mqtt->publish(VAL_LIFE_SIGN, "Life sign! " + _ntp->get_local_datetime());
-                _step = N000_INIT_STEP;
+                set_next_step(N999_END);
             }
             break;
 
         case N999_END:
+            set_next_step(N000_INIT_STEP);
             break;
     }
 }
