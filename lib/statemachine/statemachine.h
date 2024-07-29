@@ -12,9 +12,6 @@
 class statemachine
 {
     public:
-        statemachine(unsigned long init_step);
-        ~statemachine();
-
         struct step
         {
             unsigned long id;
@@ -22,14 +19,17 @@ class statemachine
             constexpr operator unsigned long() const { return id; }
         };
 
+        statemachine(step init_step);
+        ~statemachine();
+
         void set_next_step(const step &next);
         step get_step(void);
-        unsigned long get_step_start(void);
+        unsigned long get_step_start_ms(void);
         void print_step_info(const step &s);
 
     private:
         step _step;
-        unsigned long _step_start;
+        unsigned long _step_start_ms;
 };
 
 

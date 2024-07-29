@@ -22,7 +22,7 @@ void rws_webupdate::setup(void)
     MDNS.begin(_dns_host.c_str());
 
     _web_server->on("/", [this]() {
-        std::string text = "Hi! I am " + std::string(_clientId) + std::string(".");
+        std::string text = "Hi! I am " + std::string(_clientId) + std::string(" in version ") + std::string(RWS_VERSION) + std::string(".") ;
         _web_server->send(200, "text/plain", text.c_str());
     });
 

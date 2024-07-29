@@ -7,7 +7,6 @@
 #include <ESP8266mDNS.h>
 #include <ESP8266HTTPUpdateServer.h>
 
-
 class rws_webupdate
 {
     public:

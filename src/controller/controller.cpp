@@ -49,7 +49,8 @@ void controller::setup(void)
 
     print_stm_steps();
     
-    _syslog->log(LOG_INFO, "Setup done. Begin loop() ...");
+    std::string msg = "Setup done. Running version " + std::string(RWS_VERSION) + ". Begin loop() ... ";
+    _syslog->log(LOG_INFO, msg.c_str());
 }
 
 void controller::loop(void)
@@ -70,9 +71,11 @@ void controller::loop(void)
 
     //OTA update functionality
     ArduinoOTA.handle();
-    
+
     _pump_1->loop();
     _pump_2->loop();
+
+    
 
     //check all conditions are ok
     if (!check_all_conditions())
@@ -255,6 +258,7 @@ void controller::mqtt_callback(char* topic, uint8_t* payload, unsigned int lengt
 
                 case 501:
                     Serial.printf("  - MANUAL_VALVE_REQ from dashboard: %s\r\n", payload_to_string(payload, length).c_str());
+                    _light->set_enable(payload[0] == '1');
                     if (payload[0] == '1')
                         _pump_2->set_on_demand();
                     else
@@ -271,8 +275,11 @@ void controller::operating(void)
     switch (get_step())
     {
         case N000_INIT_STEP:
+
             _start = millis();
+            //_light->set_enable(true);
             set_next_step(N010_WAIT_STEP);
+            _syslog->log(LOG_INFO, N000_INIT_STEP.descr);
             break;
 
         case N010_WAIT_STEP:
@@ -280,11 +287,14 @@ void controller::operating(void)
             if (get_duration_ms(_start) >= 1000)
             {
                 _mqtt->publish(VAL_LIFE_SIGN, "Life sign! " + _ntp->get_local_datetime());
+                std::string msg = "Life sign! " + _ntp->get_local_datetime();
+                _syslog->log(LOG_INFO, msg.c_str());
                 set_next_step(N999_END);
             }
             break;
 
         case N999_END:
+            _syslog->log(LOG_INFO, N999_END.descr);
             set_next_step(N000_INIT_STEP);
             break;
     }

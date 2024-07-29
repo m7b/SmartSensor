@@ -1,11 +1,10 @@
 #include "statemachine.h"
 
-statemachine::statemachine(unsigned long init_step)
+//statemachine::statemachine(unsigned long init_step)
+statemachine::statemachine(step init_step)
 {
-    _step.id = init_step;
-    memset(_step.descr, 0, sizeof(_step.descr));
-
-    _step_start = init_step;
+    _step = init_step;
+    _step_start_ms = millis();
 }
 
 
@@ -21,8 +20,8 @@ void statemachine::set_next_step(const step &next_step)
     if (_step == next_step)
         return;
 
-    _step       = next_step;
-    _step_start = millis();
+    _step          = next_step;
+    _step_start_ms = millis();
 
     char buffer [80];
     if (print_step_id)
@@ -40,9 +39,9 @@ statemachine::step statemachine::get_step(void)
 }
 
 
-unsigned long statemachine::get_step_start(void)
+unsigned long statemachine::get_step_start_ms(void)
 {
-    return _step_start;
+    return _step_start_ms;
 }
 
 
