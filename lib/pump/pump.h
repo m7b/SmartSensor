@@ -18,7 +18,13 @@ class pump
         bool is_on(void);
         bool is_off(void);
 
+        void setCallback_on(std::function<void(void)> callback_on);
+        void setCallback_off(std::function<void(void)> callback_off);
+
     private:
+        std::function<void(void)> callback_on;
+        std::function<void(void)> callback_off;
+
         uint8_t _output_pin;
         uint8_t _input_pin;
         bool    _on_state;

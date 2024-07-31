@@ -43,7 +43,12 @@ void controller::setup(void)
     setup_otaupdate();
 
     _pump_1->setup();
+    _pump_1->setCallback_on([this] (void) { this->pump1_on_callback(); });
+    _pump_1->setCallback_off([this] (void) { this->pump1_off_callback(); });
+
     _pump_2->setup();
+    _pump_2->setCallback_on([this] (void) { this->pump2_on_callback(); });
+    _pump_2->setCallback_off([this] (void) { this->pump2_off_callback(); });
 
     _light->set_delay_ms(333);
 
@@ -253,7 +258,7 @@ void controller::mqtt_callback(char* topic, uint8_t* payload, unsigned int lengt
                     else
                         _pump_1->set_off_demand();
                         
-                    _mqtt->publish(MANUAL_PUMP_ACKNOWLEDGE, payload_to_string(payload, length));
+                    //_mqtt->publish(MANUAL_PUMP_ACKNOWLEDGE, payload_to_string(payload, length));
                     break;
 
                 case 501:
@@ -263,7 +268,8 @@ void controller::mqtt_callback(char* topic, uint8_t* payload, unsigned int lengt
                         _pump_2->set_on_demand();
                     else
                         _pump_2->set_off_demand();
-                    _mqtt->publish(MANUAL_VALVE_ACKNOWLEDGE, payload_to_string(payload, length));
+                    
+                    //_mqtt->publish(MANUAL_VALVE_ACKNOWLEDGE, payload_to_string(payload, length));
                     break;
             }
         }
@@ -307,4 +313,24 @@ void controller::print_stm_steps(void)
     print_step_info(N010_WAIT_STEP);
     print_step_info(N999_END);
     Serial.println("");
+}
+
+void controller::pump1_on_callback(void)
+{
+    _mqtt->publish(MANUAL_PUMP_ACKNOWLEDGE, "1", true);
+}
+
+void controller::pump1_off_callback(void)
+{
+    _mqtt->publish(MANUAL_PUMP_ACKNOWLEDGE, "0", true);
+}
+
+void controller::pump2_on_callback(void)
+{
+    _mqtt->publish(MANUAL_VALVE_ACKNOWLEDGE, "1", true);
+}
+
+void controller::pump2_off_callback(void)
+{
+    _mqtt->publish(MANUAL_VALVE_ACKNOWLEDGE, "0", true);
 }

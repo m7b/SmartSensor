@@ -131,8 +131,11 @@ function onMessageArrived(message) {
             if (payload == '0'){
                 $('#ManualPumpReqLabel').text('Off');
             }
-            else{
+            else if (payload == '1'){
                 $('#ManualPumpReqLabel').text('On');
+            }
+            else {
+                $('#ManualPumpReqLabel').text('Unk');
             }
             break;
 
@@ -141,8 +144,11 @@ function onMessageArrived(message) {
             if (payload == '0'){
                 $('#ManualPumpAckLabel').text('Off');
             }
-            else{
+            else if (payload == '1'){
                 $('#ManualPumpAckLabel').text('On');
+            }
+            else {
+                $('#ManualPumpAckLabel').text('Unk');
             }
             break;
 
@@ -151,8 +157,11 @@ function onMessageArrived(message) {
             if (payload == '0'){
                 $('#ManualValveReqLabel').text('Off');
             }
-            else{
+            else if (payload == '1'){
                 $('#ManualValveReqLabel').text('On');
+            }
+            else {
+                $('#ManualValveReqLabel').text('Unk');
             }
             break;
 
@@ -161,8 +170,11 @@ function onMessageArrived(message) {
             if (payload == '0'){
                 $('#ManualValveAckLabel').text('Off');
             }
-            else{
+            else if (payload == '1'){
                 $('#ManualValveAckLabel').text('On');
+            }
+            else {
+                $('#ManualValveAckLabel').text('Unk');
             }
             break;
 

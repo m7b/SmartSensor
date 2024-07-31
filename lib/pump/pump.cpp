@@ -2,6 +2,9 @@
 
 pump::pump(uint8_t output_pin, uint8_t input_pin, bool on_state, uint32_t delay_ms)
 {
+    setCallback_on(NULL);
+    setCallback_off(NULL);
+
     _output_pin = output_pin;
     _input_pin  = input_pin;
     _on_state   = on_state;
@@ -142,6 +145,9 @@ void pump::on(void)
 
     _is_on  = true;
     _is_off = false;
+
+    if (callback_on)
+        callback_on();
 }
 
 void pump::off(void)
@@ -153,6 +159,9 @@ void pump::off(void)
 
     _is_on  = false;
     _is_off = true;
+
+    if (callback_off)
+        callback_off();
 }
 
 
@@ -177,4 +186,14 @@ bool pump::is_on(void)
 bool pump::is_off(void)
 {
     return _is_off;
+}
+
+void pump::setCallback_on(std::function<void(void)> callback_on)
+{
+    this->callback_on = callback_on;
+}
+
+void pump::setCallback_off(std::function<void(void)> callback_off)
+{
+    this->callback_off = callback_off;
 }
