@@ -23,7 +23,7 @@ void statemachine::set_next_step(const step &next_step)
     _step          = next_step;
     _step_start_ms = millis();
 
-    char buffer [80];
+    char buffer [100];
     if (print_step_id)
         snprintf(buffer, sizeof(buffer), "Step %ld: %s\r\n", (unsigned long) _step, _step.descr);
     else
