@@ -49,7 +49,7 @@ void controller::setup(void)
 
     print_stm_steps();
     
-    std::string msg = "Setup done. Running version " + std::string(RWS_VERSION) + ". Begin loop() ... ";
+    std::string msg = "Setup done. Running version " + std::string(FIRMWARE_VERSION_DATE_TIME) + ". Begin loop() ... ";
     _syslog->log(LOG_INFO, msg.c_str());
 }
 

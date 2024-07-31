@@ -4,7 +4,7 @@
 #include <Arduino.h>
 #include <string>
 
-#define RWS_VERSION "2024-07-29-002"
+#define FIRMWARE_VERSION_DATE_TIME FIRMWARE_VERSION ", " __DATE__ ", "  __TIME__
 
 unsigned long get_duration_ms(unsigned long start);
 unsigned long get_duration_us(unsigned long start);
