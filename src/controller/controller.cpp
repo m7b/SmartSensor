@@ -323,6 +323,9 @@ void controller::pump1_on_callback(void)
 void controller::pump1_off_callback(void)
 {
     _mqtt->publish(MANUAL_PUMP_ACKNOWLEDGE, "0", true);
+
+    //Reset Dashboard request
+    _mqtt->publish("WS/RWS/Dashboard/ManualPumpReq", "0", true);
 }
 
 void controller::pump2_on_callback(void)
@@ -333,4 +336,7 @@ void controller::pump2_on_callback(void)
 void controller::pump2_off_callback(void)
 {
     _mqtt->publish(MANUAL_VALVE_ACKNOWLEDGE, "0", true);
+
+    //Reset Dashboard request
+    _mqtt->publish("WS/RWS/Dashboard/ManualValveReq", "0", true);
 }
