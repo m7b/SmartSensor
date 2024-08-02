@@ -296,7 +296,7 @@ void controller::operating(void)
             _start = millis();
             //_light->set_enable(true);
             set_next_step(N010_WAIT_STEP);
-            _syslog->log(LOG_INFO, N000_INIT_STEP.descr);
+            //_syslog->log(LOG_INFO, N000_INIT_STEP.descr);
             break;
 
         case N010_WAIT_STEP:
@@ -311,7 +311,7 @@ void controller::operating(void)
             break;
 
         case N999_END:
-            _syslog->log(LOG_INFO, N999_END.descr);
+            //_syslog->log(LOG_INFO, N999_END.descr);
             set_next_step(N000_INIT_STEP);
             break;
     }
