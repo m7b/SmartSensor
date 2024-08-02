@@ -25,6 +25,21 @@ const static uint64_t ds_time__1std =   36e9;
 
 //std::string self_root_topic(const char *topic);
 
+enum FunctionModes
+{
+    FUNCTION_MODE_PERMANENT_MEASSURE = 48, //'0'
+    FUNCTION_MODE_INTERVAL_MEASURE__5_SEK, //'1'
+    FUNCTION_MODE_INTERVAL_MEASURE_10_SEK, //'2'
+    FUNCTION_MODE_INTERVAL_MEASURE__1_MIN, //'3'
+    FUNCTION_MODE_INTERVAL_MEASURE__5_MIN, //'4'
+    FUNCTION_MODE_DEEP_SLEEP_20_SEK,       //'5'
+    FUNCTION_MODE_DEEP_SLEEP__1_MIN,       //'6'
+    FUNCTION_MODE_DEEP_SLEEP__5_MIN,       //'7'
+    FUNCTION_MODE_DEEP_SLEEP_10_MIN,       //'8'
+    FUNCTION_MODE_DEEP_SLEEP_30_MIN,       //'9'
+    FUNCTION_MODE_DEEP_SLEEP__1_STD        //':'
+};
+
 
 
 //cmd_topic_to_src
