@@ -1,12 +1,12 @@
 #include "pump.h"
 
-pump::pump(uint8_t output_pin, uint8_t input_pin, bool on_state, uint32_t delay_ms)
+pump::pump(uint8_t output_pin, bool on_state, uint32_t delay_ms)
+: statemachine(N000_PUMP_INIT_STEP)
 {
     setCallback_on(NULL);
     setCallback_off(NULL);
 
     _output_pin = output_pin;
-    _input_pin  = input_pin;
     _on_state   = on_state;
     _setup      = false;
 
@@ -16,7 +16,6 @@ pump::pump(uint8_t output_pin, uint8_t input_pin, bool on_state, uint32_t delay_
     _is_on      = false;
     _is_off     = false;
   
-    _step       = 0;
     _delay_ms   = delay_ms; //30000; //300000; //300000ms => 5min
 }
 
@@ -30,7 +29,6 @@ void pump::setup(void)
     //    return;
 
     pinMode(_output_pin, OUTPUT);
-    pinMode(_input_pin, INPUT_PULLUP);
     
     //initially switch pump off
     off();
@@ -40,89 +38,54 @@ void pump::setup(void)
 
 void pump::loop(void)
 {
-    bool ret_val;
     if (!conditions_ok())
         return;
 
-    switch (_step)
+    switch (get_step())
     {
-        case 0: //init
-
+        case N000_PUMP_INIT_STEP:
             _on_demand = false;
             _off_demand = false;
 
-            _step += 10;
+            set_next_step(N010_PUMP_WAIT_FOR_ON_DEMAND_STEP);
             break;
 
-        case 10: //wait button OR mqtt
-            ret_val = !digitalRead(_input_pin);
-            if (ret_val)
-            {
-                _start_entprell = millis();
-                _step += 10;
-            }
-
+        case N010_PUMP_WAIT_FOR_ON_DEMAND_STEP:
             if (_on_demand)
             {
                 _on_demand = false;
-                _step = 30;
+                set_next_step(N020_PUMP_SWITCH_ON_STEP);
             }
-
             break;
 
-        case 20: //entprell
-            ret_val = !digitalRead(_input_pin);
-            if (!ret_val)
-                _step = 0;
-
-            if (get_duration_ms(_start_entprell) >= 200)
-                _step += 10;
-            
-            break;
-
-        case 30: //on via button OR mqtt
+        case N020_PUMP_SWITCH_ON_STEP:
             on();
             _off_demand = false; // if on_demand and off_demand where set
             _start = millis();
-            _step += 10;
+            set_next_step(N030_PUMP_WAIT_FOR_OFF_DEMAND_STEP);
             break;
 
-        case 40:
-            //wait button OR mqtt
-            ret_val = !digitalRead(_input_pin);
-            if (ret_val)
-            {
-                _start_entprell = millis();
-                _step += 10;
-            }
-
+        case N030_PUMP_WAIT_FOR_OFF_DEMAND_STEP:
+            //wait delay
             if (get_duration_ms(_start) >= _delay_ms)
             {
-                _step = 60;
+                set_next_step(N040_PUMP_SWITCH_OFF_STEP);
             }
-
+            //wait _off_demand
             if (_off_demand)
             {
                 _off_demand = false;
-                _step = 60;
+                set_next_step(N040_PUMP_SWITCH_OFF_STEP);
             }
-
-            
             break;
 
-        case 50: //entprell
-            ret_val = !digitalRead(_input_pin);
-            if (!ret_val)
-                _step = 40;
-
-            if (get_duration_ms(_start_entprell) >= 200)
-                _step += 10;
-
-            break;
-
-        case 60:
+        case N040_PUMP_SWITCH_OFF_STEP:
             off();
-            _step = 0;
+            set_next_step(N999_PUMP_END);
+            break;
+
+        case N999_PUMP_END:
+            set_next_step(N000_PUMP_INIT_STEP);
             break;
     }
 }

@@ -18,8 +18,11 @@ controller::controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pub
     _function_mode_dst_ack = 0;
 
     _light = new rgbled(ONBOARD_LED_RED, ONBOARD_LED_GREEN, ONBOARD_LED_BLUE);
-    _pump_1  = new pump(PUMP_1_OUTPUT, PUMP_1_INPUT, false, 30000);  //gießen 30sek
-    _pump_2  = new pump(PUMP_2_OUTPUT, PUMP_2_INPUT, false, 300000); //hoch pumpen 5min
+    _pump_1  = new pump(PUMP_1_OUTPUT, false,  30000);  //gießen 30sek
+    _pump_2  = new pump(PUMP_2_OUTPUT, false, 300000); //hoch pumpen 5min
+
+    _pump_1_button = new OneButton(PUMP_1_INPUT, true, true);
+    _pump_2_button = new OneButton(PUMP_2_INPUT, true, true);
 
     _condition_lost = false;
     _condition_lost_time = "";
@@ -30,6 +33,8 @@ controller::~controller()
     delete _light;
     delete _pump_1;
     delete _pump_2;
+    delete _pump_1_button;
+    delete _pump_2_button;
 }
 
 void controller::setup(void)
@@ -49,6 +54,9 @@ void controller::setup(void)
     _pump_2->setup();
     _pump_2->setCallback_on([this] (void) { this->pump2_on_callback(); });
     _pump_2->setCallback_off([this] (void) { this->pump2_off_callback(); });
+
+    _pump_1_button->attachClick([](void *scope) { ((controller *) scope)->pump1_btn_click();}, this);
+    _pump_2_button->attachClick([](void *scope) { ((controller *) scope)->pump2_btn_click();}, this);
 
     _light->set_delay_ms(333);
 
@@ -77,10 +85,13 @@ void controller::loop(void)
     //OTA update functionality
     ArduinoOTA.handle();
 
+    //Pumps
     _pump_1->loop();
     _pump_2->loop();
 
-    
+    //Buttons
+    _pump_1_button->tick();
+    _pump_2_button->tick();
 
     //check all conditions are ok
     if (!check_all_conditions())
@@ -339,4 +350,22 @@ void controller::pump2_off_callback(void)
 
     //Reset Dashboard request
     _mqtt->publish("WS/RWS/Dashboard/ManualValveReq", "0", true);
+}
+
+void controller::pump1_btn_click(void)
+{
+    if (_pump_1->is_on())
+        _pump_1->set_off_demand();
+        
+    if (_pump_1->is_off())
+        _pump_1->set_on_demand();
+}
+
+void controller::pump2_btn_click(void)
+{
+    if (_pump_2->is_on())
+        _pump_2->set_off_demand();
+        
+    if (_pump_2->is_off())
+        _pump_2->set_on_demand();
 }

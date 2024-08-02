@@ -22,6 +22,7 @@
 #define ONBOARD_LED_GREEN 12
 #define ONBOARD_LED_BLUE  13
 
+#include <OneButton.h>
 #include <pump.h>
 #define PUMP_1_INPUT       5
 #define PUMP_1_OUTPUT     14
@@ -43,6 +44,9 @@ class controller : public statemachine
         rws_syslog *_syslog;
         rws_webupdate *_webUpdate;
         rws_pubsubclient *_mqtt;
+
+        OneButton *_pump_1_button;
+        OneButton *_pump_2_button;
         
         bool _condition_lost;
         std::string _condition_lost_time;
@@ -69,6 +73,9 @@ class controller : public statemachine
         void pump1_off_callback(void);
         void pump2_on_callback(void);
         void pump2_off_callback(void);
+
+        void pump1_btn_click(void);
+        void pump2_btn_click(void);
 
         rgbled *_light;
         pump   *_pump_1;

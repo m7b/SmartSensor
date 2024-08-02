@@ -2,11 +2,12 @@
 #define PUMP_H
 
 #include <rws_common.h>
+#include <statemachine.h>
 
-class pump
+class pump : public statemachine
 {
     public:
-        pump(uint8_t output_pin, uint8_t input_pin, bool on_state, uint32_t delay_ms);
+        pump(uint8_t output_pin, bool on_state, uint32_t delay_ms);
         ~pump();
 
         void setup(void);
@@ -37,15 +38,20 @@ class pump
         bool _is_on;
         bool _is_off;
 
-        uint16_t _step;
-
         uint32_t _delay_ms;
         uint32_t _start;
-        uint32_t _start_entprell;
 
         bool conditions_ok(void);
         void on(void);
         void off(void);
 };
+
+
+STEP_DEF(N000_PUMP_INIT_STEP,                "N000: Init step");
+STEP_DEF(N010_PUMP_WAIT_FOR_ON_DEMAND_STEP,  "N010: Wait for on demand");
+STEP_DEF(N020_PUMP_SWITCH_ON_STEP,           "N020: Switch on pump");
+STEP_DEF(N030_PUMP_WAIT_FOR_OFF_DEMAND_STEP, "N030: Wait for off demand");
+STEP_DEF(N040_PUMP_SWITCH_OFF_STEP,          "N040: Switch off pump");
+STEP_DEF(N999_PUMP_END,                      "N999: End");
 
 #endif // PUMP_H
