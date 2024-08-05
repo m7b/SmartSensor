@@ -329,6 +329,7 @@ void controller::print_stm_steps(void)
 void controller::pump1_on_callback(void)
 {
     _mqtt->publish(MANUAL_PUMP_ACKNOWLEDGE, "1", true);
+    _syslog->log(LOG_INFO, "Pump1 on_callback() triggered.");
 }
 
 void controller::pump1_off_callback(void)
@@ -337,11 +338,14 @@ void controller::pump1_off_callback(void)
 
     //Reset Dashboard request
     _mqtt->publish("WS/RWS/Dashboard/ManualPumpReq", "0", true);
+    
+    _syslog->log(LOG_INFO, "Pump1 off_callback() triggered.");
 }
 
 void controller::pump2_on_callback(void)
 {
     _mqtt->publish(MANUAL_VALVE_ACKNOWLEDGE, "1", true);
+    _syslog->log(LOG_INFO, "Pump2 on_callback() triggered.");
 }
 
 void controller::pump2_off_callback(void)
@@ -350,6 +354,8 @@ void controller::pump2_off_callback(void)
 
     //Reset Dashboard request
     _mqtt->publish("WS/RWS/Dashboard/ManualValveReq", "0", true);
+    
+    _syslog->log(LOG_INFO, "Pump2 off_callback() triggered.");
 }
 
 void controller::pump1_btn_click(void)
