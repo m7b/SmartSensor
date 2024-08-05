@@ -77,6 +77,9 @@ class controller : public statemachine
         void pump1_btn_click(void);
         void pump2_btn_click(void);
 
+        void pump1_btn_long_press_stop(void);
+        void pump2_btn_long_press_stop(void);
+
         rgbled *_light;
         pump   *_pump_1;
         pump   *_pump_2;

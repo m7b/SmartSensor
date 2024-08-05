@@ -58,6 +58,9 @@ void controller::setup(void)
     _pump_1_button->attachClick([](void *scope) { ((controller *) scope)->pump1_btn_click();}, this);
     _pump_2_button->attachClick([](void *scope) { ((controller *) scope)->pump2_btn_click();}, this);
 
+    _pump_1_button->attachLongPressStop([](void *scope) { ((controller *) scope)->pump1_btn_long_press_stop();}, this);
+    _pump_2_button->attachLongPressStop([](void *scope) { ((controller *) scope)->pump2_btn_long_press_stop();}, this);
+
     _light->set_delay_ms(333);
 
     print_stm_steps();
@@ -374,4 +377,14 @@ void controller::pump2_btn_click(void)
         
     if (_pump_2->is_off())
         _pump_2->set_on_demand();
+}
+
+void controller::pump1_btn_long_press_stop(void)
+{
+    _pump_1->set_ls_on_demand();
+}
+
+void controller::pump2_btn_long_press_stop(void)
+{
+    _pump_2->set_ls_on_demand();
 }

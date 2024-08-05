@@ -11,12 +11,16 @@ pump::pump(uint8_t output_pin, bool on_state, uint32_t delay_ms)
     _setup      = false;
 
     _on_demand  = false;
+    _ls_on_demand = false;
     _off_demand = false;
 
     _is_on      = false;
     _is_off     = false;
   
     _delay_ms   = delay_ms; //30000; //300000; //300000ms => 5min
+
+    _libre_strike_count_to_perform = 9;
+    _libre_strike_count = 0;
 }
 
 pump::~pump()
@@ -45,16 +49,22 @@ void pump::loop(void)
     {
         case N000_PUMP_INIT_STEP:
             _on_demand = false;
+            _ls_on_demand = false;
             _off_demand = false;
 
-            set_next_step(N010_PUMP_WAIT_FOR_ON_DEMAND_STEP);
+            set_next_step(N010_PUMP_WAIT_FOR_DEMAND_STEP);
             break;
 
-        case N010_PUMP_WAIT_FOR_ON_DEMAND_STEP:
+        case N010_PUMP_WAIT_FOR_DEMAND_STEP:
             if (_on_demand)
             {
                 _on_demand = false;
                 set_next_step(N020_PUMP_SWITCH_ON_STEP);
+            }
+            else if (_ls_on_demand)
+            {
+                _ls_on_demand = false;
+                set_next_step(N200_PUMP_INIT_LIBERATION_STRIKE_DEMAND_STEP);
             }
             break;
 
@@ -81,6 +91,65 @@ void pump::loop(void)
 
         case N040_PUMP_SWITCH_OFF_STEP:
             off();
+            set_next_step(N999_PUMP_END);
+            break;
+
+
+
+
+        case N200_PUMP_INIT_LIBERATION_STRIKE_DEMAND_STEP:
+            _libre_strike_count = 0;
+            _is_on  = true;
+            _is_off = false;
+            _off_demand = false; // if on_demand and off_demand where set
+            set_next_step(N210_PUMP_LIBERATION_STRIKE_ON_STEP);
+            break;
+
+        case N210_PUMP_LIBERATION_STRIKE_ON_STEP:
+            libre_strike_on();
+            _start = millis();
+            set_next_step(N220_PUMP_LIBERATION_STRIKE_ON_WAIT_STEP);
+            break;
+
+        case N220_PUMP_LIBERATION_STRIKE_ON_WAIT_STEP:
+            if (get_duration_ms(_start) >= 125)
+                set_next_step(N230_PUMP_LIBERATION_STRIKE_OFF_STEP);
+            break;
+
+        case N230_PUMP_LIBERATION_STRIKE_OFF_STEP:
+            libre_strike_off();
+            _start = millis();
+            set_next_step(N240_PUMP_LIBERATION_STRIKE_OFF_WAIT_STEP);
+            break;
+
+        case N240_PUMP_LIBERATION_STRIKE_OFF_WAIT_STEP:
+            if (get_duration_ms(_start) >= 125)
+                set_next_step(N250_PUMP_LIBERATION_STRIKE_CHECK_REPEAT_STEP);
+            break;
+
+        case N250_PUMP_LIBERATION_STRIKE_CHECK_REPEAT_STEP:
+            if (_off_demand)
+            {
+                _off_demand = false;
+                set_next_step(N260_PUMP_LIBERATION_STRIKE_FINALIZE_STEP);
+            }
+            else
+            {
+                if (_libre_strike_count < _libre_strike_count_to_perform)
+                {
+                    _libre_strike_count++;
+                    set_next_step(N210_PUMP_LIBERATION_STRIKE_ON_STEP);
+                }
+                else
+                {
+                    set_next_step(N260_PUMP_LIBERATION_STRIKE_FINALIZE_STEP);
+                }
+            }
+            break;
+
+        case N260_PUMP_LIBERATION_STRIKE_FINALIZE_STEP:
+            _is_on  = false;
+            _is_off = true;
             set_next_step(N999_PUMP_END);
             break;
 
@@ -118,7 +187,7 @@ void pump::off(void)
     if (_on_state)
         digitalWrite(_output_pin, LOW);
     else
-        digitalWrite(_output_pin, HIGH); 
+        digitalWrite(_output_pin, HIGH);
 
     _is_on  = false;
     _is_off = true;
@@ -127,24 +196,25 @@ void pump::off(void)
         callback_off();
 }
 
-
 void pump::set_on_demand(void)
 {
     _on_demand = true;
 }
 
+void pump::set_ls_on_demand(void)
+{
+    _ls_on_demand = true;
+}
 
 void pump::set_off_demand(void)
 {
     _off_demand = true;
 }
 
-
 bool pump::is_on(void)
 {
     return _is_on;
 }
-
 
 bool pump::is_off(void)
 {
@@ -159,4 +229,20 @@ void pump::setCallback_on(std::function<void(void)> callback_on)
 void pump::setCallback_off(std::function<void(void)> callback_off)
 {
     this->callback_off = callback_off;
+}
+
+void pump::libre_strike_on(void)
+{
+    if (_on_state)
+        digitalWrite(_output_pin, HIGH);
+    else
+        digitalWrite(_output_pin, LOW);
+}
+
+void pump::libre_strike_off(void)
+{
+    if (_on_state)
+        digitalWrite(_output_pin, LOW);
+    else
+        digitalWrite(_output_pin, HIGH);
 }
