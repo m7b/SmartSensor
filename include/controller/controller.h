@@ -71,8 +71,12 @@ class controller : public statemachine
         void mqtt_callback(char* topic, uint8_t* payload, unsigned int length);
         void pump1_on_callback(void);
         void pump1_off_callback(void);
+        void pump1_ls_on_callback(void);
+        void pump1_ls_off_callback(void);
         void pump2_on_callback(void);
         void pump2_off_callback(void);
+        void pump2_ls_on_callback(void);
+        void pump2_ls_off_callback(void);
 
         void pump1_btn_click(void);
         void pump2_btn_click(void);

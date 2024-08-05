@@ -50,10 +50,14 @@ void controller::setup(void)
     _pump_1->setup();
     _pump_1->setCallback_on([this] (void) { this->pump1_on_callback(); });
     _pump_1->setCallback_off([this] (void) { this->pump1_off_callback(); });
+    _pump_1->setCallback_ls_on([this] (void) { this->pump1_ls_on_callback(); });
+    _pump_1->setCallback_ls_off([this] (void) { this->pump1_ls_off_callback(); });
 
     _pump_2->setup();
     _pump_2->setCallback_on([this] (void) { this->pump2_on_callback(); });
     _pump_2->setCallback_off([this] (void) { this->pump2_off_callback(); });
+    _pump_2->setCallback_ls_on([this] (void) { this->pump2_ls_on_callback(); });
+    _pump_2->setCallback_ls_off([this] (void) { this->pump2_ls_off_callback(); });
 
     _pump_1_button->attachClick([](void *scope) { ((controller *) scope)->pump1_btn_click();}, this);
     _pump_2_button->attachClick([](void *scope) { ((controller *) scope)->pump2_btn_click();}, this);
@@ -387,4 +391,24 @@ void controller::pump1_btn_long_press_stop(void)
 void controller::pump2_btn_long_press_stop(void)
 {
     _pump_2->set_ls_on_demand();
+}
+
+void controller::pump1_ls_on_callback(void)
+{
+    _syslog->log(LOG_INFO, "Pump1 ls_on_callback() triggered.");
+}
+
+void controller::pump1_ls_off_callback(void)
+{
+    _syslog->log(LOG_INFO, "Pump1 ls_off_callback() triggered.");
+}
+
+void controller::pump2_ls_on_callback(void)
+{
+    _syslog->log(LOG_INFO, "Pump2 ls_on_callback() triggered.");
+}
+
+void controller::pump2_ls_off_callback(void)
+{
+    _syslog->log(LOG_INFO, "Pump2 ls_off_callback() triggered.");
 }

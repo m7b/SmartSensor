@@ -23,9 +23,15 @@ class pump : public statemachine
         void setCallback_on(std::function<void(void)> callback_on);
         void setCallback_off(std::function<void(void)> callback_off);
 
+        void setCallback_ls_on(std::function<void(void)> callback_ls_on);
+        void setCallback_ls_off(std::function<void(void)> callback_ls_off);
+
     private:
         std::function<void(void)> callback_on;
         std::function<void(void)> callback_off;
+
+        std::function<void(void)> callback_ls_on;
+        std::function<void(void)> callback_ls_off;
 
         uint8_t _output_pin;
         uint8_t _input_pin;

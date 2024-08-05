@@ -5,6 +5,9 @@ pump::pump(uint8_t output_pin, bool on_state, uint32_t delay_ms)
 {
     setCallback_on(NULL);
     setCallback_off(NULL);
+    
+    setCallback_ls_on(NULL);
+    setCallback_ls_off(NULL);
 
     _output_pin = output_pin;
     _on_state   = on_state;
@@ -102,6 +105,8 @@ void pump::loop(void)
             _is_on  = true;
             _is_off = false;
             _off_demand = false; // if on_demand and off_demand where set
+            if (callback_ls_on)
+                callback_ls_on();
             set_next_step(N210_PUMP_LIBERATION_STRIKE_ON_STEP);
             break;
 
@@ -150,6 +155,8 @@ void pump::loop(void)
         case N260_PUMP_LIBERATION_STRIKE_FINALIZE_STEP:
             _is_on  = false;
             _is_off = true;
+            if (callback_ls_off)
+                callback_ls_off();
             set_next_step(N999_PUMP_END);
             break;
 
@@ -229,6 +236,16 @@ void pump::setCallback_on(std::function<void(void)> callback_on)
 void pump::setCallback_off(std::function<void(void)> callback_off)
 {
     this->callback_off = callback_off;
+}
+
+void pump::setCallback_ls_on(std::function<void(void)> callback_ls_on)
+{
+    this->callback_ls_on = callback_ls_on;
+}
+
+void pump::setCallback_ls_off(std::function<void(void)> callback_ls_off)
+{
+    this->callback_ls_off = callback_ls_off;
 }
 
 void pump::libre_strike_on(void)
