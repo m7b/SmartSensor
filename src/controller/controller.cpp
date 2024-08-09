@@ -3,7 +3,7 @@
 //NTP stuff; Called by time.h handler
 extern time_t _MJBgetNtpTime(void);
 
-controller::controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclient *mqtt, rws_webupdate *webUpd)
+controller::controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_asyncmqttclient *mqtt, rws_webupdate *webUpd)
 : statemachine(N000_INIT_STEP)
 {
     _wifiMulti   = wifi;
@@ -83,9 +83,6 @@ void controller::loop(void)
     _ntp->loop();
     timeStatus();
 
-    //check and renew MQTT connection
-    _mqtt->check_connection();
-
     //Web-Update functionality
     _webUpdate->loop();
 
@@ -120,9 +117,6 @@ void controller::loop(void)
         std::string msg = "In loop(): Check all conditions failed at " + _condition_lost_time + " (" + _wlan_status + ")";
         _syslog->log(LOG_INFO, msg.c_str());
     }
-
-    //keep mqtt alive
-    _mqtt->loop();
 
     //control rgb led
     _light->loop();
@@ -188,12 +182,6 @@ void controller::setup_mqtt(void)
 {
     //Set topics to subscribe
     _mqtt->set_topics_to_subscribe(&topics_to_subscribe);
-
-    //Set callback function
-    _mqtt->setCallback([this] (char* topic, uint8_t* payload, unsigned int length) { this->mqtt_callback(topic, payload, length); });
-
-    // We start by connecting to MQTT server
-    _mqtt->check_connection();
 }
 
 
@@ -310,7 +298,7 @@ void controller::operating(void)
 
             if (get_duration_ms(_start) >= 1000)
             {
-                _mqtt->publish(VAL_LIFE_SIGN, "Life sign! " + _ntp->get_local_datetime());
+   //             _mqtt->publish(VAL_LIFE_SIGN, "Life sign! " + _ntp->get_local_datetime());
                 std::string msg = "Life sign! " + _ntp->get_local_datetime();
                 _syslog->log(LOG_INFO, msg.c_str());
                 set_next_step(N999_END);
@@ -335,32 +323,32 @@ void controller::print_stm_steps(void)
 
 void controller::pump1_on_callback(void)
 {
-    _mqtt->publish(MANUAL_PUMP_ACKNOWLEDGE, "1", true);
+//    _mqtt->publish(MANUAL_PUMP_ACKNOWLEDGE, "1", true);
     _syslog->log(LOG_INFO, "Pump1 on_callback() triggered.");
 }
 
 void controller::pump1_off_callback(void)
 {
-    _mqtt->publish(MANUAL_PUMP_ACKNOWLEDGE, "0", true);
+//    _mqtt->publish(MANUAL_PUMP_ACKNOWLEDGE, "0", true);
 
     //Reset Dashboard request
-    _mqtt->publish("WS/RWS/Dashboard/ManualPumpReq", "0", true);
+//    _mqtt->publish("WS/RWS/Dashboard/ManualPumpReq", "0", true);
     
     _syslog->log(LOG_INFO, "Pump1 off_callback() triggered.");
 }
 
 void controller::pump2_on_callback(void)
 {
-    _mqtt->publish(MANUAL_VALVE_ACKNOWLEDGE, "1", true);
+//    _mqtt->publish(MANUAL_VALVE_ACKNOWLEDGE, "1", true);
     _syslog->log(LOG_INFO, "Pump2 on_callback() triggered.");
 }
 
 void controller::pump2_off_callback(void)
 {
-    _mqtt->publish(MANUAL_VALVE_ACKNOWLEDGE, "0", true);
+//    _mqtt->publish(MANUAL_VALVE_ACKNOWLEDGE, "0", true);
 
     //Reset Dashboard request
-    _mqtt->publish("WS/RWS/Dashboard/ManualValveReq", "0", true);
+//    _mqtt->publish("WS/RWS/Dashboard/ManualValveReq", "0", true);
     
     _syslog->log(LOG_INFO, "Pump2 off_callback() triggered.");
 }

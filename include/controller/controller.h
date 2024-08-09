@@ -6,7 +6,7 @@
 #include <rws_wifi.h>
 #include <rws_ntp.h>
 #include <rws_syslog.h>
-#include <rws_pubsubclient.h>
+#include <rws_asyncmqttclient.h>
 #include <rws_webupdate.h>
 #include <statemachine.h>
 
@@ -32,7 +32,7 @@
 class controller : public statemachine
 {
     public:
-        controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclient *mqtt, rws_webupdate *webUpd);
+        controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_asyncmqttclient *mqtt, rws_webupdate *webUpd);
         ~controller();
 
         void setup(void);
@@ -43,7 +43,7 @@ class controller : public statemachine
         rws_ntp *_ntp;
         rws_syslog *_syslog;
         rws_webupdate *_webUpdate;
-        rws_pubsubclient *_mqtt;
+        rws_asyncmqttclient *_mqtt;
 
         OneButton *_pump_1_button;
         OneButton *_pump_2_button;
