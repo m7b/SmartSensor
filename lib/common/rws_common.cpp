@@ -32,7 +32,7 @@ constexpr unsigned long get_id(void)
 */
 
 
-std::string payload_to_string(uint8_t* payload, unsigned int length)
+std::string payload_to_string(char* payload, unsigned int length)
 {
     std::string tmp;
 

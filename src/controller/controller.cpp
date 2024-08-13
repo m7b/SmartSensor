@@ -182,6 +182,15 @@ void controller::setup_mqtt(void)
 {
     //Set topics to subscribe
     _mqtt->set_topics_to_subscribe(&topics_to_subscribe);
+
+    _mqtt->set_onMqttConnect([this] (bool sessionPresent) { this->onMqttConnect(sessionPresent); });
+    _mqtt->set_onMqttDisconnect([this] (AsyncMqttClientDisconnectReason reason) { this->onMqttDisconnect(reason); });
+    _mqtt->set_onMqttSubscribe([this] (uint16_t packetId, uint8_t qos) { this->onMqttSubscribe(packetId, qos); });
+    _mqtt->set_onMqttUnsubscribe([this] (uint16_t packetId) { this->onMqttUnsubscribe(packetId); });
+    _mqtt->set_onMqttMessage([this] (char* topic, char* payload, AsyncMqttClientMessageProperties properties, size_t len, size_t index, size_t total) { this->onMqttMessage(topic, payload, properties, len, index, total); });
+    _mqtt->set_onMqttPublish([this] (uint16_t packetId) { this->onMqttPublish(packetId); });
+    _mqtt->set_server();
+    _mqtt->connect();
 }
 
 
@@ -244,11 +253,51 @@ bool controller::check_all_conditions(void)
     return rc;
 }
 
-void controller::mqtt_callback(char* topic, uint8_t* payload, unsigned int length) {
-    Serial.print("  - Message arrived [");
-    Serial.print(topic);
-    Serial.print("] ");
-    Serial.println();
+void controller::onMqttConnect(bool sessionPresent)
+{
+    std::string msg = "Connected to MQTT. Session present: " + std::string(sessionPresent ? "true" : "false");
+    _syslog->log(LOG_INFO, msg.c_str());
+
+    // SUBSCRIBE
+    _mqtt->do_subscribe();
+    
+    // PUBLISH
+}
+
+void controller::onMqttDisconnect(AsyncMqttClientDisconnectReason reason)
+{
+    std::string msg = "Disconnected from MQTT.";
+    _syslog->log(LOG_INFO, msg.c_str());
+
+    if (WiFi.isConnected()) {
+        _mqtt->mqttReconnectTimer.once(2, [&](void) { _mqtt->connect(); });
+    }
+}
+
+void controller::onMqttSubscribe(uint16_t packetId, uint8_t qos)
+{
+    std::string msg = "Subscribe acknowledged. PacketId: " + std::to_string(packetId) + ", qos: " + std::to_string(qos) + ".";
+    _syslog->log(LOG_INFO, msg.c_str());
+}
+
+void controller::onMqttUnsubscribe(uint16_t packetId)
+{
+    std::string msg = "Unsubscribe acknowledged. PacketId: " + std::to_string(packetId) + ".";
+    _syslog->log(LOG_INFO, msg.c_str());
+}
+
+void controller::onMqttMessage(char* topic, char* payload, AsyncMqttClientMessageProperties properties, size_t len, size_t index, size_t total)
+{
+    std::string msg = "Publish received." +
+        std::string(" topic: ") + std::string(topic) +
+        std::string(", qos: ") + std::to_string(properties.qos) +
+        std::string(", dup: ") + std::to_string(properties.dup) +
+        std::string(", retain: ") + std::to_string(properties.retain) +
+        std::string(", len: ") + std::to_string(len) +
+        std::string(", index: ") + std::to_string(index) +
+        std::string(", total: ") + std::to_string(total);
+    _syslog->log(LOG_INFO, msg.c_str());
+    Serial.print(msg.c_str());
 
     for(auto el: topics_to_subscribe)
     {
@@ -257,29 +306,31 @@ void controller::mqtt_callback(char* topic, uint8_t* payload, unsigned int lengt
             switch(std::get<TP_NUM>(el))
             {
                 case 500:
-                    Serial.printf("  - MANUAL_PUMP_REQ from dashboard: %s\r\n", payload_to_string(payload, length).c_str());
+                    Serial.printf("  - MANUAL_PUMP_REQ from dashboard: %s\r\n", payload_to_string(payload, len).c_str());
                     _light->set_enable(payload[0] == '1');
                     if (payload[0] == '1')
                         _pump_1->set_on_demand();
                     else
                         _pump_1->set_off_demand();
-                        
-                    //_mqtt->publish(MANUAL_PUMP_ACKNOWLEDGE, payload_to_string(payload, length));
                     break;
 
                 case 501:
-                    Serial.printf("  - MANUAL_VALVE_REQ from dashboard: %s\r\n", payload_to_string(payload, length).c_str());
+                    Serial.printf("  - MANUAL_VALVE_REQ from dashboard: %s\r\n", payload_to_string(payload, len).c_str());
                     _light->set_enable(payload[0] == '1');
                     if (payload[0] == '1')
                         _pump_2->set_on_demand();
                     else
                         _pump_2->set_off_demand();
-                    
-                    //_mqtt->publish(MANUAL_VALVE_ACKNOWLEDGE, payload_to_string(payload, length));
                     break;
             }
         }
     }
+}
+
+void controller::onMqttPublish(uint16_t packetId)
+{
+    std::string msg = "Publish acknowledged. PacketId: " + std::to_string(packetId) + ".";
+    _syslog->log(LOG_INFO, msg.c_str());
 }
 
 void controller::operating(void)
@@ -298,8 +349,8 @@ void controller::operating(void)
 
             if (get_duration_ms(_start) >= 1000)
             {
-   //             _mqtt->publish(VAL_LIFE_SIGN, "Life sign! " + _ntp->get_local_datetime());
                 std::string msg = "Life sign! " + _ntp->get_local_datetime();
+                _mqtt->publish(VAL_LIFE_SIGN, QOS0, RETAIN_ON, msg.c_str());
                 _syslog->log(LOG_INFO, msg.c_str());
                 set_next_step(N999_END);
             }
@@ -323,32 +374,32 @@ void controller::print_stm_steps(void)
 
 void controller::pump1_on_callback(void)
 {
-//    _mqtt->publish(MANUAL_PUMP_ACKNOWLEDGE, "1", true);
+    _mqtt->publish(MANUAL_PUMP_ACKNOWLEDGE, QOS0, RETAIN_ON, "1");
     _syslog->log(LOG_INFO, "Pump1 on_callback() triggered.");
 }
 
 void controller::pump1_off_callback(void)
 {
-//    _mqtt->publish(MANUAL_PUMP_ACKNOWLEDGE, "0", true);
+    _mqtt->publish(MANUAL_PUMP_ACKNOWLEDGE, QOS0, RETAIN_ON, "0");
 
     //Reset Dashboard request
-//    _mqtt->publish("WS/RWS/Dashboard/ManualPumpReq", "0", true);
+    _mqtt->publish("WS/RWS/Dashboard/ManualPumpReq", QOS0, RETAIN_ON, "0");
     
     _syslog->log(LOG_INFO, "Pump1 off_callback() triggered.");
 }
 
 void controller::pump2_on_callback(void)
 {
-//    _mqtt->publish(MANUAL_VALVE_ACKNOWLEDGE, "1", true);
+    _mqtt->publish(MANUAL_VALVE_ACKNOWLEDGE, QOS0, RETAIN_ON, "1");
     _syslog->log(LOG_INFO, "Pump2 on_callback() triggered.");
 }
 
 void controller::pump2_off_callback(void)
 {
-//    _mqtt->publish(MANUAL_VALVE_ACKNOWLEDGE, "0", true);
+    _mqtt->publish(MANUAL_VALVE_ACKNOWLEDGE, QOS0, RETAIN_ON, "0");
 
     //Reset Dashboard request
-//    _mqtt->publish("WS/RWS/Dashboard/ManualValveReq", "0", true);
+    _mqtt->publish("WS/RWS/Dashboard/ManualValveReq", QOS0, RETAIN_ON, "0");
     
     _syslog->log(LOG_INFO, "Pump2 off_callback() triggered.");
 }

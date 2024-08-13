@@ -68,7 +68,15 @@ class controller : public statemachine
 
         bool check_all_conditions(void);
 
-        void mqtt_callback(char* topic, uint8_t* payload, unsigned int length);
+        //MQTT callbacks
+        void onMqttConnect(bool sessionPresent);
+        void onMqttDisconnect(AsyncMqttClientDisconnectReason reason);
+        void onMqttSubscribe(uint16_t packetId, uint8_t qos);
+        void onMqttUnsubscribe(uint16_t packetId);
+        void onMqttMessage(char* topic, char* payload, AsyncMqttClientMessageProperties properties, size_t len, size_t index, size_t total);
+        void onMqttPublish(uint16_t packetId);
+
+        //Pump callbacks
         void pump1_on_callback(void);
         void pump1_off_callback(void);
         void pump1_ls_on_callback(void);
@@ -78,9 +86,9 @@ class controller : public statemachine
         void pump2_ls_on_callback(void);
         void pump2_ls_off_callback(void);
 
+        //Button callbacks
         void pump1_btn_click(void);
         void pump2_btn_click(void);
-
         void pump1_btn_long_press_stop(void);
         void pump2_btn_long_press_stop(void);
 
