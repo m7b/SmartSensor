@@ -310,8 +310,8 @@ void controller::operating(void)
 
             if (get_duration_ms(_start) >= 1000)
             {
-                _mqtt->publish(VAL_LIFE_SIGN, "Life sign! " + _ntp->get_local_datetime() + "; ESP.getFreeHeap(): " + std::to_string(ESP.getFreeHeap()));
-                std::string msg = "Life sign! " + _ntp->get_local_datetime();
+                std::string msg = "Life sign! " + _ntp->get_local_datetime() + "; ESP.getFreeHeap(): " + std::to_string(ESP.getFreeHeap());
+                _mqtt->publish(VAL_LIFE_SIGN, msg);
                 _syslog->log(LOG_INFO, msg.c_str());
                 set_next_step(N999_END);
             }
