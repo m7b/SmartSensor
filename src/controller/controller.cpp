@@ -27,6 +27,9 @@ controller::controller(ESP8266WiFiClass *wifi, rws_ntp *ntp, rws_syslog *syslog,
 
     _condition_lost = false;
     _condition_lost_time = "";
+
+    // Declare Data point InfluxDB
+    _sensor = new Point("controller");
 }
 
 controller::~controller()
@@ -36,13 +39,14 @@ controller::~controller()
     delete _pump_2;
     delete _pump_1_button;
     delete _pump_2_button;
+    delete _sensor;
 }
 
 void controller::setup(void)
 {
     setup_serial();
     setup_wifi();
-    //setup_ntp();
+    setup_ntp();
     setup_syslog();
     setup_mqtt();
     setup_webupdate();
@@ -80,7 +84,6 @@ void controller::loop(void)
 {
     //update time from NTP on demand, see NTP_UPDATE_INTERVAL_MS
     _ntp->loop();
-    timeStatus();
 
     //mqtt
     _mqtt->loop();
@@ -129,8 +132,6 @@ void controller::setup_wifi(void)
 
     wifiConnectHandler = _wifi->onStationModeGotIP(std::bind(&controller::onWifiConnect, this, std::placeholders::_1));
     
-
-
     _wifi->hostname(DEVICE_HOSTNAME);
     _wifi->mode(WIFI_STA);
 
@@ -277,11 +278,35 @@ void controller::operating(void)
 
             if (get_duration_ms(_start) >= 5000)
             {
-                
-                std::string msg = "Life sign!;" + _ntp->get_local_datetime() + ";ESP.getFreeHeap() = " + std::to_string(ESP.getFreeHeap()) + "; mqtt: " + std::to_string(_mqtt->connected());
-                _mqtt->publish(VAL_LIFE_SIGN, msg.c_str(), QOS0, RETAIN_ON);
+                uint32_t    ifree_heap  = ESP.getFreeHeap();
+                int8_t      iRSSI       = WiFi.RSSI();
+                std::string free_heap   = std::to_string(ifree_heap);
+                std::string mqtt_con    = std::to_string(_mqtt->connected());
+                std::string influx_con  = std::to_string(_influx->validateConnection());
+                int         ibrightness = analogRead(A0);
+                std::string brightness  = std::to_string(ibrightness);
+
+                std::string msg = "Life sign: " + _ntp->get_local_datetime() + "; FreeHeap: " + free_heap + "; mqtt: " + mqtt_con + "; InfluxDB: " + influx_con;
+                _mqtt->publish(STATUS, msg.c_str(), QOS0, RETAIN_ON);
+                _mqtt->publish(VAL_AMBIENT_BRIGHTNESS, brightness.c_str(), QOS0, RETAIN_ON);
                 _syslog->log(LOG_INFO, msg.c_str());
                 Serial.println(msg.c_str());
+
+                // Clear fields for reusing the point. Tags will remain the same as set above.
+                _sensor->clearFields();
+
+                // Store measured value into point
+                // Report RSSI of currently connected network
+                _sensor->addField("wifi_rssi", iRSSI);
+                _sensor->addField("free_heap", ifree_heap);
+                _sensor->addField("brightness", ibrightness); //https://elektro.turanis.de/html/prj397/index.html#ExIIIEingebauterLDR
+
+                // Print what are we exactly writing
+                Serial.print("Writing: ");
+                Serial.println(_sensor->toLineProtocol());
+
+                //Write Point
+                _influx->writePoint(*_sensor);
 
                 set_next_step(N999_END);
             }

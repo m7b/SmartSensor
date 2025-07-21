@@ -4,6 +4,7 @@
 #include "rws_common.h"
 
 #include <InfluxDbClient.h>
+#include <InfluxDbCloud.h>
 
 class rws_influxdbclient : public InfluxDBClient
 {

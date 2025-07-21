@@ -111,9 +111,9 @@
  * @brief InfluxDB server connection info
  * 
  */
-#define INFLUXDB_SERVER "192.168.0.1"
+#define INFLUXDB_URL    "192.168.0.1"
+#define INFLUXDB_TOKEN  "token"
 #define INFLUXDB_ORG    "org"
 #define INFLUXDB_BUCKET "bucket"
-#define INFLUXDB_TOKEN  "token"
 
 #endif // COMMON_SETTINGS_H

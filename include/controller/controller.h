@@ -101,6 +101,9 @@ class controller : public statemachine
         void print_stm_steps(void);
 
         unsigned long _start;
+
+        // Declare Data point InfluxDB
+        Point *_sensor;
 };
 
 
