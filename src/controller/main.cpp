@@ -17,7 +17,7 @@ ESP8266HTTPUpdateServer httpUpdater;
 rws_webupdate webUpdate(MQTT_CLIENT_ID, &httpServer, &httpUpdater, MQTT_CLIENT_ID);
 //Web-Updater things---------------------
 
-controller ctrl(&WiFi, &ntp, &syslog, &mqtt, &webUpdate);
+controller ctrl(&WiFi, &ntp, &syslog, &mqtt, &webUpdate, &influx);
 
 /**
  * @brief setup section of board

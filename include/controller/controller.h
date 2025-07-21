@@ -32,7 +32,7 @@
 class controller : public statemachine
 {
     public:
-        controller(ESP8266WiFiClass *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_mqttclient *mqtt, rws_webupdate *webUpd);
+        controller(ESP8266WiFiClass *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_mqttclient *mqtt, rws_webupdate *webUpd, rws_influxdbclient *influx);
         ~controller();
 
         void setup(void);
@@ -44,6 +44,7 @@ class controller : public statemachine
         rws_syslog *_syslog;
         rws_webupdate *_webUpdate;
         rws_mqttclient *_mqtt;
+        rws_influxdbclient *_influx;
 
         OneButton *_pump_1_button;
         OneButton *_pump_2_button;
@@ -74,14 +75,6 @@ class controller : public statemachine
         //WiFi events
         void onWifiConnect(const WiFiEventStationModeGotIP& event);
         void onWifiDisconnect(const WiFiEventStationModeDisconnected& event);
-
-
-        //MQTT callbacks
-        void onMqttConnect(bool sessionPresent);
-        void onMqttSubscribe(uint16_t packetId, uint8_t qos);
-        void onMqttUnsubscribe(uint16_t packetId);
-        void onMqttMessage(char* topic, char* payload, size_t len, size_t index, size_t total);
-        void onMqttPublish(uint16_t packetId);
 
         //Pump callbacks
         void pump1_on_callback(void);

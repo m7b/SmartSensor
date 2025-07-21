@@ -3,7 +3,7 @@
 //NTP stuff; Called by time.h handler
 extern time_t _MJBgetNtpTime(void);
 
-controller::controller(ESP8266WiFiClass *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_mqttclient *mqtt, rws_webupdate *webUpd)
+controller::controller(ESP8266WiFiClass *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_mqttclient *mqtt, rws_webupdate *webUpd, rws_influxdbclient *influx)
 : statemachine(N000_INIT_STEP)
 {
     _wifi        = wifi;
@@ -11,6 +11,7 @@ controller::controller(ESP8266WiFiClass *wifi, rws_ntp *ntp, rws_syslog *syslog,
     _syslog      = syslog;
     _webUpdate   = webUpd;
     _mqtt        = mqtt;
+    _influx      = influx;
 
     _function_mode_src_req = 0;
     _function_mode_src_ack = 0;
@@ -126,14 +127,6 @@ void controller::setup_wifi(void)
 {
     Serial.println("--> setup_wifi()");
 
-    //wifiConnectHandler = WiFi.onStationModeGotIP([this] (const WiFiEventStationModeGotIP& event) { this->onWifiConnect_2(event); });
-    //wifiDisconnectHandler = WiFi.onStationModeDisconnected([this] (const WiFiEventStationModeDisconnected& event) { this->onWifiDisconnect(event); });
-
- /*   wifiConnectHandler = WiFi.onStationModeGotIP([this] (const WiFiEventStationModeGotIP& event) {
-        Serial.println("--> onStationModeGotIP()");
-    //    this->_syslog->log(LOG_INFO, "--> onWifiConnect()");
-    }); */
-
     wifiConnectHandler = _wifi->onStationModeGotIP(std::bind(&controller::onWifiConnect, this, std::placeholders::_1));
     
 
@@ -177,20 +170,27 @@ void controller::setup_mqtt(void)
     Serial.println("--> setup_mqtt()");
 
     //Set topics to subscribe
-    _mqtt->set_topics_to_subscribe(&topics_to_subscribe);
-    _mqtt->do_subscribe();
+    _mqtt->subscribe("WS/RWS/#", [this](const char * topic, const char * payload) {
+        Serial.printf("Received topic '%s': %s\n", topic, payload);
 
-    //_mqtt_v2->set_onMqttConnect([this] (bool sessionPresent) { this->onMqttConnect(sessionPresent); });
-//    _mqtt_v2->set_onMqttConnect([](void *scope) { ((controller *) scope)->onMqttConnect(sessionPresent);}, this);
-//    _mqtt_v2->onConnect([this] (bool sessionPresent) { this->onMqttConnect(sessionPresent); });
-//    _mqtt_v2->onDisconnect([this] (AsyncMqttClientDisconnectReason reason) { this->onMqttDisconnect(reason); });
-/*
-    _mqtt->set_onMqttSubscribe([this] (uint16_t packetId, uint8_t qos) { this->onMqttSubscribe(packetId, qos); });
-    _mqtt->set_onMqttUnsubscribe([this] (uint16_t packetId) { this->onMqttUnsubscribe(packetId); });
-    _mqtt->set_onMqttMessage([this] (char* topic, char* payload, AsyncMqttClientMessageProperties properties, size_t len, size_t index, size_t total) { this->onMqttMessage(topic, payload, properties, len, index, total); });
-    _mqtt->set_onMqttPublish([this] (uint16_t packetId) { this->onMqttPublish(packetId); });
-*/
-//    _mqtt_v2->setServer(MQTT_SERVER, MQTT_PORT);
+        if (strcmp(topic, "WS/RWS/Dashboard/ManualPumpReq") == 0) {
+            _light->set_enable(payload[0] == '1');
+            if (payload[0] == '1')
+                _pump_1->set_on_demand();
+            else
+                _pump_1->set_off_demand();
+        }
+
+        if (strcmp(topic, "WS/RWS/Dashboard/ManualValveReq") == 0) {
+            _light->set_enable(payload[0] == '1');
+            if (payload[0] == '1')
+                _pump_2->set_on_demand();
+            else
+                _pump_2->set_off_demand();
+        }
+
+    });
+
     _mqtt->begin();
 
     _syslog->log(LOG_INFO, "--> End setup_mqtt()");
@@ -259,67 +259,6 @@ bool controller::check_all_conditions(void)
     rc = rc & _ntp->update(); */
 
     return rc;
-}
-
-void controller::onMqttConnect(bool sessionPresent)
-{
-//    std::string msg = "Connected to MQTT. Session present: " + std::string(sessionPresent ? "true" : "false");
-    //_syslog->log(LOG_INFO, msg.c_str());
-//    Serial.println(msg.c_str());
-    Serial.println("MQTT connected !!!!!!!!!!!!!!!!!!!!!!!!");
-
-    // SUBSCRIBE
-//    _mqtt->do_subscribe();
-    
-    // PUBLISH
-}
-
-void controller::onMqttSubscribe(uint16_t packetId, uint8_t qos)
-{
-    std::string msg = "Subscribe acknowledged. PacketId: " + std::to_string(packetId) + ", qos: " + std::to_string(qos) + ".";
-    //_syslog->log(LOG_INFO, msg.c_str());
-}
-
-void controller::onMqttUnsubscribe(uint16_t packetId)
-{
-    std::string msg = "Unsubscribe acknowledged. PacketId: " + std::to_string(packetId) + ".";
-    //_syslog->log(LOG_INFO, msg.c_str());
-}
-
-void controller::onMqttMessage(char* topic, char* payload, size_t len, size_t index, size_t total)
-{
-    for(auto el: topics_to_subscribe)
-    {
-        if (strcmp(topic, std::get<TP_TOP>(el)) == 0)
-        {
-            switch(std::get<TP_NUM>(el))
-            {
-                case 500:
-                    Serial.printf("  - MANUAL_PUMP_REQ from dashboard: %s\r\n", payload_to_string(payload, len).c_str());
-                    _light->set_enable(payload[0] == '1');
-                    if (payload[0] == '1')
-                        _pump_1->set_on_demand();
-                    else
-                        _pump_1->set_off_demand();
-                    break;
-
-                case 501:
-                    Serial.printf("  - MANUAL_VALVE_REQ from dashboard: %s\r\n", payload_to_string(payload, len).c_str());
-                    _light->set_enable(payload[0] == '1');
-                    if (payload[0] == '1')
-                        _pump_2->set_on_demand();
-                    else
-                        _pump_2->set_off_demand();
-                    break;
-            }
-        }
-    }
-}
-
-void controller::onMqttPublish(uint16_t packetId)
-{
-    std::string msg = "Publish acknowledged. PacketId: " + std::to_string(packetId) + ".";
-    //_syslog->log(LOG_INFO, msg.c_str());
 }
 
 void controller::operating(void)
