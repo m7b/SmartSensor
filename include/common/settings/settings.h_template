@@ -106,4 +106,14 @@
 #define DEVICE_HOSTNAME MQTT_CLIENT_ID
 #define APP_NAME "smartsensor"
 
+
+/**
+ * @brief InfluxDB server connection info
+ * 
+ */
+#define INFLUXDB_SERVER "192.168.0.1"
+#define INFLUXDB_ORG    "org"
+#define INFLUXDB_BUCKET "bucket"
+#define INFLUXDB_TOKEN  "token"
+
 #endif // COMMON_SETTINGS_H
