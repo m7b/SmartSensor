@@ -3,10 +3,9 @@
 
 #include <ArduinoOTA.h>
 
-#include <rws_wifi.h>
 #include <rws_ntp.h>
 #include <rws_syslog.h>
-#include <rws_asyncmqttclient.h>
+#include <rws_mqttclient.h>
 #include <rws_webupdate.h>
 #include <statemachine.h>
 
@@ -32,21 +31,24 @@
 class controller : public statemachine
 {
     public:
-        controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_asyncmqttclient *mqtt, rws_webupdate *webUpd);
+        controller(ESP8266WiFiClass *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_mqttclient *mqtt, rws_webupdate *webUpd);
         ~controller();
 
         void setup(void);
         void loop(void);
 
     private:
-        rws_wifi *_wifiMulti;
+        ESP8266WiFiClass *_wifi;
         rws_ntp *_ntp;
         rws_syslog *_syslog;
         rws_webupdate *_webUpdate;
-        rws_asyncmqttclient *_mqtt;
+        rws_mqttclient *_mqtt;
 
         OneButton *_pump_1_button;
         OneButton *_pump_2_button;
+
+        WiFiEventHandler wifiConnectHandler;
+        WiFiEventHandler wifiDisconnectHandler;
         
         bool _condition_lost;
         std::string _condition_lost_time;
@@ -68,12 +70,16 @@ class controller : public statemachine
 
         bool check_all_conditions(void);
 
+        //WiFi events
+        void onWifiConnect(const WiFiEventStationModeGotIP& event);
+        void onWifiDisconnect(const WiFiEventStationModeDisconnected& event);
+
+
         //MQTT callbacks
         void onMqttConnect(bool sessionPresent);
-        void onMqttDisconnect(AsyncMqttClientDisconnectReason reason);
         void onMqttSubscribe(uint16_t packetId, uint8_t qos);
         void onMqttUnsubscribe(uint16_t packetId);
-        void onMqttMessage(char* topic, char* payload, AsyncMqttClientMessageProperties properties, size_t len, size_t index, size_t total);
+        void onMqttMessage(char* topic, char* payload, size_t len, size_t index, size_t total);
         void onMqttPublish(uint16_t packetId);
 
         //Pump callbacks
