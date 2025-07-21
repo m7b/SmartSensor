@@ -6,6 +6,7 @@
 #include <rws_ntp.h>
 #include <rws_syslog.h>
 #include <rws_mqttclient.h>
+#include <rws_influxdbclient.h>
 #include <rws_webupdate.h>
 #include <statemachine.h>
 
