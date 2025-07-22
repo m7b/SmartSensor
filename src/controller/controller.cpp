@@ -3,14 +3,15 @@
 //NTP stuff; Called by time.h handler
 extern time_t _MJBgetNtpTime(void);
 
-controller::controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclient *mqtt, rws_webupdate *webUpd)
+controller::controller(ESP8266WiFiClass *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_mqttclient *mqtt, rws_webupdate *webUpd, rws_influxdbclient *influx)
 : statemachine(N000_INIT_STEP)
 {
-    _wifiMulti   = wifi;
+    _wifi        = wifi;
     _ntp         = ntp;
     _syslog      = syslog;
     _webUpdate   = webUpd;
     _mqtt        = mqtt;
+    _influx      = influx;
 
     _function_mode_src_req = 0;
     _function_mode_src_ack = 0;
@@ -26,6 +27,9 @@ controller::controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pub
 
     _condition_lost = false;
     _condition_lost_time = "";
+
+    // Declare Data point InfluxDB
+    _sensor = new Point("controller");
 }
 
 controller::~controller()
@@ -35,6 +39,7 @@ controller::~controller()
     delete _pump_2;
     delete _pump_1_button;
     delete _pump_2_button;
+    delete _sensor;
 }
 
 void controller::setup(void)
@@ -71,20 +76,17 @@ void controller::setup(void)
     
     std::string msg = "Setup done. Running version " + std::string(FIRMWARE_VERSION_DATE_TIME) + ". Begin loop() ... ";
     _syslog->log(LOG_INFO, msg.c_str());
+    Serial.println("--> setup() done");
+    
 }
 
 void controller::loop(void)
 {
-    //check and renew WiFi connection
-    _wifiMulti->check_connection();
-    //MDNS.update();
-    
     //update time from NTP on demand, see NTP_UPDATE_INTERVAL_MS
     _ntp->loop();
-    timeStatus();
 
-    //check and renew MQTT connection
-    _mqtt->check_connection();
+    //mqtt
+    _mqtt->loop();
 
     //Web-Update functionality
     _webUpdate->loop();
@@ -99,30 +101,6 @@ void controller::loop(void)
     //Buttons
     _pump_1_button->tick();
     _pump_2_button->tick();
-
-    //check all conditions are ok
-    if (!check_all_conditions())
-    {
-        if (!_condition_lost)
-        {
-            _condition_lost = true;
-            _condition_lost_time = _ntp->get_local_datetime();
-            
-            char buf[10];
-            snprintf(buf, 10, "%d", WiFi.status());
-            _wlan_status = std::string(buf);
-        }
-        return;
-    }
-    if (_condition_lost)
-    {
-        _condition_lost = false;
-        std::string msg = "In loop(): Check all conditions failed at " + _condition_lost_time + " (" + _wlan_status + ")";
-        _syslog->log(LOG_INFO, msg.c_str());
-    }
-
-    //keep mqtt alive
-    _mqtt->loop();
 
     //control rgb led
     _light->loop();
@@ -140,6 +118,8 @@ void controller::setup_serial(void)
 {
     Serial.begin(115200, SERIAL_8N1, SERIAL_TX_ONLY);
 
+    Serial.println("--> setup_serial()");
+
 #if DEBUG == ON
     // Take time for opening serial window
     delay(10000);
@@ -148,17 +128,16 @@ void controller::setup_serial(void)
 
 void controller::setup_wifi(void)
 {
-    // Add WiFi connection credentials
-    for(auto entry : wifi_access_credentials) 
-        _wifiMulti->addAP(entry.first, entry.second);
+    Serial.println("--> setup_wifi()");
 
-    WiFi.hostname(DEVICE_HOSTNAME);
-    WiFi.mode(WIFI_STA);
-
-    // We start by connecting to a WiFi network
-    _wifiMulti->check_connection();
+    wifiConnectHandler = _wifi->onStationModeGotIP(std::bind(&controller::onWifiConnect, this, std::placeholders::_1));
     
-    //MDNS.begin(DEVICE_HOSTNAME);
+    _wifi->hostname(DEVICE_HOSTNAME);
+    _wifi->mode(WIFI_STA);
+
+    // Add WiFi connection credentials
+    _wifi->begin(WIFI_SSID, WIFI_PASSWORD);
+    Serial.println("--> setup_wifi() done.");
 }
 
 void controller::setup_ntp(void)
@@ -182,29 +161,55 @@ void controller::setup_ntp(void)
 void controller::setup_syslog(void)
 {
     //Syslog already usable
+    Serial.println("--> setup_syslog()");
+    Serial.println("--> setup_syslog() done.");
 }
 
 void controller::setup_mqtt(void)
 {
+    _syslog->log(LOG_INFO, "--> Start setup_mqtt()");
+    Serial.println("--> setup_mqtt()");
+
     //Set topics to subscribe
-    _mqtt->set_topics_to_subscribe(&topics_to_subscribe);
+    _mqtt->subscribe("WS/RWS/#", [this](const char * topic, const char * payload) {
+        Serial.printf("Received topic '%s': %s\n", topic, payload);
 
-    //Set callback function
-    _mqtt->setCallback([this] (char* topic, uint8_t* payload, unsigned int length) { this->mqtt_callback(topic, payload, length); });
+        if (strcmp(topic, "WS/RWS/Dashboard/ManualPumpReq") == 0) {
+            _light->set_enable(payload[0] == '1');
+            if (payload[0] == '1')
+                _pump_1->set_on_demand();
+            else
+                _pump_1->set_off_demand();
+        }
 
-    // We start by connecting to MQTT server
-    _mqtt->check_connection();
+        if (strcmp(topic, "WS/RWS/Dashboard/ManualValveReq") == 0) {
+            _light->set_enable(payload[0] == '1');
+            if (payload[0] == '1')
+                _pump_2->set_on_demand();
+            else
+                _pump_2->set_off_demand();
+        }
+
+    });
+
+    _mqtt->begin();
+
+    _syslog->log(LOG_INFO, "--> End setup_mqtt()");
+    Serial.println("--> setup_mqtt() done.");
 }
 
 
 void controller::setup_webupdate(void)
 {
+    Serial.println("--> setup_webupdate()");
     _webUpdate->setup();
+    Serial.println("--> setup_webupdate() done.");
 }
 
 
 void controller::setup_otaupdate(void)
 {
+    Serial.println("--> setup_otaupdate()");
     ArduinoOTA.setHostname(DEVICE_HOSTNAME);
 
     ArduinoOTA.onStart([]() {
@@ -243,55 +248,18 @@ void controller::setup_otaupdate(void)
     });
 
     ArduinoOTA.begin();
+    Serial.println("--> setup_otaupdate() done.");
 }
 
 bool controller::check_all_conditions(void)
 {
     bool rc = true;
     
-    rc = rc & _wifiMulti->connected();
+    rc = rc & WiFi.isConnected();
     /* Test if this is the cause of not working 
     rc = rc & _ntp->update(); */
 
     return rc;
-}
-
-void controller::mqtt_callback(char* topic, uint8_t* payload, unsigned int length) {
-    Serial.print("  - Message arrived [");
-    Serial.print(topic);
-    Serial.print("] ");
-    Serial.println();
-
-    for(auto el: topics_to_subscribe)
-    {
-        if (strcmp(topic, std::get<TP_TOP>(el)) == 0)
-        {
-            switch(std::get<TP_NUM>(el))
-            {
-                case 500:
-                    Serial.printf("  - MANUAL_PUMP_REQ from dashboard: %s\r\n", payload_to_string(payload, length).c_str());
-                    _light->set_enable(payload[0] == '1');
-                    if (payload[0] == '1')
-                        _pump_1->set_on_demand();
-                    else
-                        _pump_1->set_off_demand();
-                        
-                    //_mqtt->publish(MANUAL_PUMP_ACKNOWLEDGE, payload_to_string(payload, length));
-                    break;
-
-                case 501:
-                    Serial.printf("  - MANUAL_VALVE_REQ from dashboard: %s\r\n", payload_to_string(payload, length).c_str());
-                    _light->set_enable(payload[0] == '1');
-                    if (payload[0] == '1')
-                        _pump_2->set_on_demand();
-                    else
-                        _pump_2->set_off_demand();
-                    
-                    //_mqtt->publish(MANUAL_VALVE_ACKNOWLEDGE, payload_to_string(payload, length));
-                    break;
-            }
-        }
-    }
 }
 
 void controller::operating(void)
@@ -308,11 +276,44 @@ void controller::operating(void)
 
         case N010_WAIT_STEP:
 
-            if (get_duration_ms(_start) >= 1000)
+            if (get_duration_ms(_start) >= 5000)
             {
+<<<<<<< HEAD
                 std::string msg = "Life sign! " + _ntp->get_local_datetime() + "; ESP.getFreeHeap(): " + std::to_string(ESP.getFreeHeap());
                 _mqtt->publish(VAL_LIFE_SIGN, msg);
+=======
+                uint32_t    ifree_heap  = ESP.getFreeHeap();
+                int8_t      iRSSI       = WiFi.RSSI();
+                std::string RSSI        = std::to_string(iRSSI);
+                std::string free_heap   = std::to_string(ifree_heap);
+                std::string mqtt_con    = std::to_string(_mqtt->connected());
+                std::string influx_con  = std::to_string(_influx->validateConnection());
+                int         ibrightness = analogRead(A0);
+                std::string brightness  = std::to_string(ibrightness);
+
+                std::string msg = _ntp->get_local_datetime() + "; FreeHeap: " + free_heap + "; RSSI: " + RSSI + "; mqtt: " + mqtt_con + "; InfluxDB: " + influx_con;
+                _mqtt->publish(STATUS, msg.c_str(), QOS0, RETAIN_ON);
+                _mqtt->publish(VAL_AMBIENT_BRIGHTNESS, brightness.c_str(), QOS0, RETAIN_ON);
+>>>>>>> feature/async_mqtt
                 _syslog->log(LOG_INFO, msg.c_str());
+                Serial.println(msg.c_str());
+
+                // Clear fields for reusing the point. Tags will remain the same as set above.
+                _sensor->clearFields();
+
+                // Store measured value into point
+                // Report RSSI of currently connected network
+                _sensor->addField("wifi_rssi", iRSSI);
+                _sensor->addField("free_heap", ifree_heap);
+                _sensor->addField("brightness", ibrightness); //https://elektro.turanis.de/html/prj397/index.html#ExIIIEingebauterLDR
+
+                // Print what are we exactly writing
+                Serial.print("Writing: ");
+                Serial.println(_sensor->toLineProtocol());
+
+                //Write Point
+                _influx->writePoint(*_sensor);
+
                 set_next_step(N999_END);
             }
             break;
@@ -327,40 +328,42 @@ void controller::operating(void)
 void controller::print_stm_steps(void)
 {
     Serial.println("");
+    Serial.println("Begin list of state machine:");
     print_step_info(N000_INIT_STEP);
     print_step_info(N010_WAIT_STEP);
     print_step_info(N999_END);
+    Serial.println("End list of state machine.");
     Serial.println("");
 }
 
 void controller::pump1_on_callback(void)
 {
-    _mqtt->publish(MANUAL_PUMP_ACKNOWLEDGE, "1", true);
+    _mqtt->publish(MANUAL_PUMP_ACKNOWLEDGE, "1", QOS0, RETAIN_ON);
     _syslog->log(LOG_INFO, "Pump1 on_callback() triggered.");
 }
 
 void controller::pump1_off_callback(void)
 {
-    _mqtt->publish(MANUAL_PUMP_ACKNOWLEDGE, "0", true);
+    _mqtt->publish(MANUAL_PUMP_ACKNOWLEDGE, "0", QOS0, RETAIN_ON);
 
     //Reset Dashboard request
-    _mqtt->publish("WS/RWS/Dashboard/ManualPumpReq", "0", true);
+    _mqtt->publish("WS/RWS/Dashboard/ManualPumpReq", "0", QOS0, RETAIN_ON);
     
     _syslog->log(LOG_INFO, "Pump1 off_callback() triggered.");
 }
 
 void controller::pump2_on_callback(void)
 {
-    _mqtt->publish(MANUAL_VALVE_ACKNOWLEDGE, "1", true);
+    _mqtt->publish(MANUAL_VALVE_ACKNOWLEDGE, "1", QOS0, RETAIN_ON);
     _syslog->log(LOG_INFO, "Pump2 on_callback() triggered.");
 }
 
 void controller::pump2_off_callback(void)
 {
-    _mqtt->publish(MANUAL_VALVE_ACKNOWLEDGE, "0", true);
+    _mqtt->publish(MANUAL_VALVE_ACKNOWLEDGE, "0", QOS0, RETAIN_ON);
 
     //Reset Dashboard request
-    _mqtt->publish("WS/RWS/Dashboard/ManualValveReq", "0", true);
+    _mqtt->publish("WS/RWS/Dashboard/ManualValveReq", "0", QOS0, RETAIN_ON);
     
     _syslog->log(LOG_INFO, "Pump2 off_callback() triggered.");
 }
@@ -411,4 +414,16 @@ void controller::pump2_ls_on_callback(void)
 void controller::pump2_ls_off_callback(void)
 {
     _syslog->log(LOG_INFO, "Pump2 ls_off_callback() triggered.");
+}
+
+void controller::onWifiConnect(const WiFiEventStationModeGotIP& event)
+{
+    Serial.println("--> onWifiConnect()");
+    //_syslog->log(LOG_INFO, "--> onWifiConnect()");
+    //setup_mqtt();
+}
+
+void controller::onWifiDisconnect(const WiFiEventStationModeDisconnected& event)
+{
+    Serial.println("--> onWifiDisconnect()");
 }

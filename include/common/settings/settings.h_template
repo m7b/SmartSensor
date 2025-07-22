@@ -20,12 +20,8 @@
  * @brief Declaration of ssid and password
  * 
  */
-static const std::vector<std::pair<const char*, const char*>> wifi_access_credentials = {
-/*  {"<ssid>"},            "<password>", */
-    {"my_wifi_no_1", "pass for wifi no 1"},
-    {"my_wifi_no_2", "pass for wifi no 2"},
-    {"my_wifi_no_3", "pass for wifi no 3"}
-};
+#define WIFI_SSID "My_Wi-Fi"
+#define WIFI_PASSWORD "my-awesome-password"
 
 
 /**
@@ -109,5 +105,15 @@ static const std::vector<std::pair<const char*, const char*>> wifi_access_creden
 #define SYSLOG_PORT 514
 #define DEVICE_HOSTNAME MQTT_CLIENT_ID
 #define APP_NAME "smartsensor"
+
+
+/**
+ * @brief InfluxDB server connection info
+ * 
+ */
+#define INFLUXDB_URL    "192.168.0.1"
+#define INFLUXDB_TOKEN  "token"
+#define INFLUXDB_ORG    "org"
+#define INFLUXDB_BUCKET "bucket"
 
 #endif // COMMON_SETTINGS_H

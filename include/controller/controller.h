@@ -3,10 +3,10 @@
 
 #include <ArduinoOTA.h>
 
-#include <rws_wifi.h>
 #include <rws_ntp.h>
 #include <rws_syslog.h>
-#include <rws_pubsubclient.h>
+#include <rws_mqttclient.h>
+#include <rws_influxdbclient.h>
 #include <rws_webupdate.h>
 #include <statemachine.h>
 
@@ -32,21 +32,25 @@
 class controller : public statemachine
 {
     public:
-        controller(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclient *mqtt, rws_webupdate *webUpd);
+        controller(ESP8266WiFiClass *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_mqttclient *mqtt, rws_webupdate *webUpd, rws_influxdbclient *influx);
         ~controller();
 
         void setup(void);
         void loop(void);
 
     private:
-        rws_wifi *_wifiMulti;
+        ESP8266WiFiClass *_wifi;
         rws_ntp *_ntp;
         rws_syslog *_syslog;
         rws_webupdate *_webUpdate;
-        rws_pubsubclient *_mqtt;
+        rws_mqttclient *_mqtt;
+        rws_influxdbclient *_influx;
 
         OneButton *_pump_1_button;
         OneButton *_pump_2_button;
+
+        WiFiEventHandler wifiConnectHandler;
+        WiFiEventHandler wifiDisconnectHandler;
         
         bool _condition_lost;
         std::string _condition_lost_time;
@@ -68,7 +72,11 @@ class controller : public statemachine
 
         bool check_all_conditions(void);
 
-        void mqtt_callback(char* topic, uint8_t* payload, unsigned int length);
+        //WiFi events
+        void onWifiConnect(const WiFiEventStationModeGotIP& event);
+        void onWifiDisconnect(const WiFiEventStationModeDisconnected& event);
+
+        //Pump callbacks
         void pump1_on_callback(void);
         void pump1_off_callback(void);
         void pump1_ls_on_callback(void);
@@ -78,9 +86,9 @@ class controller : public statemachine
         void pump2_ls_on_callback(void);
         void pump2_ls_off_callback(void);
 
+        //Button callbacks
         void pump1_btn_click(void);
         void pump2_btn_click(void);
-
         void pump1_btn_long_press_stop(void);
         void pump2_btn_long_press_stop(void);
 
@@ -93,6 +101,9 @@ class controller : public statemachine
         void print_stm_steps(void);
 
         unsigned long _start;
+
+        // Declare Data point InfluxDB
+        Point *_sensor;
 };
 
 
