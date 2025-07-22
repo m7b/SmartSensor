@@ -2,6 +2,7 @@
 #define CONTROLLER_H
 
 #include <ArduinoOTA.h>
+#include "uptime.h"
 
 #include <rws_ntp.h>
 #include <rws_syslog.h>

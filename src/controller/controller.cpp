@@ -278,6 +278,9 @@ void controller::operating(void)
 
             if (get_duration_ms(_start) >= 5000)
             {
+                uptime::calculateUptime();
+
+                std::string uptime      = std::to_string(uptime::getDays()) + "d" + std::to_string(uptime::getHours()) + "h" + std::to_string(uptime::getMinutes()) + "m" + std::to_string(uptime::getSeconds()) + "s";
                 uint32_t    ifree_heap  = ESP.getFreeHeap();
                 int8_t      iRSSI       = WiFi.RSSI();
                 std::string RSSI        = std::to_string(iRSSI);
@@ -287,7 +290,7 @@ void controller::operating(void)
                 int         ibrightness = analogRead(A0);
                 std::string brightness  = std::to_string(ibrightness);
 
-                std::string msg = _ntp->get_local_datetime() + "; FreeHeap: " + free_heap + "; RSSI: " + RSSI + "; mqtt: " + mqtt_con + "; InfluxDB: " + influx_con;
+                std::string msg = _ntp->get_local_datetime() + ";uptime: " + uptime + "; FreeHeap: " + free_heap + "; RSSI: " + RSSI + "; mqtt: " + mqtt_con + "; InfluxDB: " + influx_con;
                 _mqtt->publish(STATUS, msg.c_str(), QOS0, RETAIN_ON);
                 _mqtt->publish(VAL_AMBIENT_BRIGHTNESS, brightness.c_str(), QOS0, RETAIN_ON);
                 _syslog->log(LOG_INFO, msg.c_str());
@@ -315,6 +318,11 @@ void controller::operating(void)
 
         case N999_END:
             //_syslog->log(LOG_INFO, N999_END.descr);
+            if (uptime::getDays() >= 2) {
+                ESP.restart();
+                delay(1000);
+            }
+
             set_next_step(N000_INIT_STEP);
             break;
     }
