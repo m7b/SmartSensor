@@ -278,10 +278,6 @@ void controller::operating(void)
 
             if (get_duration_ms(_start) >= 5000)
             {
-<<<<<<< HEAD
-                std::string msg = "Life sign! " + _ntp->get_local_datetime() + "; ESP.getFreeHeap(): " + std::to_string(ESP.getFreeHeap());
-                _mqtt->publish(VAL_LIFE_SIGN, msg);
-=======
                 uint32_t    ifree_heap  = ESP.getFreeHeap();
                 int8_t      iRSSI       = WiFi.RSSI();
                 std::string RSSI        = std::to_string(iRSSI);
@@ -294,7 +290,6 @@ void controller::operating(void)
                 std::string msg = _ntp->get_local_datetime() + "; FreeHeap: " + free_heap + "; RSSI: " + RSSI + "; mqtt: " + mqtt_con + "; InfluxDB: " + influx_con;
                 _mqtt->publish(STATUS, msg.c_str(), QOS0, RETAIN_ON);
                 _mqtt->publish(VAL_AMBIENT_BRIGHTNESS, brightness.c_str(), QOS0, RETAIN_ON);
->>>>>>> feature/async_mqtt
                 _syslog->log(LOG_INFO, msg.c_str());
                 Serial.println(msg.c_str());
 
