@@ -290,7 +290,7 @@ void controller::operating(void)
                 int         ibrightness = analogRead(A0);
                 std::string brightness  = std::to_string(ibrightness);
 
-                std::string msg = _ntp->get_local_datetime() + ";uptime: " + uptime + "; FreeHeap: " + free_heap + "; RSSI: " + RSSI + "; mqtt: " + mqtt_con + "; InfluxDB: " + influx_con;
+                std::string msg = _ntp->get_local_datetime() + "; uptime: " + uptime + "; FreeHeap: " + free_heap + "; RSSI: " + RSSI + "; mqtt: " + mqtt_con + "; InfluxDB: " + influx_con;
                 _mqtt->publish(STATUS, msg.c_str(), QOS0, RETAIN_ON);
                 _mqtt->publish(VAL_AMBIENT_BRIGHTNESS, brightness.c_str(), QOS0, RETAIN_ON);
                 _syslog->log(LOG_INFO, msg.c_str());
