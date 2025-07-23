@@ -308,6 +308,7 @@ void controller::operating(void)
                 _sensor->addField("wifi_rssi",    iRSSI);
                 _sensor->addField("wifi_channel", uiChannel);
                 _sensor->addField("free_heap",    ifree_heap);
+                _sensor->addField("cpu_freq_mhz", uiCPUfreqMhz);
                 _sensor->addField("brightness",   ibrightness); //https://elektro.turanis.de/html/prj397/index.html#ExIIIEingebauterLDR
 
                 // Print what are we exactly writing
