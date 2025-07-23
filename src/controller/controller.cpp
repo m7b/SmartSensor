@@ -283,6 +283,8 @@ void controller::operating(void)
                 std::string uptime      = std::to_string(uptime::getDays()) + "d" + std::to_string(uptime::getHours()) + "h" + std::to_string(uptime::getMinutes()) + "m" + std::to_string(uptime::getSeconds()) + "s";
                 uint32_t    ifree_heap  = ESP.getFreeHeap();
                 int8_t      iRSSI       = WiFi.RSSI();
+                uint8_t     uiChannel   = WiFi.channel();
+                std::string Channel     = std::to_string(uiChannel);
                 std::string RSSI        = std::to_string(iRSSI);
                 std::string free_heap   = std::to_string(ifree_heap);
                 std::string mqtt_con    = std::to_string(_mqtt->connected());
@@ -290,7 +292,7 @@ void controller::operating(void)
                 int         ibrightness = analogRead(A0);
                 std::string brightness  = std::to_string(ibrightness);
 
-                std::string msg = _ntp->get_local_datetime() + "; uptime: " + uptime + "; FreeHeap: " + free_heap + "; RSSI: " + RSSI + "; mqtt: " + mqtt_con + "; InfluxDB: " + influx_con;
+                std::string msg = _ntp->get_local_datetime() + "; uptime: " + uptime + "; FreeHeap: " + free_heap + "; RSSI: " + RSSI + "; Channel: " + Channel + "; mqtt: " + mqtt_con + "; InfluxDB: " + influx_con;
                 _mqtt->publish(STATUS, msg.c_str(), QOS0, RETAIN_ON);
                 _mqtt->publish(VAL_AMBIENT_BRIGHTNESS, brightness.c_str(), QOS0, RETAIN_ON);
                 _syslog->log(LOG_INFO, msg.c_str());
@@ -301,9 +303,10 @@ void controller::operating(void)
 
                 // Store measured value into point
                 // Report RSSI of currently connected network
-                _sensor->addField("wifi_rssi", iRSSI);
-                _sensor->addField("free_heap", ifree_heap);
-                _sensor->addField("brightness", ibrightness); //https://elektro.turanis.de/html/prj397/index.html#ExIIIEingebauterLDR
+                _sensor->addField("wifi_rssi",    iRSSI);
+                _sensor->addField("wifi_channel", uiChannel);
+                _sensor->addField("free_heap",    ifree_heap);
+                _sensor->addField("brightness",   ibrightness); //https://elektro.turanis.de/html/prj397/index.html#ExIIIEingebauterLDR
 
                 // Print what are we exactly writing
                 Serial.print("Writing: ");
