@@ -280,19 +280,21 @@ void controller::operating(void)
             {
                 uptime::calculateUptime();
 
-                std::string uptime      = std::to_string(uptime::getDays()) + "d" + std::to_string(uptime::getHours()) + "h" + std::to_string(uptime::getMinutes()) + "m" + std::to_string(uptime::getSeconds()) + "s";
-                uint32_t    ifree_heap  = ESP.getFreeHeap();
-                int8_t      iRSSI       = WiFi.RSSI();
-                uint8_t     uiChannel   = WiFi.channel();
-                std::string Channel     = std::to_string(uiChannel);
-                std::string RSSI        = std::to_string(iRSSI);
-                std::string free_heap   = std::to_string(ifree_heap);
-                std::string mqtt_con    = std::to_string(_mqtt->connected());
-                std::string influx_con  = std::to_string(_influx->validateConnection());
-                int         ibrightness = analogRead(A0);
-                std::string brightness  = std::to_string(ibrightness);
+                std::string uptime       = std::to_string(uptime::getDays()) + "d" + std::to_string(uptime::getHours()) + "h" + std::to_string(uptime::getMinutes()) + "m" + std::to_string(uptime::getSeconds()) + "s";
+                uint32_t    ifree_heap   = ESP.getFreeHeap();
+                uint8_t     uiCPUfreqMhz = ESP.getCpuFreqMHz();
+                int8_t      iRSSI        = WiFi.RSSI();
+                uint8_t     uiChannel    = WiFi.channel();
+                std::string Channel      = std::to_string(uiChannel);
+                std::string RSSI         = std::to_string(iRSSI);
+                std::string free_heap    = std::to_string(ifree_heap);
+                std::string CPUfreqMhz   = std::to_string(uiCPUfreqMhz);
+                std::string mqtt_con     = std::to_string(_mqtt->connected());
+                std::string influx_con   = std::to_string(_influx->validateConnection());
+                int         ibrightness  = analogRead(A0);
+                std::string brightness   = std::to_string(ibrightness);
 
-                std::string msg = _ntp->get_local_datetime() + "; uptime: " + uptime + "; FreeHeap: " + free_heap + "; RSSI: " + RSSI + "; Channel: " + Channel + "; mqtt: " + mqtt_con + "; InfluxDB: " + influx_con;
+                std::string msg = _ntp->get_local_datetime() + "; uptime: " + uptime + "; CPU freq MHz: " + CPUfreqMhz + "; FreeHeap: " + free_heap + "; RSSI: " + RSSI + "; Channel: " + Channel + "; mqtt: " + mqtt_con + "; InfluxDB: " + influx_con;
                 _mqtt->publish(STATUS, msg.c_str(), QOS0, RETAIN_ON);
                 _mqtt->publish(VAL_AMBIENT_BRIGHTNESS, brightness.c_str(), QOS0, RETAIN_ON);
                 _syslog->log(LOG_INFO, msg.c_str());
