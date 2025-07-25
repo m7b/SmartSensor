@@ -30,6 +30,11 @@ controller::controller(ESP8266WiFiClass *wifi, rws_ntp *ntp, rws_syslog *syslog,
 
     // Declare Data point InfluxDB
     _sensor = new Point("controller");
+
+    // Cycle time meassurement
+    _tick = 0;
+    _tick2 = 0;
+    _cyc_time = 0;
 }
 
 controller::~controller()
@@ -264,6 +269,17 @@ bool controller::check_all_conditions(void)
 
 void controller::operating(void)
 {
+
+    if (_tick == 0) {
+        _tick = micros();
+    }
+    else {
+        _tick2 = micros();
+        _cyc_time = _tick - _tick2;
+        _tick = _tick2;
+    }
+    
+    
     switch (get_step())
     {
         case N000_INIT_STEP:
@@ -280,6 +296,7 @@ void controller::operating(void)
             {
                 uptime::calculateUptime();
 
+                std::string scyc_time    = std::to_string(_cyc_time);
                 std::string uptime       = std::to_string(uptime::getDays()) + "d" + std::to_string(uptime::getHours()) + "h" + std::to_string(uptime::getMinutes()) + "m" + std::to_string(uptime::getSeconds()) + "s";
                 uint32_t    ifree_heap   = ESP.getFreeHeap();
                 uint8_t     uiCPUfreqMhz = ESP.getCpuFreqMHz();
@@ -294,7 +311,7 @@ void controller::operating(void)
                 int         ibrightness  = analogRead(A0);
                 std::string brightness   = std::to_string(ibrightness);
 
-                std::string msg = _ntp->get_local_datetime() + "; uptime: " + uptime + "; CPU freq MHz: " + CPUfreqMhz + "; FreeHeap: " + free_heap + "; RSSI: " + RSSI + "; Channel: " + Channel + "; mqtt: " + mqtt_con + "; InfluxDB: " + influx_con;
+                std::string msg = _ntp->get_local_datetime() + "; uptime: " + uptime + "; CPU freq MHz: " + CPUfreqMhz + "; Cyc Time: " + scyc_time + "; FreeHeap: " + free_heap + "; RSSI: " + RSSI + "; Channel: " + Channel + "; mqtt: " + mqtt_con + "; InfluxDB: " + influx_con;
                 _mqtt->publish(STATUS, msg.c_str(), QOS0, RETAIN_ON);
                 _mqtt->publish(VAL_AMBIENT_BRIGHTNESS, brightness.c_str(), QOS0, RETAIN_ON);
                 _syslog->log(LOG_INFO, msg.c_str());
@@ -309,6 +326,7 @@ void controller::operating(void)
                 _sensor->addField("wifi_channel", uiChannel);
                 _sensor->addField("free_heap",    ifree_heap);
                 _sensor->addField("cpu_freq_mhz", uiCPUfreqMhz);
+                _sensor->addField("cyc_time",     _cyc_time);
                 _sensor->addField("brightness",   ibrightness); //https://elektro.turanis.de/html/prj397/index.html#ExIIIEingebauterLDR
 
                 // Print what are we exactly writing

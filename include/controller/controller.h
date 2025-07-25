@@ -105,6 +105,11 @@ class controller : public statemachine
 
         // Declare Data point InfluxDB
         Point *_sensor;
+
+        //Cycle time meassurement
+        unsigned long _tick;
+        unsigned long _tick2;
+        unsigned long _cyc_time;
 };
 
 
