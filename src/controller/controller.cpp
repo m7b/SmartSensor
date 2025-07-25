@@ -275,7 +275,7 @@ void controller::operating(void)
     }
     else {
         _tick2 = micros();
-        _cyc_time = _tick - _tick2;
+        _cyc_time = _tick2 - _tick;
         _tick = _tick2;
     }
     
