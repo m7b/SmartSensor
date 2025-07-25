@@ -342,7 +342,7 @@ void controller::operating(void)
 
         case N999_END:
             //_syslog->log(LOG_INFO, N999_END.descr);
-            if (uptime::getDays() >= 2) {
+            if (uptime::getHours() >= 6) {
                 ESP.restart();
                 delay(1000);
             }
