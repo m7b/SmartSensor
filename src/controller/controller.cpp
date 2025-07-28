@@ -32,7 +32,7 @@ controller::controller(ESP8266WiFiClass *wifi, rws_ntp *ntp, rws_syslog *syslog,
     _sensor = new Point("controller");
 
     // Cycle time meassurement with buffer size 10
-    _ct = new cycletimemeassure(10);
+    _ct = new CycleTimeMeasure(10);
 }
 
 controller::~controller()
@@ -269,7 +269,7 @@ bool controller::check_all_conditions(void)
 void controller::operating(void)
 {
 
-    _ct->take_meassure_point();
+    _ct->takeMeasurePoint();
     
     switch (get_step())
     {
@@ -287,8 +287,8 @@ void controller::operating(void)
             {
                 uptime::calculateUptime();
 
-                float       fcyc_time    = _ct->get_cycle_time();
-                std::string scyc_time    = _ct->get_cycle_time(1);
+                float       fcyc_time    = _ct->getCycleTime();
+                std::string scyc_time    = _ct->getCycleTime(1);
                 std::string uptime       = std::to_string(uptime::getDays()) + "d" + std::to_string(uptime::getHours()) + "h" + std::to_string(uptime::getMinutes()) + "m" + std::to_string(uptime::getSeconds()) + "s";
                 uint32_t    ifree_heap   = ESP.getFreeHeap();
                 uint8_t     uiCPUfreqMhz = ESP.getCpuFreqMHz();
