@@ -10,6 +10,7 @@
 #include <rws_influxdbclient.h>
 #include <rws_webupdate.h>
 #include <statemachine.h>
+#include <cycletimemeassure.h>
 
 #include <SPI.h>
 
@@ -107,9 +108,7 @@ class controller : public statemachine
         Point *_sensor;
 
         //Cycle time meassurement
-        unsigned long _tick;
-        unsigned long _tick2;
-        unsigned long _cyc_time;
+        cycletimemeassure *_ct;
 };
 
 

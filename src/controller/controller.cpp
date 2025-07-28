@@ -31,10 +31,8 @@ controller::controller(ESP8266WiFiClass *wifi, rws_ntp *ntp, rws_syslog *syslog,
     // Declare Data point InfluxDB
     _sensor = new Point("controller");
 
-    // Cycle time meassurement
-    _tick = 0;
-    _tick2 = 0;
-    _cyc_time = 0;
+    // Cycle time meassurement with buffer size 10
+    _ct = new cycletimemeassure(10);
 }
 
 controller::~controller()
@@ -45,6 +43,7 @@ controller::~controller()
     delete _pump_1_button;
     delete _pump_2_button;
     delete _sensor;
+    delete _ct;
 }
 
 void controller::setup(void)
@@ -270,15 +269,7 @@ bool controller::check_all_conditions(void)
 void controller::operating(void)
 {
 
-    if (_tick == 0) {
-        _tick = micros();
-    }
-    else {
-        _tick2 = micros();
-        _cyc_time = _tick2 - _tick;
-        _tick = _tick2;
-    }
-    
+    _ct->take_meassure_point();
     
     switch (get_step())
     {
@@ -296,7 +287,8 @@ void controller::operating(void)
             {
                 uptime::calculateUptime();
 
-                std::string scyc_time    = std::to_string(_cyc_time);
+                float       fcyc_time    = _ct->get_cycle_time();
+                std::string scyc_time    = _ct->get_cycle_time(1);
                 std::string uptime       = std::to_string(uptime::getDays()) + "d" + std::to_string(uptime::getHours()) + "h" + std::to_string(uptime::getMinutes()) + "m" + std::to_string(uptime::getSeconds()) + "s";
                 uint32_t    ifree_heap   = ESP.getFreeHeap();
                 uint8_t     uiCPUfreqMhz = ESP.getCpuFreqMHz();
@@ -326,7 +318,7 @@ void controller::operating(void)
                 _sensor->addField("wifi_channel", uiChannel);
                 _sensor->addField("free_heap",    ifree_heap);
                 _sensor->addField("cpu_freq_mhz", uiCPUfreqMhz);
-                _sensor->addField("cyc_time",     _cyc_time);
+                _sensor->addField("cyc_time",     fcyc_time);
                 _sensor->addField("brightness",   ibrightness); //https://elektro.turanis.de/html/prj397/index.html#ExIIIEingebauterLDR
 
                 // Print what are we exactly writing
