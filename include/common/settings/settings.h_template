@@ -9,6 +9,9 @@
 #define ON 1
 #define OFF 0
 
+#define RETAIN_ON true
+#define RETAIN_OFF false
+
 #define TRUE true
 #define FALSE false
 
