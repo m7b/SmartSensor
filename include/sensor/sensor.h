@@ -1,10 +1,9 @@
 #ifndef SENSOR_H
 #define SENSOR_H
 
-#include <rws_wifi.h>
 #include <rws_ntp.h>
 #include <rws_syslog.h>
-#include <rws_pubsubclient.h>
+#include <rws_mqttclient.h>
 #include <rws_webupdate.h>
 #include <statemachine.h>
 
@@ -17,18 +16,18 @@
 class sensor : public statemachine
 {
     public:
-        sensor(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclient *mqtt, rws_webupdate *webUpd);
+        sensor(ESP8266WiFiClass *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_mqttclient *mqtt, rws_webupdate *webUpd);
         ~sensor();
 
         void setup(void);
         void loop(void);
 
     private:
-        rws_wifi *_wifiMulti;
+        ESP8266WiFiClass *_wifi;
         rws_ntp *_ntp;
         rws_syslog *_syslog;
         rws_webupdate *_webUpdate;
-        rws_pubsubclient *_mqtt;
+        rws_mqttclient *_mqtt;
 
         barrel *_barrel;
         

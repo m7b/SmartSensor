@@ -10,7 +10,7 @@
  * @param mqtt 
  * @param syslog 
  */
-barrel::barrel(rws_ntp *ntp, rws_pubsubclient *mqtt, rws_syslog *syslog)
+barrel::barrel(rws_ntp *ntp, rws_mqttclient *mqtt, rws_syslog *syslog)
 : NewPing(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE_CM), ntp(ntp), mqtt(mqtt), syslog(syslog)
 {
     this->max_fill_level_cm = MAX_FILL_LEVEL_CM;

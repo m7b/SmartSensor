@@ -4,7 +4,7 @@
 #include <NewPing.h>
 #include "rws_common.h"
 #include "rws_ntp.h"
-#include "rws_pubsubclient.h"
+#include <rws_mqttclient.h>
 #include "rws_syslog.h"
 
 struct sFillLevel
@@ -30,7 +30,7 @@ struct sFillLevel
 class barrel : public NewPing
 {
     public:
-        barrel(rws_ntp *ntp, rws_pubsubclient *mqtt, rws_syslog *syslog);
+        barrel(rws_ntp *ntp, rws_mqttclient *mqtt, rws_syslog *syslog);
         ~barrel();
 
         bool do_measure(void);
@@ -48,7 +48,7 @@ class barrel : public NewPing
         sFillLevel fill_level;
 
         rws_ntp *ntp;
-        rws_pubsubclient *mqtt;
+        rws_mqttclient *mqtt;
         rws_syslog *syslog;
 
         float calc_Volume(void);

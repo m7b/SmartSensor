@@ -1,9 +1,9 @@
 #include "sensor/sensor.h"
 
-sensor::sensor(rws_wifi *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_pubsubclient *mqtt, rws_webupdate *webUpd)
+sensor::sensor(ESP8266WiFiClass *wifi, rws_ntp *ntp, rws_syslog *syslog, rws_mqttclient *mqtt, rws_webupdate *webUpd)
 : statemachine(N000_INIT_STEP)
 {
-    _wifiMulti = wifi;
+    _wifi      = wifi;
     _ntp       = ntp;
     _syslog    = syslog;
     _webUpdate = webUpd;
@@ -41,12 +41,8 @@ void sensor::loop(void)
     //update time from NTP on demand, see NTP_UPDATE_INTERVAL_MS
     _ntp->update();
 
-    //check and renew WiFi connection
-    _wifiMulti->check_connection();
-
-    //check and renew MQTT connection
-    if (_mqtt_online)
-        _mqtt->check_connection();
+    //mqtt
+    _mqtt->loop();
 
     //Web-Update functionality
     _webUpdate->loop();
@@ -78,20 +74,16 @@ void sensor::setup_serial(void)
 
 void sensor::setup_wifi(void)
 {
-    _wifiMulti->set_on_con_timeout_fct([this] (void) {
-        //Things to do after wlanconnection timeout occured
-        action_wlan_con_timeout();
-        });
+    Serial.println("--> setup_wifi()");
+
+    wifiConnectHandler = _wifi->onStationModeGotIP(std::bind(&sensor::onWifiConnect, this, std::placeholders::_1));
+    
+    _wifi->hostname(DEVICE_HOSTNAME);
+    _wifi->mode(WIFI_STA);
 
     // Add WiFi connection credentials
-    for(auto entry : wifi_access_credentials) 
-        _wifiMulti->addAP(entry.first, entry.second);
-
-    WiFi.hostname(DEVICE_HOSTNAME);
-    WiFi.mode(WIFI_STA);
-
-    // We start by connecting to a WiFi network
-    _wifiMulti->check_connection();
+    _wifi->begin(WIFI_SSID, WIFI_PASSWORD);
+    Serial.println("--> setup_wifi() done.");
 }
 
 void sensor::setup_ntp(void)
@@ -141,15 +133,13 @@ bool sensor::check_all_conditions(void)
 {
     bool rc = true;
     
-    rc = rc & _wifiMulti->connected();
-
-    if (_mqtt_online)
-        rc = rc & _mqtt->connected();
-
-    rc = rc & _ntp->update();
+    rc = rc & WiFi.isConnected();
+    /* Test if this is the cause of not working 
+    rc = rc & _ntp->update(); */
 
     return rc;
 }
+
 
 void sensor::mqtt_callback(char* topic, uint8_t* payload, unsigned int length) {
     Serial.print("  - Message arrived [");
