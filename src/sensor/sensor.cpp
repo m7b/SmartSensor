@@ -99,27 +99,24 @@ void sensor::setup_syslog(void)
 
 void sensor::setup_mqtt(void)
 {
+    _syslog->log(LOG_INFO, "--> Start setup_mqtt()");
+    Serial.println("--> setup_mqtt()");
+
     //Set topics to subscribe
-    _mqtt->set_topics_to_subscribe(&topics_to_subscribe);
+    _mqtt->subscribe("WS/RWS/#", [this](const char * topic, const char * payload) {
+        Serial.printf("Received topic '%s': %s\n", topic, payload);
 
-    //Set callback function
-    _mqtt->setCallback([this] (char* topic, uint8_t* payload, unsigned int length) {
-        this->mqtt_callback(topic, payload, length);
-        });
+        if (strcmp(topic, FUNCTION_MODE_REQ) == 0) {
+            Serial.printf("  - Function mode request received: %d\r\n", payload[0]);
+            _FunctionModeRequest = payload[0];
+        }
 
-    //Set on connection pub function
-    _mqtt->set_on_con_fct([this] (void) {
-        //Things to do after connection is established
-        set_next_step(N000_INIT_STEP);
-        //Publish actual function mode acknowledge
-        _mqtt->publish(FUNCTION_MODE_ACK, _FunctionModeAck);
-        });
+    });
 
-    //Set on connection fail function
-    _mqtt->set_on_con_failed_fct([this] (void) {
-        //Things to do after mqtt broker connection failed
-        action_mqtt_con_timeout();
-        });
+    _mqtt->begin();
+
+    _syslog->log(LOG_INFO, "--> End setup_mqtt()");
+    Serial.println("--> setup_mqtt() done.");
 }
 
 
@@ -140,31 +137,6 @@ bool sensor::check_all_conditions(void)
     return rc;
 }
 
-
-void sensor::mqtt_callback(char* topic, uint8_t* payload, unsigned int length) {
-    Serial.print("  - Message arrived [");
-    Serial.print(topic);
-    Serial.print("] ");
-    Serial.println();
-
-    for(auto el: topics_to_subscribe)
-    {
-        if (strcmp(topic, std::get<TP_TOP>(el)) == 0)
-        {
-            switch(std::get<TP_NUM>(el))
-            {
-                case 0:     
-                    Serial.printf("  - Function mode request received: %d\r\n", payload[0]);
-                    _FunctionModeRequest = payload[0];
-                    break;
-
-                case 1:
-                    Serial.printf("  - inTopic received: %s\r\n", payload_to_string(payload, length).c_str());
-                    break;
-            }
-        }
-    }
-}
 
 void sensor::operating(void)
 {
@@ -220,7 +192,9 @@ void sensor::operating(void)
 
         case N060_ACK_NEW_FUNCTION_MODE:
             _FunctionModeAck = _FunctionMode;
-            _mqtt->publish(FUNCTION_MODE_ACK, _FunctionModeAck);
+            //_mqtt->publish(FUNCTION_MODE_ACK, _FunctionModeAck, QOS0, RETAIN_ON);
+            _mqtt->publish(FUNCTION_MODE_ACK, "2", QOS0, RETAIN_ON);
+
             set_next_step(N070_WAIT_TIMEOUT);
             break;
 
@@ -338,4 +312,17 @@ void sensor::print_stm_steps(void)
     print_step_info(N100_WAIT_TIMEOUT_DS);
     print_step_info(N110_ENTER_DS);
     Serial.println("");
+}
+
+
+void sensor::onWifiConnect(const WiFiEventStationModeGotIP& event)
+{
+    Serial.println("--> onWifiConnect()");
+    //_syslog->log(LOG_INFO, "--> onWifiConnect()");
+    //setup_mqtt();
+}
+
+void sensor::onWifiDisconnect(const WiFiEventStationModeDisconnected& event)
+{
+    Serial.println("--> onWifiDisconnect()");
 }

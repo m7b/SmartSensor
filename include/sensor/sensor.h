@@ -29,6 +29,9 @@ class sensor : public statemachine
         rws_webupdate *_webUpdate;
         rws_mqttclient *_mqtt;
 
+        WiFiEventHandler wifiConnectHandler;
+        WiFiEventHandler wifiDisconnectHandler;
+
         barrel *_barrel;
         
         unsigned long _start_time;
@@ -51,7 +54,11 @@ class sensor : public statemachine
 
         bool check_all_conditions(void);
 
-        void mqtt_callback(char* topic, uint8_t* payload, unsigned int length);
+        //WiFi events
+        void onWifiConnect(const WiFiEventStationModeGotIP& event);
+        void onWifiDisconnect(const WiFiEventStationModeDisconnected& event);
+
+        //void mqtt_callback(char* topic, uint8_t* payload, unsigned int length);
         
         void operating(void);
 
