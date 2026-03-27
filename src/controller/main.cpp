@@ -38,6 +38,9 @@ void setup(void) {
 void loop(void) {
     //Perform the controller
     ctrl.loop();
+
+    //Hands execution back to the system so the watchdog and WiFi stack can run
+    yield();
 }
 
 /* #################################################### */

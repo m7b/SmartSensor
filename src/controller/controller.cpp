@@ -139,6 +139,10 @@ void controller::setup_wifi(void)
     _wifi->hostname(DEVICE_HOSTNAME);
     _wifi->mode(WIFI_STA);
 
+    //wifi tuning
+    _wifi->setSleep(false);
+    wifi_set_phy_mode(PHY_MODE_11G);
+
     // Add WiFi connection credentials
     _wifi->begin(WIFI_SSID, WIFI_PASSWORD);
     Serial.println("--> setup_wifi() done.");
